@@ -1,0 +1,18 @@
+mat-button-toggle-group {
+  flex-wrap: wrap;
+  border: none;
+}
+
+mat-button-toggle {
+  border: 1px solid;
+  border-radius: 5px;
+  margin: 5px;
+  background-color: rgba(24, 24, 100, 0.932);
+  color: white;
+}
+
+.mat-button-toggle-checked {
+  background-color: rgba(221, 219, 90, 0.932);
+  color: black;
+  border: none;
+}

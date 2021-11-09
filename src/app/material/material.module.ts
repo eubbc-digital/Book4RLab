@@ -8,6 +8,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -19,6 +21,8 @@ const MaterialComponents = [
   MatNativeDateModule,
   MatGridListModule,
   MatButtonToggleModule,
+  MatIconModule,
+  MatSelectModule,
 ];
 
 @NgModule({
