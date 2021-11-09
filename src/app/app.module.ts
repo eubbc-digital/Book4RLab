@@ -10,9 +10,10 @@ import { BookingStepperComponent } from './components/booking-stepper/booking-st
 import { AvailableHoursComponent } from './components/available-hours/available-hours.component';
 import { ConfirmationFormComponent } from './components/confirmation-form/confirmation-form.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
-  declarations: [AppComponent, BookingStepperComponent, AvailableHoursComponent, ConfirmationFormComponent, NavbarComponent],
+  declarations: [AppComponent, BookingStepperComponent, AvailableHoursComponent, ConfirmationFormComponent, NavbarComponent, FooterComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
