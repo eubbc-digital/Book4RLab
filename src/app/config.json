@@ -1,0 +1,9 @@
+{
+  "api": {
+    "url": "http://localhost:4200/"
+  },
+  "organizationData": {
+    "name": "Universidad Privada Boliviana",
+    "acronym": "UPB"
+  }
+}
