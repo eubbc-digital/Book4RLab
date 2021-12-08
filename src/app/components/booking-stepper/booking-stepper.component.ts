@@ -31,6 +31,10 @@ export class BookingStepperComponent implements OnInit {
 
   reservationData = { lab: '', datetime: '', kit: '' };
 
+  isEditable: boolean = true;
+
+  bookingLink!: string;
+
   constructor(
     private formBuilder: FormBuilder,
     private labService: LabService,
@@ -77,5 +81,14 @@ export class BookingStepperComponent implements OnInit {
       datetime: 'Wed Dec 08 2021 12:06:20 GMT-0400 (Bolivia Time)',
       kit: this.kits.filter((kit) => kit.id === 1)[0].name,
     };
+  }
+
+  saveReservation(): void {
+    this.isEditable = false;
+    this.delay(1000).then((_) => this.bookingLink = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp');
+  }
+
+  delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

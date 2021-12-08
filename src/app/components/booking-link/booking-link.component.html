@@ -1,0 +1,27 @@
+<h2>Reservation</h2>
+<p>
+  Please save the link or the QR image, you need this to enter your reservation
+  lab.
+</p>
+
+<div *ngIf="isBookingLinkAvailable(); else loading">
+  <p>
+    <strong>Link: </strong><a [href]="bookingLink">{{ bookingLink }}</a>
+  </p>
+  <p><strong>QR:</strong></p>
+  <qr-code
+    class="center-container"
+    [value]="bookingLink"
+    size="300"
+    errorCorrectionLevel="M"
+  ></qr-code>
+</div>
+
+<ng-template #loading>
+  <div class="center-container">
+    <mat-progress-spinner
+      class="spinner"
+      mode="indeterminate"
+    ></mat-progress-spinner>
+  </div>
+</ng-template>

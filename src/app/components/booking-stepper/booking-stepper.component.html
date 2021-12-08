@@ -4,7 +4,7 @@
     linear
     id="stepper"
   >
-    <mat-step [stepControl]="reservationFormGroup">
+    <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable">
       <form [formGroup]="reservationFormGroup" (ngSubmit)="onSubmit()">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
@@ -59,20 +59,30 @@
       </form>
     </mat-step>
 
-    <mat-step>
-      <form>
-        <ng-template matStepLabel>Confirm appointment</ng-template>
-        <app-confirmation-form
-          [reservation]="reservationData"
-        ></app-confirmation-form>
+    <mat-step [editable]="isEditable">
+      <ng-template matStepLabel>Confirm appointment</ng-template>
+      <app-confirmation-form
+        [reservation]="reservationData"
+      ></app-confirmation-form>
 
-        <div class="space-between">
-          <button mat-raised-button matStepperPrevious color="primary">
-            Back
-          </button>
-          <button mat-raised-button matStepperNext color="primary">Done</button>
-        </div>
-      </form>
+      <div class="space-between">
+        <button mat-raised-button matStepperPrevious color="primary">
+          Back
+        </button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          (click)="saveReservation()"
+        >
+          Done
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Reservation done</ng-template>
+      <app-booking-link [bookingLink]="bookingLink"></app-booking-link>
     </mat-step>
   </mat-stepper>
 </mat-card>
