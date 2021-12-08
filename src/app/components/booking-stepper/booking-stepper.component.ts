@@ -15,13 +15,11 @@ import { Kit } from 'src/app/interfaces/kit';
   styleUrls: ['./booking-stepper.component.css'],
 })
 export class BookingStepperComponent implements OnInit {
-  firstFormGroup!: FormGroup;
-  secondFormGroup!: FormGroup;
+  reservationFormGroup!: FormGroup;
+  confirmationFormGroup!: FormGroup;
 
   cols: number;
-  labSelectedValue: number = 1;
 
-  selectedDate = new Date();
   startAt = new Date();
   minDate = new Date();
   maxDate = new Date(new Date().setMonth(new Date().getMonth() + 5));
@@ -32,7 +30,7 @@ export class BookingStepperComponent implements OnInit {
   kits: Kit[] = [];
 
   constructor(
-    private _formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     private labService: LabService,
     private kitService: KitService,
     breakpointObserver: BreakpointObserver
@@ -40,18 +38,22 @@ export class BookingStepperComponent implements OnInit {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
     this.labs = this.labService.getLabs();
     this.kits = this.kitService.getKits();
-    this.onSelect(this.selectedDate);
+
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
 
   ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required],
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required],
+    this.createFormValidation();
+  }
+
+  createFormValidation(): void {
+    this.reservationFormGroup = this.formBuilder.group({
+      selectedLab: ['', Validators.required],
+      selectedKit: ['', Validators.required],
+      selectedHour: ['', Validators.required],
+      selectedDate: ['', Validators.required],
     });
   }
 
@@ -59,7 +61,11 @@ export class BookingStepperComponent implements OnInit {
     this.cols = event.target.innerWidth <= 900 ? 1 : 2;
   }
 
-  onSelect(event: any) {
-    this.selectedDate = event;
-  } 
+  updateSelectedHour(id: number) {
+    this.reservationFormGroup.controls['selectedHour'].setValue(id);
+  }
+
+  onSelectDate(event: Event): void {
+    this.reservationFormGroup.controls['selectedDate'].setValue(event);
+  }
 }

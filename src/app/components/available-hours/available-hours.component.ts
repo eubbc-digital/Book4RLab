@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Output, EventEmitter } from '@angular/core';
+import { LabHourService } from 'src/app/services/lab-hour.service';
+import { LabHour } from 'src/app/interfaces/labHour';
 
 @Component({
   selector: 'app-available-hours',
@@ -6,25 +9,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./available-hours.component.css'],
 })
 export class AvailableHoursComponent implements OnInit {
-  toggleOptions: Array<string> = [
-    '09:00 AM',
-    '10:00 AM',
-    '11:00 AM',
-    '12:00 PM',
-    '13:00 PM',
-    '14:00 PM',
-    '15:00 PM',
-    '16:00 PM',
-    '17:00 PM',
-    '18:00 PM',
-    '19:00 PM',
-    '20:00 PM',
-    '21:00 PM',
-    '22:00 PM',
-  ];
-  selectedValue: string = '12:00 PM';
+  hours: LabHour[] = [];
+  selectedHour: number = 0;
 
-  constructor() {}
+  @Output() selectedHourEvent = new EventEmitter<number>();
+
+  constructor(private labHourService: LabHourService) {
+    this.hours = this.labHourService.getLabHours();
+  }
 
   ngOnInit(): void {}
+
+  updateSelectedHour(): void {
+    this.selectedHourEvent.emit(this.selectedHour);
+  }
 }

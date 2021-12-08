@@ -1,22 +1,23 @@
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
   <mat-stepper
     [orientation]="(stepperOrientation | async)!"
-    #stepper
+    linear
     id="stepper"
   >
-    <mat-step [stepControl]="firstFormGroup">
-      <form [formGroup]="firstFormGroup">
+    <mat-step [stepControl]="reservationFormGroup">
+      <form [formGroup]="reservationFormGroup">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
           <div class="column">
             <h2>Available dates</h2>
             <mat-card class="calendar-card">
               <mat-calendar
-                [selected]="selectedDate"
+                formControlName="selectedDate"
+                [selected]="reservationFormGroup.controls['selectedDate'].value"
                 [startAt]="startAt"
                 [minDate]="minDate"
                 [maxDate]="maxDate"
-                (selectedChange)="onSelect($event)"
+                (selectedChange)="onSelectDate($event)"
               ></mat-calendar>
             </mat-card>
           </div>
@@ -24,39 +25,50 @@
           <div class="column">
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Laboratories</mat-label>
-              <mat-select [value]="labSelectedValue">
-                <mat-option *ngFor="let lab of labs" [value]="lab.id">{{ lab.name }}</mat-option>
+              <mat-select formControlName="selectedLab" required>
+                <mat-option *ngFor="let lab of labs" [value]="lab.id">{{
+                  lab.name
+                }}</mat-option>
               </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Materials</mat-label>
-              <mat-select>
-                <mat-option
-                  *ngFor="let kit of kits"
-                  [value]="kit.id"
-                  >{{ kit.name }}</mat-option
-                >
+              <mat-select formControlName="selectedKit">
+                <mat-option *ngFor="let kit of kits" [value]="kit.id">
+                  {{ kit.name }}
+                </mat-option>
               </mat-select>
             </mat-form-field>
 
-            <app-available-hours></app-available-hours>
+            <app-available-hours
+              (selectedHourEvent)="updateSelectedHour($event)"
+            ></app-available-hours>
           </div>
         </div>
 
         <div class="next-step">
-          <button mat-raised-button matStepperNext color="primary">Next</button>
+          <button
+            mat-raised-button
+            matStepperNext
+            color="primary"
+            [disabled]="!reservationFormGroup.valid"
+          >
+            Next
+          </button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="secondFormGroup">
-      <form [formGroup]="secondFormGroup">
+    <mat-step>
+      <form>
         <ng-template matStepLabel>Confirm appointment</ng-template>
         <app-confirmation-form></app-confirmation-form>
 
         <div class="space-between">
-          <button mat-raised-button matStepperPrevious color="primary">Back</button>
+          <button mat-raised-button matStepperPrevious color="primary">
+            Back
+          </button>
           <button mat-raised-button matStepperNext color="primary">Done</button>
         </div>
       </form>
