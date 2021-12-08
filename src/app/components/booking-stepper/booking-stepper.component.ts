@@ -35,6 +35,11 @@ export class BookingStepperComponent implements OnInit {
 
   bookingLink!: string;
 
+  config = {
+    leftTime: 100,
+    format: 'mm:ss',
+  };
+
   constructor(
     private formBuilder: FormBuilder,
     private labService: LabService,
@@ -85,7 +90,10 @@ export class BookingStepperComponent implements OnInit {
 
   saveReservation(): void {
     this.isEditable = false;
-    this.delay(1000).then((_) => this.bookingLink = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp');
+    this.delay(1000).then(
+      (_) =>
+        (this.bookingLink = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp')
+    );
   }
 
   delay(ms: number) {

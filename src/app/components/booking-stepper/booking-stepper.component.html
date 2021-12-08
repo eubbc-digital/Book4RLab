@@ -1,4 +1,5 @@
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
+  <countdown class="timer" [config]="config"></countdown>
   <mat-stepper
     [orientation]="(stepperOrientation | async)!"
     linear

@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QrCodeModule } from 'ng-qrcode';
+import { CountdownModule } from 'ngx-countdown';
 
 import { AppComponent } from './app.component';
 import { BookingStepperComponent } from './components/booking-stepper/booking-stepper.component';
@@ -23,7 +24,8 @@ import { BookingLinkComponent } from './components/booking-link/booking-link.com
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    QrCodeModule
+    QrCodeModule,
+    CountdownModule
   ],
   providers: [],
   bootstrap: [AppComponent],
