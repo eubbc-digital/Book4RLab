@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-confirmation-form',
@@ -7,17 +9,21 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./confirmation-form.component.css'],
 })
 export class ConfirmationFormComponent implements OnInit {
-  email = new FormControl('', [Validators.required, Validators.email]);
+  @Input() reservation = {
+    lab: '',
+    datetime: '',
+    kit: '',
+  };
 
-  constructor() {}
+  currentUser: User = {};
 
-  ngOnInit(): void {}
+  constructor(private userService: UserService) {}
 
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
-    }
+  ngOnInit(): void {
+    this.getUserData();
+  }
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+  getUserData(): void {
+    this.currentUser = this.userService.getUserData();
   }
 }

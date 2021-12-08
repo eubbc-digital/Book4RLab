@@ -29,6 +29,8 @@ export class BookingStepperComponent implements OnInit {
   labs: Lab[] = [];
   kits: Kit[] = [];
 
+  reservationData = { lab: '', datetime: '', kit: '' };
+
   constructor(
     private formBuilder: FormBuilder,
     private labService: LabService,
@@ -67,5 +69,13 @@ export class BookingStepperComponent implements OnInit {
 
   onSelectDate(event: Event): void {
     this.reservationFormGroup.controls['selectedDate'].setValue(event);
+  }
+
+  onSubmit() {
+    this.reservationData = {
+      lab: this.labs.filter((lab) => lab.id === 1)[0].name,
+      datetime: 'Wed Dec 08 2021 12:06:20 GMT-0400 (Bolivia Time)',
+      kit: this.kits.filter((kit) => kit.id === 1)[0].name,
+    };
   }
 }

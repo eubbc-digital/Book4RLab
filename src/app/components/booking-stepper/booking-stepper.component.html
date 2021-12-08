@@ -5,14 +5,13 @@
     id="stepper"
   >
     <mat-step [stepControl]="reservationFormGroup">
-      <form [formGroup]="reservationFormGroup">
+      <form [formGroup]="reservationFormGroup" (ngSubmit)="onSubmit()">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
           <div class="column">
             <h2>Available dates</h2>
             <mat-card class="calendar-card">
               <mat-calendar
-                formControlName="selectedDate"
                 [selected]="reservationFormGroup.controls['selectedDate'].value"
                 [startAt]="startAt"
                 [minDate]="minDate"
@@ -49,10 +48,10 @@
 
         <div class="next-step">
           <button
-            mat-raised-button
-            matStepperNext
             color="primary"
             [disabled]="!reservationFormGroup.valid"
+            mat-raised-button
+            matStepperNext
           >
             Next
           </button>
@@ -63,7 +62,9 @@
     <mat-step>
       <form>
         <ng-template matStepLabel>Confirm appointment</ng-template>
-        <app-confirmation-form></app-confirmation-form>
+        <app-confirmation-form
+          [reservation]="reservationData"
+        ></app-confirmation-form>
 
         <div class="space-between">
           <button mat-raised-button matStepperPrevious color="primary">
