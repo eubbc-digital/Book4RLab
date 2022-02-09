@@ -1,0 +1,10 @@
+#logo {
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+#main-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
