@@ -6,7 +6,9 @@ import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QrCodeModule } from 'ng-qrcode';
 import { CountdownModule } from 'ngx-countdown';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+// Components
 import { AppComponent } from './app.component';
 import { BookingStepperComponent } from './components/booking-stepper/booking-stepper.component';
 import { AvailableHoursComponent } from './components/available-hours/available-hours.component';
@@ -15,8 +17,19 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BookingLinkComponent } from './components/booking-link/booking-link.component';
 
+// Interceptors
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+
 @NgModule({
-  declarations: [AppComponent, BookingStepperComponent, AvailableHoursComponent, ConfirmationFormComponent, NavbarComponent, FooterComponent, BookingLinkComponent],
+  declarations: [
+    AppComponent,
+    BookingStepperComponent,
+    AvailableHoursComponent,
+    ConfirmationFormComponent,
+    NavbarComponent,
+    FooterComponent,
+    BookingLinkComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -25,9 +38,16 @@ import { BookingLinkComponent } from './components/booking-link/booking-link.com
     FormsModule,
     ReactiveFormsModule,
     QrCodeModule,
-    CountdownModule
+    CountdownModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

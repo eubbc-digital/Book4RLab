@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Kit } from '../interfaces/kit';
-import data from '../data.json';
+import config from '../config.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KitService {
-  constructor() {}
+  private url: string = `${config.api.baseUrl}${config.api.kits}`;
 
-  getKits(): Kit[] {
-    return data.materials;
+  constructor(private http: HttpClient) {}
+
+  getKits(): Observable<Kit[]> {
+    return this.http.get<Kit[]>(this.url);
   }
 }
