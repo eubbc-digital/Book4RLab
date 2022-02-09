@@ -2,7 +2,8 @@
   "api": {
     "baseUrl": "http://10.1.2.107:8000/api/booking/",
     "labs": "laboratories/",
-    "kits": "kits/"
+    "kits": "kits/",
+    "booking": "booking/"
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",
