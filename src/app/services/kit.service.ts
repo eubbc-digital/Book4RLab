@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Kit } from '../interfaces/kit';
 import config from '../config.json';
@@ -14,5 +14,10 @@ export class KitService {
 
   getKits(): Observable<Kit[]> {
     return this.http.get<Kit[]>(this.url);
+  }
+
+  getKitsByLabId(labId: number) {
+    const params = new HttpParams().set('laboratory', labId);
+    return this.http.get<Kit[]>(this.url, { params });
   }
 }
