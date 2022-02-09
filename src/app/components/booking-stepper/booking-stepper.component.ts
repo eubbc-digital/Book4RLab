@@ -33,10 +33,10 @@ export class BookingStepperComponent implements OnInit {
 
   isEditable: boolean = true;
 
-  bookingLink!: string;
+  accessUrl!: string;
 
   config = {
-    leftTime: 100,
+    leftTime: 180,
     format: 'mm:ss',
   };
 
@@ -47,8 +47,6 @@ export class BookingStepperComponent implements OnInit {
     breakpointObserver: BreakpointObserver
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
-    this.labs = this.labService.getLabs();
-    this.kits = this.kitService.getKits();
 
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -57,6 +55,12 @@ export class BookingStepperComponent implements OnInit {
 
   ngOnInit() {
     this.createFormValidation();
+
+    this.labService.getLabs().subscribe((labs) => (this.labs = labs));
+    this.kitService.getKits().subscribe((kits) => {
+      console.log(kits);
+      this.kits = kits;
+    });
   }
 
   createFormValidation(): void {
@@ -92,7 +96,7 @@ export class BookingStepperComponent implements OnInit {
     this.isEditable = false;
     this.delay(1000).then(
       (_) =>
-        (this.bookingLink = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp')
+        (this.accessUrl = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp')
     );
   }
 
