@@ -36,7 +36,7 @@ export class BookingStepperComponent implements OnInit {
   bookingLink!: string;
 
   config = {
-    leftTime: 100,
+    leftTime: 420,
     format: 'mm:ss',
   };
 

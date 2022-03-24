@@ -12,6 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -27,6 +29,8 @@ const MaterialComponents = [
   MatSelectModule,
   MatToolbarModule,
   MatProgressSpinnerModule,
+  MatTabsModule,
+  MatCheckboxModule,
 ];
 
 @NgModule({

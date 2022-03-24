@@ -6,6 +6,8 @@ import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QrCodeModule } from 'ng-qrcode';
 import { CountdownModule } from 'ngx-countdown';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { BookingStepperComponent } from './components/booking-stepper/booking-stepper.component';
@@ -14,9 +16,23 @@ import { ConfirmationFormComponent } from './components/confirmation-form/confir
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BookingLinkComponent } from './components/booking-link/booking-link.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { AccessComponent } from './components/access/access.component';
 
 @NgModule({
-  declarations: [AppComponent, BookingStepperComponent, AvailableHoursComponent, ConfirmationFormComponent, NavbarComponent, FooterComponent, BookingLinkComponent],
+  declarations: [
+    AppComponent,
+    BookingStepperComponent,
+    AvailableHoursComponent,
+    ConfirmationFormComponent,
+    NavbarComponent,
+    FooterComponent,
+    BookingLinkComponent,
+    LoginComponent,
+    RegistrationComponent,
+    AccessComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -25,7 +41,9 @@ import { BookingLinkComponent } from './components/booking-link/booking-link.com
     FormsModule,
     ReactiveFormsModule,
     QrCodeModule,
-    CountdownModule
+    CountdownModule,
+    ToastrModule.forRoot(),
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

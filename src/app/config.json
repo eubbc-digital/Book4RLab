@@ -1,6 +1,10 @@
 {
   "api": {
-    "url": "http://localhost:4200/"
+    "baseUrl": "http://10.1.2.107:8000/api/",
+    "users": {
+      "login": "users/token/",
+      "signup": "users/signup/"
+    }
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",

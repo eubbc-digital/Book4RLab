@@ -15,7 +15,7 @@
     <div class="column">
       <mat-form-field class="item" appearance="fill">
         <mat-label>Last name</mat-label>
-        <input matInput readonly [value]="currentUser.lastName" />
+        <input matInput readonly [value]="currentUser.last_name" />
       </mat-form-field>
     </div>
   </div>
@@ -23,11 +23,6 @@
     <mat-label>Email</mat-label>
     <input matInput readonly [value]="currentUser.email" />
     <mat-icon matSuffix>email</mat-icon>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Code</mat-label>
-    <input matInput readonly [value]="currentUser.code" />
   </mat-form-field>
 
   <div class="reservation-data">

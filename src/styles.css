@@ -23,12 +23,34 @@ body {
   clear: both;
 }
 
+.spacer {
+  flex: 1 1 auto;
+}
+
 @media only screen and (max-width: 700px) {
   .column {
     width: 100%;
   }
 }
 
-.spacer {
-  flex: 1 1 auto;
+.toast-container .ngx-toastr {
+  box-shadow: 0 0 12px #3b3b3b !important;
+}
+
+.input-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+form {
+  padding: 30px;
+}
+
+.access-button {
+  width: 100%;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }

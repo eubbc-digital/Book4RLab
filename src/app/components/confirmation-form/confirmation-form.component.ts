@@ -15,7 +15,7 @@ export class ConfirmationFormComponent implements OnInit {
     kit: '',
   };
 
-  currentUser: User = {};
+  currentUser: User = { email: '', name: '', last_name: '' };
 
   constructor(private userService: UserService) {}
 
