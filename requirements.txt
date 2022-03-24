@@ -1,0 +1,8 @@
+Django==4.0.1
+djangorestframework==3.13.1
+psycopg2==2.9.3
+django-cors-headers==3.11.0
+opencv-python==4.5.5.62
+paho-mqtt==1.6.1
+django-light==0.1.0.post3
+uuid==1.30

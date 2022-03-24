@@ -1,19 +1,24 @@
 from rest_framework import serializers
-from reservations.models import Booking, Kit, Laboratory
+from booking.models import Booking, Kit, Laboratory
+from django.utils.crypto import get_random_string
 
 class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_date', 'end_date', 'available', 'access_url', 'user', 'kit']
+        fields = ['id', 'start_date', 'end_date', 'available', 'access_id', 'password', 'user', 'kit']
         extra_kwargs = {
             'start_date': {'required': True},
             'end_date': {'required': True},
             'available': {'required': True},
-            'access_url': {'required': True},
+            'access_id': {'required': True},
             'user': {'required': True},
             'kit': {'required': True}
         }
+
+    def create(self, validated_data):
+        validated_data['password'] = get_random_string(15)
+        return Booking.objects.create(**validated_data)
 
 
 class KitSerializer(serializers.ModelSerializer):

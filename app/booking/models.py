@@ -1,14 +1,16 @@
 from django.db import models
+from django.conf import settings
+import uuid
 
-# Create your models here.
 class Booking(models.Model):
 
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     available = models.BooleanField(default=True)
-    access_url = models.CharField(max_length=255, default='')
-    user = models.IntegerField()
-    kit = models.ForeignKey('reservations.Kit', related_name='reservations', on_delete=models.CASCADE)
+    access_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    password = models.CharField(max_length=15)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    kit = models.ForeignKey('Kit', related_name='reservations', on_delete=models.CASCADE)
     
     class Meta:
         ordering = ['start_date']
@@ -18,11 +20,10 @@ class Kit(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
     description = models.CharField(max_length=255, default='')
-    laboratory = models.ForeignKey('reservations.Laboratory', related_name='reservations', on_delete=models.CASCADE)
+    laboratory = models.ForeignKey('Laboratory', related_name='reservations', on_delete=models.CASCADE)
     
 
 class Laboratory(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
     description = models.CharField(max_length=255, default='')
-    
