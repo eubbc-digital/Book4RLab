@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
-  <countdown class="timer" [config]="config"></countdown>
+  <countdown class="timer" [config]="timerConfig"></countdown>
   <mat-stepper
     [orientation]="(stepperOrientation | async)!"
     linear
@@ -27,7 +27,11 @@
           <div class="column">
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Laboratories</mat-label>
-              <mat-select formControlName="selectedLab" required>
+              <mat-select
+                (selectionChange)="getKitsByLabId($event.value)"
+                formControlName="selectedLab"
+                required
+              >
                 <mat-option *ngFor="let lab of labs" [value]="lab.id">{{
                   lab.name
                 }}</mat-option>
@@ -85,7 +89,7 @@
 
     <mat-step>
       <ng-template matStepLabel>Reservation done</ng-template>
-      <app-booking-link [bookingLink]="bookingLink"></app-booking-link>
+      <app-booking-link [bookingLink]="accessUrl"></app-booking-link>
     </mat-step>
   </mat-stepper>
 </mat-card>

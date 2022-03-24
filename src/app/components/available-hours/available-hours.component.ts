@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
-import { LabHourService } from 'src/app/services/lab-hour.service';
-import { LabHour } from 'src/app/interfaces/labHour';
 
 @Component({
   selector: 'app-available-hours',
@@ -9,13 +7,13 @@ import { LabHour } from 'src/app/interfaces/labHour';
   styleUrls: ['./available-hours.component.css'],
 })
 export class AvailableHoursComponent implements OnInit {
-  hours: LabHour[] = [];
+  hours: [] = [];
   selectedHour: number = 0;
 
   @Output() selectedHourEvent = new EventEmitter<number>();
 
-  constructor(private labHourService: LabHourService) {
-    this.hours = this.labHourService.getLabHours();
+  constructor() {
+    //this.hours = this.labHourService.getLabHours();
   }
 
   ngOnInit(): void {}

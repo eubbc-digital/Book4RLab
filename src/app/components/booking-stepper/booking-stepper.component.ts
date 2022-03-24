@@ -32,10 +32,11 @@ export class BookingStepperComponent implements OnInit {
   reservationData = { lab: '', datetime: '', kit: '' };
 
   isEditable: boolean = true;
+  noAvailableData: boolean = false;
 
-  bookingLink!: string;
+  accessUrl!: string;
 
-  config = {
+  timerConfig = {
     leftTime: 420,
     format: 'mm:ss',
   };
@@ -47,8 +48,6 @@ export class BookingStepperComponent implements OnInit {
     breakpointObserver: BreakpointObserver
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
-    this.labs = this.labService.getLabs();
-    this.kits = this.kitService.getKits();
 
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -56,10 +55,15 @@ export class BookingStepperComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.createFormValidation();
+    this.setFormValidation();
+
+    this.labService.getLabs().subscribe((labs) => {
+      this.labs = labs;
+      this.selectFirstAvailableLab();
+    });
   }
 
-  createFormValidation(): void {
+  setFormValidation(): void {
     this.reservationFormGroup = this.formBuilder.group({
       selectedLab: ['', Validators.required],
       selectedKit: ['', Validators.required],
@@ -68,11 +72,51 @@ export class BookingStepperComponent implements OnInit {
     });
   }
 
+  selectFirstAvailableLab(): void {
+    if (this.labs.length > 0) {
+      const selectedLab = this.labs[0];
+
+      this.reservationFormGroup.controls['selectedLab'].setValue(
+        selectedLab.id
+      );
+
+      this.getKitsByLabId(selectedLab.id!);
+    }
+  }
+
+  getKitsByLabId(labId: number): void {
+    this.kitService.getKitsByLabId(labId).subscribe((kits) => {
+      this.kits = kits;
+
+      this.setDataFromFirstAvailableKit();
+    });
+  }
+
+  setDataFromFirstAvailableKit(): void {
+    if (this.kits.length > 0) {
+      this.noAvailableData = false;
+
+      const selectedKit = this.kits[0];
+
+      this.reservationFormGroup.controls['selectedKit'].setValue(
+        selectedKit.id
+      );
+
+      this.getDatesByKitId(selectedKit.id);
+    } else {
+      this.noAvailableData = true;
+    }
+  }
+
+  getDatesByKitId(kitId: number): void {
+    // get dates and hours
+  }
+
   handleSize(event: any) {
     this.cols = event.target.innerWidth <= 900 ? 1 : 2;
   }
 
-  updateSelectedHour(id: number) {
+  updateSelectedHour(id: number): void {
     this.reservationFormGroup.controls['selectedHour'].setValue(id);
   }
 
@@ -82,7 +126,7 @@ export class BookingStepperComponent implements OnInit {
 
   onSubmit() {
     this.reservationData = {
-      lab: this.labs.filter((lab) => lab.id === 1)[0].name,
+      lab: '',
       datetime: 'Wed Dec 08 2021 12:06:20 GMT-0400 (Bolivia Time)',
       kit: this.kits.filter((kit) => kit.id === 1)[0].name,
     };
@@ -92,7 +136,7 @@ export class BookingStepperComponent implements OnInit {
     this.isEditable = false;
     this.delay(1000).then(
       (_) =>
-        (this.bookingLink = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp')
+        (this.accessUrl = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp')
     );
   }
 

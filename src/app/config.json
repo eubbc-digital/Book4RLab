@@ -4,10 +4,15 @@
     "users": {
       "login": "users/token/",
       "signup": "users/signup/"
-    }
+    },
+    "labs": "booking/laboratories/",
+    "kits": "booking/kits/",
+    "booking": "booking/booking/"
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",
     "acronym": "UPB"
-  }
+  },
+  "loginUrl": "http://localhost:4200/access",
+  "token": "c5de4a0331f10322c496c183c541cdff26453d92"
 }

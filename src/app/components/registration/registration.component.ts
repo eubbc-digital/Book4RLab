@@ -53,7 +53,7 @@ export class RegistrationComponent implements OnInit {
 
           this.authService.login(newUser).subscribe((response) => {
             this.restartFields(formDirective);
-            // TODO: Save token
+            localStorage.setItem('token', response.body.token);
             this.router.navigateByUrl('');
           });
         }
