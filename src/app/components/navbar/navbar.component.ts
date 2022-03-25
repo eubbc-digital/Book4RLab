@@ -14,4 +14,8 @@ export class NavbarComponent implements OnInit {
   goToLogin(): void {
     this.router.navigateByUrl('/access');
   }
+
+  logout(): void {
+    localStorage.removeItem('token');
+  }
 }
