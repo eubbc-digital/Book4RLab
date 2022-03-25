@@ -1,8 +1,14 @@
 <app-navbar></app-navbar>
 
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
-  <countdown class="timer" [config]="timerConfig"></countdown>
+  <countdown
+    #cd
+    class="timer"
+    [config]="timerConfig"
+    (event)="handleEvent($event)"
+  ></countdown>
   <mat-stepper
+    #stepper
     [orientation]="(stepperOrientation | async)!"
     linear
     id="stepper"

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { StepperOrientation } from '@angular/material/stepper';
+import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LabService } from 'src/app/services/lab.service';
@@ -13,6 +13,8 @@ import { BookingService } from 'src/app/services/booking.service';
 import * as moment from 'moment';
 import config from '../../config.json';
 import { Booking } from 'src/app/interfaces/booking';
+import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -20,6 +22,9 @@ import { Booking } from 'src/app/interfaces/booking';
   styleUrls: ['./booking-stepper.component.css'],
 })
 export class BookingStepperComponent implements OnInit {
+  @ViewChild('cd', { static: false }) private countdown!: CountdownComponent;
+  @ViewChild('stepper', { read: MatStepper }) private stepper!: MatStepper;
+
   reservationFormGroup!: FormGroup;
   confirmationFormGroup!: FormGroup;
 
@@ -55,6 +60,7 @@ export class BookingStepperComponent implements OnInit {
     private labService: LabService,
     private kitService: KitService,
     private bookingService: BookingService,
+    private router: Router,
     breakpointObserver: BreakpointObserver
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
@@ -185,6 +191,15 @@ export class BookingStepperComponent implements OnInit {
     this.bookingService.updateBooking(booking).subscribe((updatedBooking) => {
       this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
       this.publicAccessUrl = `${this.privateAccessUrl}?pwd=${updatedBooking.password}`;
+      this.countdown.stop();
     });
+  }
+
+  handleEvent(e: CountdownEvent) {
+    if (e.action == 'done') {
+      this.countdown.restart();
+      this.stepper.reset();
+      this.selectFirstAvailableLab();
+    }
   }
 }

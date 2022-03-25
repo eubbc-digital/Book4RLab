@@ -28,6 +28,8 @@
   <div class="reservation-data">
     <p><strong>Laboratory:</strong> {{ selectedLab.name }}</p>
     <p><strong>Selected date and time:</strong> {{ getFormattedDate() }}</p>
-    <p><strong>Materials:</strong> {{ selectedKit.name }}</p>
+    <p *ngIf="selectedKit != null">
+      <strong>Materials:</strong> {{ selectedKit.name }}
+    </p>
   </div>
 </div>
