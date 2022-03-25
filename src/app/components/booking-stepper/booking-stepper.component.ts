@@ -11,6 +11,8 @@ import { Kit } from 'src/app/interfaces/kit';
 import { AvailableDate } from 'src/app/interfaces/available-date';
 import { BookingService } from 'src/app/services/booking.service';
 import * as moment from 'moment';
+import config from '../../config.json';
+import { Booking } from 'src/app/interfaces/booking';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -40,7 +42,8 @@ export class BookingStepperComponent implements OnInit {
   isEditable: boolean = true;
   noAvailableData: boolean = false;
 
-  accessUrl!: string;
+  privateAccessUrl!: string;
+  publicAccessUrl!: string;
 
   timerConfig = {
     leftTime: 420,
@@ -174,13 +177,14 @@ export class BookingStepperComponent implements OnInit {
 
   saveReservation(): void {
     this.isEditable = false;
-    this.delay(1000).then(
-      (_) =>
-        (this.accessUrl = 'https://lab/#adsdadasd485555a5a55aadfidjnnnlvpp')
-    );
-  }
+    let booking: Booking = {
+      id: this.bookingId,
+      available: false,
+    };
 
-  delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    this.bookingService.updateBooking(booking).subscribe((updatedBooking) => {
+      this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
+      this.publicAccessUrl = `${this.privateAccessUrl}?pwd=${updatedBooking.password}`;
+    });
   }
 }

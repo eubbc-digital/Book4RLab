@@ -96,7 +96,10 @@
 
     <mat-step>
       <ng-template matStepLabel>Reservation done</ng-template>
-      <app-booking-link [bookingLink]="accessUrl"></app-booking-link>
+      <app-booking-link
+        [privateBookingLink]="privateAccessUrl"
+        [publicBookingLink]="publicAccessUrl"
+      ></app-booking-link>
     </mat-step>
   </mat-stepper>
 </mat-card>

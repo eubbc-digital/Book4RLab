@@ -14,5 +14,6 @@
     "name": "Universidad Privada Boliviana",
     "acronym": "UPB"
   },
-  "loginUrl": "http://localhost:4200/access"
+  "loginUrl": "http://localhost:4200/access",
+  "remoteLabUrl": "https:spectrometrylabupb.edu/"
 }

@@ -4,15 +4,27 @@
   lab.
 </p>
 
-<div *ngIf="isBookingLinkAvailable(); else loading">
+<div *ngIf="areBookingLinksAvailable(); else loading">
   <p>
-    <strong>Link: </strong><a [href]="bookingLink">{{ bookingLink }}</a>
+    <strong>Private access url: </strong
+    ><a [href]="privateBookingLink">{{ privateBookingLink }}</a>
   </p>
   <p><strong>QR:</strong></p>
   <qr-code
     class="center-container"
-    [value]="bookingLink"
-    size="300"
+    [value]="privateBookingLink"
+    size="200"
+    errorCorrectionLevel="M"
+  ></qr-code>
+  <p>
+    <strong>Public access url: </strong
+    ><a [href]="publicBookingLink">{{ publicBookingLink }}</a>
+  </p>
+  <p><strong>QR:</strong></p>
+  <qr-code
+    class="center-container"
+    [value]="publicBookingLink"
+    size="200"
     errorCorrectionLevel="M"
   ></qr-code>
 </div>

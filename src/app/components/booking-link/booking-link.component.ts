@@ -6,12 +6,17 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./booking-link.component.css'],
 })
 export class BookingLinkComponent implements OnInit {
-  @Input() bookingLink!: string;
+  @Input() privateBookingLink!: string;
+  @Input() publicBookingLink!: string;
+
   constructor() {}
 
   ngOnInit(): void {}
 
-  isBookingLinkAvailable(): boolean {
-    return this.bookingLink !== undefined;
+  areBookingLinksAvailable(): boolean {
+    return (
+      this.privateBookingLink !== undefined &&
+      this.publicBookingLink !== undefined
+    );
   }
 }
