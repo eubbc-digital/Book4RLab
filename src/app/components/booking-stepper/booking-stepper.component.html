@@ -40,7 +40,15 @@
 
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Materials</mat-label>
-              <mat-select formControlName="selectedKit">
+              <mat-select
+                formControlName="selectedKit"
+                (selectionChange)="
+                  getHoursByKitIdAndDate(
+                    $event.value,
+                    reservationFormGroup.controls['selectedDate'].value
+                  )
+                "
+              >
                 <mat-option *ngFor="let kit of kits" [value]="kit.id">
                   {{ kit.name }}
                 </mat-option>
@@ -48,6 +56,7 @@
             </mat-form-field>
 
             <app-available-hours
+              [hours]="availableHoursBySelectedDate"
               (selectedHourEvent)="updateSelectedHour($event)"
             ></app-available-hours>
           </div>

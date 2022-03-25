@@ -4,6 +4,7 @@ export interface Booking {
   end_date: string;
   available: boolean;
   access_url?: string;
+  password?: string;
   user?: number;
   kit: number;
 }

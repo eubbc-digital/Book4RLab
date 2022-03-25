@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import config from '../config.json';
+import { Booking } from '../interfaces/booking';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +12,9 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  getBookingListByKitId(kitId: number): Observable<any> {
+  getBookingListByKitId(kitId: number): Observable<Booking[]> {
     let params = new HttpParams().set('kit', kitId);
 
-    return this.http.get<any>(this.url, { params });
+    return this.http.get<Booking[]>(this.url, { params });
   }
 }

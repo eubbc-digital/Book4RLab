@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
+import { AvailableDate } from 'src/app/interfaces/available-date';
 
 @Component({
   selector: 'app-available-hours',
@@ -7,18 +8,16 @@ import { Output, EventEmitter } from '@angular/core';
   styleUrls: ['./available-hours.component.css'],
 })
 export class AvailableHoursComponent implements OnInit {
-  hours: [] = [];
-  selectedHour: number = 0;
+  bookingId: number = 0;
 
+  @Input() hours: AvailableDate[] = [];
   @Output() selectedHourEvent = new EventEmitter<number>();
 
-  constructor() {
-    //this.hours = this.labHourService.getLabHours();
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 
   updateSelectedHour(): void {
-    this.selectedHourEvent.emit(this.selectedHour);
+    this.selectedHourEvent.emit(this.bookingId);
   }
 }

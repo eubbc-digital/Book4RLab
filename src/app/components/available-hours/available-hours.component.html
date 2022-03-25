@@ -2,15 +2,15 @@
   <h2>Available hours</h2>
   <div *ngIf="hours.length > 0; else elseBlock">
     <mat-button-toggle-group
-      [(ngModel)]="selectedHour"
+      [(ngModel)]="bookingId"
       (change)="updateSelectedHour()"
     >
       <mat-button-toggle
         color="primary"
         *ngFor="let item of hours"
-        [value]="item"
+        [value]="item.hour.bookingId"
       >
-        {{ item }}
+        {{ item.hour.formattedHour }}
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>

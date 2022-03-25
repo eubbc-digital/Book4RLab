@@ -8,6 +8,9 @@ import { LabService } from 'src/app/services/lab.service';
 import { KitService } from 'src/app/services/kit.service';
 import { Lab } from 'src/app/interfaces/lab';
 import { Kit } from 'src/app/interfaces/kit';
+import { AvailableDate } from 'src/app/interfaces/available-date';
+import { BookingService } from 'src/app/services/booking.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -24,10 +27,14 @@ export class BookingStepperComponent implements OnInit {
   minDate = new Date();
   maxDate = new Date(new Date().setMonth(new Date().getMonth() + 5));
 
+  dateFormat: string = 'MM/DD/YYYY';
+  hourFormat: string = 'hh:mm a';
+
   stepperOrientation: Observable<StepperOrientation>;
 
   labs: Lab[] = [];
   kits: Kit[] = [];
+  availableHoursBySelectedDate: AvailableDate[] = [];
 
   reservationData = { lab: '', datetime: '', kit: '' };
 
@@ -45,6 +52,7 @@ export class BookingStepperComponent implements OnInit {
     private formBuilder: FormBuilder,
     private labService: LabService,
     private kitService: KitService,
+    private bookingService: BookingService,
     breakpointObserver: BreakpointObserver
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
@@ -61,6 +69,10 @@ export class BookingStepperComponent implements OnInit {
       this.labs = labs;
       this.selectFirstAvailableLab();
     });
+  }
+
+  handleSize(event: any) {
+    this.cols = event.target.innerWidth <= 900 ? 1 : 2;
   }
 
   setFormValidation(): void {
@@ -86,7 +98,7 @@ export class BookingStepperComponent implements OnInit {
 
   getKitsByLabId(labId: number): void {
     this.kitService.getKitsByLabId(labId).subscribe((kits) => {
-      this.kits = kits;
+      this.kits = kits.reverse();
 
       this.setDataFromFirstAvailableKit();
     });
@@ -101,27 +113,53 @@ export class BookingStepperComponent implements OnInit {
       this.reservationFormGroup.controls['selectedKit'].setValue(
         selectedKit.id
       );
-
-      this.getDatesByKitId(selectedKit.id);
+      this.getHoursByKitIdAndDate(selectedKit.id, this.startAt);
     } else {
       this.noAvailableData = true;
     }
   }
 
-  getDatesByKitId(kitId: number): void {
-    // get dates and hours
+  getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
+    let availableDates: AvailableDate[] = [];
+    this.bookingService
+      .getBookingListByKitId(kitId)
+      .subscribe((bookingList) => {
+        bookingList.forEach((booking) => {
+          if (booking.available) {
+            let formattedDate = moment(booking.start_date).format(
+              this.dateFormat
+            );
+            let formattedHour = moment(booking.start_date).format(
+              this.hourFormat
+            );
+            let availableDate = {
+              formattedDate: formattedDate,
+              hour: {
+                bookingId: booking.id,
+                formattedHour: formattedHour,
+              },
+            };
+            availableDates.push(availableDate);
+          }
+        });
+
+        this.availableHoursBySelectedDate = availableDates.filter(
+          (availableDate) =>
+            availableDate.formattedDate ===
+            moment(selectedDate).format(this.dateFormat)
+        );
+      });
   }
 
-  handleSize(event: any) {
-    this.cols = event.target.innerWidth <= 900 ? 1 : 2;
+  updateSelectedHour(bookingId: number): void {
+    this.reservationFormGroup.controls['selectedHour'].setValue(bookingId);
+    // TODO: update booking to unavailable
   }
 
-  updateSelectedHour(id: number): void {
-    this.reservationFormGroup.controls['selectedHour'].setValue(id);
-  }
-
-  onSelectDate(event: Event): void {
+  onSelectDate(event: any): void {
     this.reservationFormGroup.controls['selectedDate'].setValue(event);
+    let kitId = this.reservationFormGroup.controls['selectedKit'].value;
+    this.getHoursByKitIdAndDate(kitId, event);
   }
 
   onSubmit() {
