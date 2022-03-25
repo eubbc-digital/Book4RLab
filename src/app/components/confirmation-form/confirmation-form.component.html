@@ -26,8 +26,8 @@
   </mat-form-field>
 
   <div class="reservation-data">
-    <p><strong>Laboratory:</strong> {{ reservation.lab }}</p>
-    <p><strong>Selected date and time:</strong> {{ reservation.datetime }}</p>
-    <p><strong>Materials:</strong> {{ reservation.kit }}</p>
+    <p><strong>Laboratory:</strong> {{ selectedLab.name }}</p>
+    <p><strong>Selected date and time:</strong> {{ getFormattedDate() }}</p>
+    <p><strong>Materials:</strong> {{ selectedKit.name }}</p>
   </div>
 </div>

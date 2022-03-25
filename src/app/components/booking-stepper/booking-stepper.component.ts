@@ -22,6 +22,7 @@ export class BookingStepperComponent implements OnInit {
   confirmationFormGroup!: FormGroup;
 
   cols: number;
+  bookingId: number = 0;
 
   startAt = new Date();
   minDate = new Date();
@@ -35,8 +36,6 @@ export class BookingStepperComponent implements OnInit {
   labs: Lab[] = [];
   kits: Kit[] = [];
   availableHoursBySelectedDate: AvailableDate[] = [];
-
-  reservationData = { lab: '', datetime: '', kit: '' };
 
   isEditable: boolean = true;
   noAvailableData: boolean = false;
@@ -84,13 +83,23 @@ export class BookingStepperComponent implements OnInit {
     });
   }
 
+  get selectedKit(): Kit {
+    return this.reservationFormGroup.controls['selectedKit'].value;
+  }
+
+  get selectedLab(): Lab {
+    return this.reservationFormGroup.controls['selectedLab'].value;
+  }
+
+  get selectedDate(): Date {
+    return this.reservationFormGroup.controls['selectedDate'].value;
+  }
+
   selectFirstAvailableLab(): void {
     if (this.labs.length > 0) {
       const selectedLab = this.labs[0];
 
-      this.reservationFormGroup.controls['selectedLab'].setValue(
-        selectedLab.id
-      );
+      this.reservationFormGroup.controls['selectedLab'].setValue(selectedLab);
 
       this.getKitsByLabId(selectedLab.id!);
     }
@@ -110,9 +119,7 @@ export class BookingStepperComponent implements OnInit {
 
       const selectedKit = this.kits[0];
 
-      this.reservationFormGroup.controls['selectedKit'].setValue(
-        selectedKit.id
-      );
+      this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
       this.getHoursByKitIdAndDate(selectedKit.id, this.startAt);
     } else {
       this.noAvailableData = true;
@@ -153,21 +160,16 @@ export class BookingStepperComponent implements OnInit {
 
   updateSelectedHour(bookingId: number): void {
     this.reservationFormGroup.controls['selectedHour'].setValue(bookingId);
-    // TODO: update booking to unavailable
   }
 
   onSelectDate(event: any): void {
     this.reservationFormGroup.controls['selectedDate'].setValue(event);
-    let kitId = this.reservationFormGroup.controls['selectedKit'].value;
-    this.getHoursByKitIdAndDate(kitId, event);
+    let kit = this.reservationFormGroup.controls['selectedKit'].value;
+    this.getHoursByKitIdAndDate(kit.id, event);
   }
 
-  onSubmit() {
-    this.reservationData = {
-      lab: '',
-      datetime: 'Wed Dec 08 2021 12:06:20 GMT-0400 (Bolivia Time)',
-      kit: this.kits.filter((kit) => kit.id === 1)[0].name,
-    };
+  followNextStep() {
+    this.bookingId = this.reservationFormGroup.controls['selectedHour'].value;
   }
 
   saveReservation(): void {

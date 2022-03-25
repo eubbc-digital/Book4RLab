@@ -8,7 +8,7 @@
     id="stepper"
   >
     <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable">
-      <form [formGroup]="reservationFormGroup" (ngSubmit)="onSubmit()">
+      <form [formGroup]="reservationFormGroup" (ngSubmit)="followNextStep()">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
           <div class="column">
@@ -32,7 +32,7 @@
                 formControlName="selectedLab"
                 required
               >
-                <mat-option *ngFor="let lab of labs" [value]="lab.id">{{
+                <mat-option *ngFor="let lab of labs" [value]="lab">{{
                   lab.name
                 }}</mat-option>
               </mat-select>
@@ -43,13 +43,10 @@
               <mat-select
                 formControlName="selectedKit"
                 (selectionChange)="
-                  getHoursByKitIdAndDate(
-                    $event.value,
-                    reservationFormGroup.controls['selectedDate'].value
-                  )
+                  getHoursByKitIdAndDate($event.value.id, selectedDate)
                 "
               >
-                <mat-option *ngFor="let kit of kits" [value]="kit.id">
+                <mat-option *ngFor="let kit of kits" [value]="kit">
                   {{ kit.name }}
                 </mat-option>
               </mat-select>
@@ -78,9 +75,10 @@
     <mat-step [editable]="isEditable">
       <ng-template matStepLabel>Confirm appointment</ng-template>
       <app-confirmation-form
-        [reservation]="reservationData"
+        [bookingId]="bookingId"
+        [selectedKit]="selectedKit"
+        [selectedLab]="selectedLab"
       ></app-confirmation-form>
-
       <div class="space-between">
         <button mat-raised-button matStepperPrevious color="primary">
           Back
