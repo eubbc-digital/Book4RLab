@@ -1,8 +1,10 @@
-FROM node:16.13.0 as build-environment
-WORKDIR /app
-COPY . /app/
+FROM node:16.13-alpine AS build
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
-FROM httpd:latest
-COPY --from=build-environment /app/dist/remote-lab-booking/ /usr/local/apache2/htdocs/
+FROM nginx:1.17.1-alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /usr/src/app/dist/remote-lab-booking/ /usr/share/nginx/html
