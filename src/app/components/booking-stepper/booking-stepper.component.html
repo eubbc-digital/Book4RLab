@@ -12,6 +12,7 @@
     [orientation]="(stepperOrientation | async)!"
     linear
     id="stepper"
+    (selectionChange)="onStepChange($event)"
   >
     <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable">
       <form [formGroup]="reservationFormGroup" (ngSubmit)="followNextStep()">
@@ -60,6 +61,7 @@
 
             <app-available-hours
               [hours]="availableHoursBySelectedDate"
+              (unavailableHoursEvent)="resetSelectedHour()"
               (selectedHourEvent)="updateSelectedHour($event)"
             ></app-available-hours>
           </div>
@@ -79,21 +81,26 @@
     </mat-step>
 
     <mat-step [editable]="isEditable">
-      <ng-template matStepLabel>Confirm appointment</ng-template>
+      <ng-template matStepLabel>Confirm reservation</ng-template>
       <app-confirmation-form
         [bookingId]="bookingId"
         [selectedKit]="selectedKit"
         [selectedLab]="selectedLab"
       ></app-confirmation-form>
       <div class="space-between">
-        <button mat-raised-button matStepperPrevious color="primary">
+        <button
+          mat-raised-button
+          matStepperPrevious
+          color="primary"
+          (click)="undoReservation()"
+        >
           Back
         </button>
         <button
           mat-raised-button
           matStepperNext
           color="primary"
-          (click)="saveReservation()"
+          (click)="confirmReservation()"
         >
           Done
         </button>
@@ -101,8 +108,9 @@
     </mat-step>
 
     <mat-step>
-      <ng-template matStepLabel>Reservation done</ng-template>
+      <ng-template matStepLabel>Reservation details</ng-template>
       <app-booking-link
+        [startDate]="reservationDate"
         [privateBookingLink]="privateAccessUrl"
         [publicBookingLink]="publicAccessUrl"
       ></app-booking-link>

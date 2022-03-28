@@ -46,7 +46,12 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     ReactiveFormsModule,
     QrCodeModule,
     CountdownModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      closeButton: true,
+      preventDuplicates: true,
+      progressBar: true,
+    }),
     HttpClientModule,
     HttpClientModule,
   ],
