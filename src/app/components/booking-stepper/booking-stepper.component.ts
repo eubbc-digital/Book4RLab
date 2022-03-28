@@ -14,7 +14,7 @@ import * as moment from 'moment';
 import config from '../../config.json';
 import { Booking } from 'src/app/interfaces/booking';
 import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
-import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -36,6 +36,7 @@ export class BookingStepperComponent implements OnInit {
   maxDate = new Date(new Date().setMonth(new Date().getMonth() + 5));
 
   dateFormat: string = 'MM/DD/YYYY';
+  dateTimeFormat: string = 'MMMM Do YYYY, h:mm a';
   hourFormat: string = 'hh:mm a';
 
   stepperOrientation: Observable<StepperOrientation>;
@@ -49,6 +50,7 @@ export class BookingStepperComponent implements OnInit {
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
+  reservationDate: string = '';
 
   timerConfig = {
     leftTime: 420,
@@ -60,7 +62,7 @@ export class BookingStepperComponent implements OnInit {
     private labService: LabService,
     private kitService: KitService,
     private bookingService: BookingService,
-    private router: Router,
+    private toastService: ToastrService,
     breakpointObserver: BreakpointObserver
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
@@ -75,6 +77,7 @@ export class BookingStepperComponent implements OnInit {
 
     this.labService.getLabs().subscribe((labs) => {
       this.labs = labs;
+      this.initializeCountdown();
       this.selectFirstAvailableLab();
     });
   }
@@ -83,12 +86,16 @@ export class BookingStepperComponent implements OnInit {
     this.cols = event.target.innerWidth <= 900 ? 1 : 2;
   }
 
+  initializeCountdown(): void {
+    this.countdown.stop();
+  }
+
   setFormValidation(): void {
     this.reservationFormGroup = this.formBuilder.group({
       selectedLab: ['', Validators.required],
       selectedKit: ['', Validators.required],
       selectedHour: ['', Validators.required],
-      selectedDate: ['', Validators.required],
+      selectedDate: [this.startAt, Validators.required],
     });
   }
 
@@ -179,27 +186,84 @@ export class BookingStepperComponent implements OnInit {
 
   followNextStep() {
     this.bookingId = this.reservationFormGroup.controls['selectedHour'].value;
+    this.saveReservation();
   }
 
   saveReservation(): void {
-    this.isEditable = false;
     let booking: Booking = {
       id: this.bookingId,
       available: false,
     };
 
+    this.countdown.restart();
+
     this.bookingService.updateBooking(booking).subscribe((updatedBooking) => {
       this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
       this.publicAccessUrl = `${this.privateAccessUrl}?pwd=${updatedBooking.password}`;
-      this.countdown.stop();
+      this.reservationDate = moment(updatedBooking.start_date).format(
+        this.dateTimeFormat
+      );
     });
+  }
+
+  undoReservation(): void {
+    if (this.bookingId !== 0) {
+      let booking: Booking = {
+        id: this.bookingId,
+        available: true,
+      };
+
+      this.bookingService.updateBooking(booking).subscribe((_) => {
+        this.privateAccessUrl = '';
+        this.publicAccessUrl = '';
+        this.reservationDate = '';
+
+        this.countdown.restart();
+        this.countdown.stop();
+
+        this.bookingId = 0;
+      });
+    }
+  }
+
+  confirmReservation(): void {
+    this.isEditable = false;
+
+    if (this.privateAccessUrl !== '' && this.publicAccessUrl !== '') {
+      this.toastService.success('Reservation made successfully');
+      this.countdown.stop();
+      this.bookingId = 0;
+    }
   }
 
   handleEvent(e: CountdownEvent) {
     if (e.action == 'done') {
-      this.countdown.restart();
-      this.stepper.reset();
-      this.selectFirstAvailableLab();
+      this.resetStepper();
+      this.toastService.error(
+        'The remaining time to make a reservation has ended'
+      );
     }
+  }
+
+  resetStepper(): void {
+    this.countdown.restart();
+    this.countdown.stop();
+
+    this.stepper.reset();
+
+    if (this.bookingId !== 0) this.undoReservation();
+
+    this.selectFirstAvailableLab();
+  }
+
+  onStepChange(event: any) {
+    if (event.selectedIndex == 0 && event.previouslySelectedIndex == 1) {
+      this.undoReservation();
+      this.resetSelectedHour();
+    }
+  }
+
+  resetSelectedHour(): void {
+    this.reservationFormGroup.controls['selectedHour'].reset();
   }
 }

@@ -6,6 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./booking-link.component.css'],
 })
 export class BookingLinkComponent implements OnInit {
+  @Input() startDate: string = '';
   @Input() privateBookingLink!: string;
   @Input() publicBookingLink!: string;
 

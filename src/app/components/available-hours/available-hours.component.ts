@@ -12,10 +12,18 @@ export class AvailableHoursComponent implements OnInit {
 
   @Input() hours: AvailableDate[] = [];
   @Output() selectedHourEvent = new EventEmitter<number>();
+  @Output() unavailableHoursEvent = new EventEmitter<number>();
 
   constructor() {}
 
   ngOnInit(): void {}
+
+  ngOnChanges() {
+    if (this.hours.length == 0) {
+      this.unavailableHoursEvent.emit();
+      this.bookingId = 0;
+    }
+  }
 
   updateSelectedHour(): void {
     this.selectedHourEvent.emit(this.bookingId);
