@@ -47,6 +47,7 @@ export class BookingStepperComponent implements OnInit {
 
   isEditable: boolean = true;
   noAvailableData: boolean = false;
+  restartSelectedHour: boolean = false;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -238,8 +239,6 @@ export class BookingStepperComponent implements OnInit {
 
         this.countdown.restart();
         this.countdown.stop();
-
-        this.bookingId = 0;
       });
     }
   }
@@ -249,8 +248,10 @@ export class BookingStepperComponent implements OnInit {
 
     if (this.privateAccessUrl !== '' && this.publicAccessUrl !== '') {
       this.toastService.success('Reservation made successfully');
+
       this.countdown.stop();
-      this.bookingId = 0;
+
+      this.resetBookingId();
     }
   }
 
@@ -269,7 +270,10 @@ export class BookingStepperComponent implements OnInit {
 
     this.stepper.reset();
 
-    if (this.bookingId !== 0) this.undoReservation();
+    if (this.bookingId !== 0) {
+      this.undoReservation();
+      this.resetBookingId();
+    }
 
     this.selectFirstAvailableLab();
   }
@@ -277,8 +281,11 @@ export class BookingStepperComponent implements OnInit {
   onStepChange(event: any) {
     if (event.selectedIndex == 0 && event.previouslySelectedIndex == 1) {
       this.undoReservation();
-      this.resetSelectedHour();
     }
+  }
+
+  resetBookingId(): void {
+    this.bookingId = 0;
   }
 
   resetSelectedHour(): void {
