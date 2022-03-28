@@ -148,13 +148,19 @@ export class BookingStepperComponent implements OnInit {
       .getBookingListByKitId(kitId)
       .subscribe((bookingList) => {
         bookingList.forEach((booking) => {
-          if (booking.available) {
-            let formattedDate = moment(booking.start_date).format(
+          if (
+            booking.available &&
+            this.isAvailableDateValid(booking.start_date)
+          ) {
+            let formattedDate = this.getFormattedDate(
+              booking.start_date,
               this.dateFormat
             );
-            let formattedHour = moment(booking.start_date).format(
+            let formattedHour = this.getFormattedDate(
+              booking.start_date,
               this.hourFormat
             );
+
             let availableDate = {
               formattedDate: formattedDate,
               hour: {
@@ -166,12 +172,24 @@ export class BookingStepperComponent implements OnInit {
           }
         });
 
+        let formattedSelectedDate = this.getFormattedDate(
+          selectedDate,
+          this.dateFormat
+        );
+
         this.availableHoursBySelectedDate = availableDates.filter(
           (availableDate) =>
-            availableDate.formattedDate ===
-            moment(selectedDate).format(this.dateFormat)
+            availableDate.formattedDate == formattedSelectedDate
         );
       });
+  }
+
+  isAvailableDateValid(date: string | undefined): boolean {
+    return date !== null && moment(date).isAfter(moment());
+  }
+
+  getFormattedDate(date: string | undefined | Date, format: string): any {
+    return moment(date).format(format);
   }
 
   updateSelectedHour(bookingId: number): void {
