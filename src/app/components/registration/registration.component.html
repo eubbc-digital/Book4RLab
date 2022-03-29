@@ -26,6 +26,13 @@
       [type]="hide ? 'password' : 'text'"
       formControlName="password"
     />
+    <mat-error
+      *ngIf="
+        passwordControl.errors != null && passwordControl.errors['minlength']
+      "
+    >
+      Password must have at least 8 characters.
+    </mat-error>
     <button
       mat-icon-button
       matSuffix
@@ -44,6 +51,9 @@
       [type]="hide ? 'password' : 'text'"
       formControlName="passwordConfirmation"
     />
+    <mat-error *ngIf="isConfirmationPasswordValid()">
+      Password and confirmation password does not match.
+    </mat-error>
     <button
       mat-icon-button
       matSuffix
@@ -54,6 +64,8 @@
       <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
   </mat-form-field>
+
+  <p class="mat-caption">Required fields are marked with *</p>
 
   <button class="access-button" type="submit" mat-raised-button color="primary">
     Sign Up

@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormGroupDirective } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  FormGroupDirective,
+  ValidatorFn,
+  ValidationErrors,
+  AbstractControl,
+} from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -18,8 +25,8 @@ export class RegistrationComponent implements OnInit {
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
-      Validators.required,
       Validators.minLength(8),
+      Validators.required,
     ]),
     passwordConfirmation: new FormControl('', [Validators.required]),
   });
@@ -30,7 +37,28 @@ export class RegistrationComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.registrationForm.controls['passwordConfirmation'].addValidators(
+      this.checkPasswords
+    );
+  }
+
+  checkPasswords: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    let pass = this.registrationForm.controls['password'].value;
+    let confirmPass =
+      this.registrationForm.controls['passwordConfirmation'].value;
+    return pass === confirmPass ? null : { notSame: true };
+  };
+
+  get passwordControl() {
+    return this.registrationForm.controls['password'];
+  }
+
+  get passwordConfirmationControl() {
+    return this.registrationForm.controls['passwordConfirmation'];
+  }
 
   saveUser(formDirective: FormGroupDirective): void {
     const user: User = {
@@ -69,5 +97,12 @@ export class RegistrationComponent implements OnInit {
   restartFields(formDirective: FormGroupDirective): void {
     formDirective.resetForm();
     this.registrationForm.reset();
+  }
+
+  isConfirmationPasswordValid(): boolean {
+    return (
+      this.passwordConfirmationControl.errors !== null &&
+      this.passwordConfirmationControl.errors['notSame']
+    );
   }
 }
