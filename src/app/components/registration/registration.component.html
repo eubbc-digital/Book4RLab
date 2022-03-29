@@ -23,7 +23,7 @@
     <mat-label>Password</mat-label>
     <input
       matInput
-      [type]="hide ? 'password' : 'text'"
+      [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"
     />
     <mat-error
@@ -36,11 +36,12 @@
     <button
       mat-icon-button
       matSuffix
-      (click)="hide = !hide"
+      (click)="hidePassword = !hidePassword"
       [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide"
+      [attr.aria-pressed]="hidePassword"
+      tabindex="-1"
     >
-      <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
   </mat-form-field>
 
@@ -48,20 +49,23 @@
     <mat-label>Password confirmation</mat-label>
     <input
       matInput
-      [type]="hide ? 'password' : 'text'"
+      [type]="hidePasswordConfirmation ? 'password' : 'text'"
       formControlName="passwordConfirmation"
     />
-    <mat-error *ngIf="isConfirmationPasswordValid()">
+    <mat-error *ngIf="isPasswordConfirmationValid()">
       Password and confirmation password does not match.
     </mat-error>
     <button
       mat-icon-button
       matSuffix
-      (click)="hide = !hide"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide"
+      (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
+      [attr.aria-label]="'Hide password confirmation'"
+      [attr.aria-pressed]="hidePasswordConfirmation"
+      tabindex="-1"
     >
-      <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      <mat-icon>{{
+        hidePasswordConfirmation ? "visibility_off" : "visibility"
+      }}</mat-icon>
     </button>
   </mat-form-field>
 

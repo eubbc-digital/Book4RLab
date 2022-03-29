@@ -19,7 +19,9 @@ import { User } from 'src/app/interfaces/user';
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit {
-  hide: boolean = true;
+  hidePassword: boolean = true;
+  hidePasswordConfirmation: boolean = true;
+
   registrationForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
@@ -99,7 +101,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationForm.reset();
   }
 
-  isConfirmationPasswordValid(): boolean {
+  isPasswordConfirmationValid(): boolean {
     return (
       this.passwordConfirmationControl.errors !== null &&
       this.passwordConfirmationControl.errors['notSame']
