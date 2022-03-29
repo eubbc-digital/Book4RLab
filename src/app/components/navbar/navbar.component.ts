@@ -1,5 +1,11 @@
+import {
+  BreakpointObserver,
+  Breakpoints,
+  BreakpointState,
+} from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +13,24 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(private router: Router) {}
+  isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
+    Breakpoints.Handset
+  );
+
+  constructor(
+    private router: Router,
+    private breakPointObserver: BreakpointObserver
+  ) {}
 
   ngOnInit(): void {}
+
+  goToBooking(): void {
+    this.router.navigateByUrl('/');
+  }
+
+  goToReservationList(): void {
+    this.router.navigateByUrl('/reservation-list');
+  }
 
   goToLogin(): void {
     this.router.navigateByUrl('/access');

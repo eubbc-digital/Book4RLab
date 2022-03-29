@@ -23,6 +23,7 @@ import { AccessComponent } from './components/access/access.component';
 
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { ReservationListComponent } from './components/reservation-list/reservation-list.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     LoginComponent,
     RegistrationComponent,
     AccessComponent,
+    ReservationListComponent,
   ],
   imports: [
     BrowserModule,

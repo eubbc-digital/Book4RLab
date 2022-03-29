@@ -1,11 +1,47 @@
 <mat-toolbar color="primary">
-  <div id="main-label">
+  <div id="main-label" (click)="goToBooking()">
     <img id="logo" src="../../../assets/logo.png" alt="logo" width="30px" />
     <span>Remote Lab Booking</span>
   </div>
   <span class="spacer"></span>
-  <button mat-button aria-label="Login icon" (click)="goToLogin()">
-    <mat-icon>login</mat-icon>
-    Logout
+  <button
+    type="button"
+    aria-label="side nav"
+    [matMenuTriggerFor]="menu"
+    mat-icon-button
+    *ngIf="(isHandset | async)!.matches; else navbarButtons"
+  >
+    <mat-icon aria-label="Side nav icon">menu</mat-icon>
   </button>
+
+  <mat-menu class="navbar-menu" #menu="matMenu">
+    <button
+      mat-menu-item
+      aria-label="Reservation list icon"
+      (click)="goToReservationList()"
+    >
+      <mat-icon>list</mat-icon>
+      <span> Reservations</span>
+    </button>
+    <button mat-menu-item aria-label="Logout icon" (click)="goToLogin()">
+      <mat-icon>login</mat-icon>
+      <span>Logout </span>
+    </button>
+  </mat-menu>
+
+  <ng-template #navbarButtons>
+    <button
+      mat-button
+      aria-label="Reservation list icon"
+      (click)="goToReservationList()"
+    >
+      <mat-icon>list</mat-icon>
+      Reservations
+    </button>
+
+    <button mat-button aria-label="Logout icon" (click)="goToLogin()">
+      <mat-icon>login</mat-icon>
+      Logout
+    </button>
+  </ng-template>
 </mat-toolbar>
