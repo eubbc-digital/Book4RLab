@@ -48,6 +48,7 @@ export class BookingStepperComponent implements OnInit {
   isEditable: boolean = true;
   noAvailableData: boolean = false;
   restartSelectedHour: boolean = false;
+  showSpinner: boolean = true;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -147,6 +148,7 @@ export class BookingStepperComponent implements OnInit {
   }
 
   getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
+    this.showSpinner = true;
     let availableDates: AvailableDate[] = [];
     this.bookingService
       .getBookingListByKitId(kitId)
@@ -185,6 +187,7 @@ export class BookingStepperComponent implements OnInit {
           (availableDate) =>
             availableDate.formattedDate == formattedSelectedDate
         );
+        this.showSpinner = false;
       });
   }
 

@@ -11,6 +11,7 @@ export class AvailableHoursComponent implements OnInit {
   bookingId: number = 0;
 
   @Input() hours: AvailableDate[] = [];
+  @Input() showSpinner: boolean = true;
 
   @Output() selectedHourEvent = new EventEmitter<number>();
   @Output() unavailableHoursEvent = new EventEmitter<number>();

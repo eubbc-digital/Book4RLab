@@ -16,3 +16,12 @@ mat-button-toggle {
   color: black;
   border: none;
 }
+
+.spinner-card {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+.center {
+  margin: 0 auto;
+}
