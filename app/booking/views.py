@@ -39,7 +39,7 @@ class BookingUserList(generics.ListAPIView):
         user_id = self.request.user.id
 
         if user_id is not None:
-            return queryset.filter(user_id=int(user_id))
+            return queryset.filter(reserved_by=int(user_id))
 
         return None
 

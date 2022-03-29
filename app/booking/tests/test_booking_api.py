@@ -11,6 +11,8 @@ from booking.serializers import BookingSerializer
 import datetime
 import uuid
 
+import pytz
+
 BOOKING_URL = reverse('booking:bookinglist')
 
 
@@ -51,7 +53,8 @@ class PrivateBookingApiTests(TestCase):
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit)
 
         res = self.client.get(BOOKING_URL)
@@ -70,21 +73,24 @@ class PrivateBookingApiTests(TestCase):
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=False,
-            user=self.user2,
+            owner=self.user2,
+            reserved_by=None,
             kit=kit)
 
         res = self.client.get(BOOKING_URL + 'public/')
@@ -101,35 +107,40 @@ class PrivateBookingApiTests(TestCase):
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user2,
+            owner=self.user2,
+            reserved_by=None,
             kit=kit)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user2,
+            owner=self.user2,
+            reserved_by=None,
             kit=kit)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             public=True,
-            user=self.user2,
+            owner=self.user2,
+            reserved_by=None,
             kit=kit)
 
         res = self.client.get(BOOKING_URL + 'public/?start_date=2004-01-01T0:00:00Z')
@@ -149,7 +160,7 @@ class PrivateBookingApiTests(TestCase):
             'public': True,
             'access_id': uuid.uuid4(),
             'password': 'JKLNXNZUOQEJLKD',
-            'user': self.user.id,
+            'owner': self.user.id,
             'kit': str(kit.id)
         }
         
@@ -160,7 +171,7 @@ class PrivateBookingApiTests(TestCase):
             end_date=payload['end_date'],
             available=payload['available'],
             public=payload['public'],
-            user=payload['user'],
+            owner=payload['owner'],
             kit=payload['kit']
         ).exists()
 
@@ -173,7 +184,8 @@ class PrivateBookingApiTests(TestCase):
             'end_date': datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             'available': False,
             'public': False,
-            'user': self.user.id,
+            'owner': self.user.id,
+            'reserved_by': None,
             'kit': ''
         }
         
@@ -205,7 +217,8 @@ class PrivateBookingApiTests(TestCase):
             public=False,
             access_id=uuid.uuid4(),
             password='JKLNXNZUOQEJLKD',
-            user=self.user,
+            owner=self.user,
+            reserved_by=self.user,
             kit=kit)
 
         res = self.client.get(BOOKING_URL + str(booking.id) + '/')
@@ -219,7 +232,8 @@ class PrivateBookingApiTests(TestCase):
             'public': booking.public,
             'access_id': str(booking.access_id),
             'password': booking.password,
-            'user': booking.user.id,
+            'owner': booking.owner.id,
+            'reserved_by': booking.reserved_by.id,
             'kit': booking.kit.id
         })
 
@@ -232,19 +246,22 @@ class PrivateBookingApiTests(TestCase):
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=None,
             kit=kit2)
 
         res = self.client.get(BOOKING_URL + '?kit=' + str(kit1.id))
@@ -261,25 +278,29 @@ class PrivateBookingApiTests(TestCase):
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=self.user,
             kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user,
+            owner=self.user,
+            reserved_by=self.user,
             kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user2,
+            owner=self.user2,
+            reserved_by=self.user2,
             kit=kit2)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            user=self.user2,
+            owner=self.user2,
+            reserved_by=self.user2,
             kit=kit2)
 
         res = self.client.get(BOOKING_URL + 'me/')
