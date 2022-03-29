@@ -11,6 +11,14 @@
   margin-right: 20px;
 }
 
+@media (max-width: 600px) {
+  .calendar-card {
+    margin-left: -20px;
+    margin-top: 10px;
+    width: 120%;
+  }
+}
+
 form {
   margin-top: 20px;
 }

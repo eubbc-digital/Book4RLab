@@ -78,9 +78,12 @@ export class BookingStepperComponent implements OnInit {
 
     this.labService.getLabs().subscribe((labs) => {
       this.labs = labs;
-      this.initializeCountdown();
       this.selectFirstAvailableLab();
     });
+  }
+
+  ngAfterViewInit() {
+    this.initializeCountdown();
   }
 
   handleSize(event: any) {

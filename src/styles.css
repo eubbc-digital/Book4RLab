@@ -58,3 +58,9 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
+
+@media (max-width: 600px) {
+  .mat-typography h2 {
+    font-size: 17px;
+  }
+}

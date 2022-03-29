@@ -11,5 +11,15 @@
 }
 
 ::ng-deep .mat-menu-panel {
-  width: 250px !important;
+  width: 200px !important;
+}
+
+@media (max-width: 600px) {
+  #logo {
+    width: 25px;
+  }
+
+  #navbar-title {
+    font-size: 16px;
+  }
 }
