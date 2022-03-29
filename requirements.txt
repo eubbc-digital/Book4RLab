@@ -4,4 +4,4 @@ psycopg2==2.9.3
 django-cors-headers==3.11.0
 django-light==0.1.0.post3
 uuid==1.30
-pytz=2022.1
+pytz==2022.1
