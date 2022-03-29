@@ -10,6 +10,7 @@ from booking.serializers import BookingSerializer
 
 import datetime
 import pytz
+import uuid
 
 BOOKING_URL = reverse('booking:bookinglist')
 
@@ -36,6 +37,12 @@ class PrivateBookingApiTests(TestCase):
             'test@upb.edu',
             'Password123'
         )
+
+        self.user2 = get_user_model().objects.create_user(
+            'test2@upb.edu',
+            'Password123'
+        )
+
         self.client.force_authenticate(self.user)
 
     def test_retrieve_booking_list(self):
@@ -45,7 +52,6 @@ class PrivateBookingApiTests(TestCase):
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            access_url='http://remote-lab.upb.edu/GG3883',
             user=self.user,
             kit=kit)
 
@@ -65,7 +71,9 @@ class PrivateBookingApiTests(TestCase):
             'start_date': datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC), 
             'end_date': datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             'available': False,
-            'access_url': 'http://remote-lab.upb.edu/GG3883',
+            'public': True,
+            'access_id': uuid.uuid4(),
+            'password': 'JKLNXNZUOQEJLKD',
             'user': self.user.id,
             'kit': str(kit.id)
         }
@@ -76,10 +84,11 @@ class PrivateBookingApiTests(TestCase):
             start_date=payload['start_date'],
             end_date=payload['end_date'],
             available=payload['available'],
-            access_url=payload['access_url'],
+            public=payload['public'],
             user=payload['user'],
             kit=payload['kit']
         ).exists()
+
         self.assertTrue(exists)
 
     def test_create_booking_without_kit(self):
@@ -88,7 +97,7 @@ class PrivateBookingApiTests(TestCase):
             'start_date': datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC), 
             'end_date': datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             'available': False,
-            'access_url': 'http://remote-lab.upb.edu/GG3883',
+            'public': False,
             'user': self.user.id,
             'kit': ''
         }
@@ -104,7 +113,6 @@ class PrivateBookingApiTests(TestCase):
             'start_date': '', 
             'end_date': '',
             'available': False,
-            'access_url': '',
             'user': '',
             'kit': ''
         }
@@ -119,7 +127,9 @@ class PrivateBookingApiTests(TestCase):
         booking = Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            access_url='http://remote-lab.upb.edu/GG3883',
+            public=False,
+            access_id=uuid.uuid4(),
+            password='JKLNXNZUOQEJLKD',
             user=self.user,
             kit=kit)
 
@@ -131,7 +141,9 @@ class PrivateBookingApiTests(TestCase):
             'start_date': booking.start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
             'end_date': booking.end_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
             'available': booking.available,
-            'access_url': booking.access_url,
+            'public': booking.public,
+            'access_id': str(booking.access_id),
+            'password': booking.password,
             'user': booking.user.id,
             'kit': booking.kit.id
         })
@@ -145,25 +157,57 @@ class PrivateBookingApiTests(TestCase):
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            access_url='http://remote-lab.upb.edu/GG3883',
             user=self.user,
             kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            access_url='http://remote-lab.upb.edu/GG3883',
             user=self.user,
             kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
-            access_url='http://remote-lab.upb.edu/GG3883',
             user=self.user,
             kit=kit2)
 
         res = self.client.get(BOOKING_URL + '?kit=' + str(kit1.id))
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
+
+    def test_retrieve_booking_by_user(self):
+        """Test retrieve booking by user"""
+        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
+        kit1 = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        kit2 = Kit.objects.create(name='Kit 2', description='Spectrometry Labo', laboratory=laboratory)
+        
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            user=self.user,
+            kit=kit1)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            user=self.user,
+            kit=kit1)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            user=self.user2,
+            kit=kit2)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            user=self.user2,
+            kit=kit2)
+
+        res = self.client.get(BOOKING_URL + 'me/')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)

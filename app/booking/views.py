@@ -26,6 +26,22 @@ class BookingList(generics.ListCreateAPIView):
         return queryset
 
 
+class BookingUserList(generics.ListAPIView):
+
+    serializer_class = BookingSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Booking.objects.all()
+        user_id = self.request.user.id
+
+        if user_id is not None:
+            return queryset.filter(user_id=int(user_id))
+
+        return None
+
+
 class BookingDetail(generics.RetrieveUpdateAPIView):
 
     queryset = Booking.objects.all()

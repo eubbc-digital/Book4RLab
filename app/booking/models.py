@@ -7,6 +7,7 @@ class Booking(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     available = models.BooleanField(default=True)
+    public = models.BooleanField(default=False)
     access_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     password = models.CharField(max_length=15)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
