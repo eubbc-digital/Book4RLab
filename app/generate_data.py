@@ -20,6 +20,7 @@ kits_per_lab = 4
 data = []
 pk_lab = 1
 pk_kit = 1
+pk_kit_name = 1
 
 user = {
     'model': 'core.user',
@@ -57,13 +58,17 @@ for laboratory_name in laboratories:
             'model': 'booking.kit',
             'pk': pk_kit,
             'fields': {
-                'name': f'Kit {pk_kit % 5}',
+                'name': f'Kit {pk_kit_name}',
                 'description': 'Description',
                 'laboratory': pk_lab
             }
         }
 
         pk_kit += 1
+        pk_kit_name += 1
+
+        if pk_kit_name == kits_per_lab + 1:
+            pk_kit_name = 1
 
         data.append(kit)
 
@@ -83,12 +88,12 @@ end_date = date(end_year, end_month, end_day)
 delta = end_date - start_date
 
 pk = 1
-total_kits = pk_kit
+total_kits = kits_per_lab * len(laboratories)
 
 for i in range(delta.days + 1):
     day = start_date + timedelta(days=i)
 
-    for pk_kit in range(1, total_kits):
+    for pk_kit in range(1, total_kits + 1):
         for hour in hours:
             start_hour = hour[0]
             end_hour = hour[1]
