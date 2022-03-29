@@ -6,6 +6,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import SuspiciousOperation
 
+import datetime
+import pytz
 
 class BookingList(generics.ListCreateAPIView):
 
@@ -40,6 +42,24 @@ class BookingUserList(generics.ListAPIView):
             return queryset.filter(user_id=int(user_id))
 
         return None
+
+
+class BookingPublicList(generics.ListAPIView):
+
+    serializer_class = BookingSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Booking.objects.filter(public=True)
+
+        start_date = self.request.query_params.get('start_date')
+
+        if start_date is not None:
+            start_date_datetime = datetime.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%SZ')
+            return queryset.filter(start_date__gte=start_date_datetime)
+
+        return queryset
 
 
 class BookingDetail(generics.RetrieveUpdateAPIView):

@@ -9,7 +9,6 @@ from booking.models import Kit, Laboratory, Booking
 from booking.serializers import BookingSerializer
 
 import datetime
-import pytz
 import uuid
 
 BOOKING_URL = reverse('booking:bookinglist')
@@ -61,6 +60,82 @@ class PrivateBookingApiTests(TestCase):
         serializer = BookingSerializer(bookings, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_retrieve_booking_public_list(self):
+        """Test retrieving a list of bookings"""
+        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
+        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user,
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user,
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=False,
+            user=self.user2,
+            kit=kit)
+
+        res = self.client.get(BOOKING_URL + 'public/')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
+
+    def test_retrieve_booking_public_list_by_start_date(self):
+        """Test retrieving a list of bookings with start date"""
+        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
+        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user,
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user,
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user2,
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user2,
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            user=self.user2,
+            kit=kit)
+
+        res = self.client.get(BOOKING_URL + 'public/?start_date=2004-01-01T0:00:00Z')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 3)
 
     def test_create_booking_successful(self):
         """Test create a new kit"""
