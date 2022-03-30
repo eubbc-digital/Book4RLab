@@ -246,6 +246,41 @@ class PrivateBookingApiTests(TestCase):
             'kit': booking.kit.id
         })
 
+    def test_update_booking_detail_with_registering_user(self):
+        """Test update a booking with registering user"""
+        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
+        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        
+        booking = Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=False,
+            access_id=uuid.uuid4(),
+            password='JKLNXNZUOQEJLKD',
+            owner=self.user,
+            reserved_by=None,
+            kit=kit)
+
+        payload = {
+            'available': True
+        }
+
+        res = self.client.patch(BOOKING_URL + str(booking.id) + '/?register=true', payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, {
+            'id': booking.id,
+            'start_date': booking.start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            'end_date': booking.end_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            'available': True,
+            'public': booking.public,
+            'access_id': str(booking.access_id),
+            'password': booking.password,
+            'owner': booking.owner.id,
+            'reserved_by': self.user.id,
+            'kit': booking.kit.id
+        })
+
     def test_retrieve_booking_by_kit_id(self):
         """Test retrieve all bookings with kit id"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')

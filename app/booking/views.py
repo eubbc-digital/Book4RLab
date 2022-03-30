@@ -5,6 +5,8 @@ from booking.models import Booking, Kit, Laboratory
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import SuspiciousOperation
+from rest_framework.response import Response
+from rest_framework import status
 
 import datetime
 
@@ -67,6 +69,25 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
     serializer_class = BookingSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        register = self.request.query_params.get('register')
+
+        if register is not None and register == 'true':
+            instance.reserved_by = self.request.user
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+
+        return Response(serializer.data)
 
 
 class KitList(generics.ListCreateAPIView):
