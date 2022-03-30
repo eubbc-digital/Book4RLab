@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import SuspiciousOperation
 
 import datetime
-import pytz
 
 class BookingList(generics.ListCreateAPIView):
 
@@ -51,7 +50,7 @@ class BookingPublicList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = Booking.objects.filter(public=True)
+        queryset = Booking.objects.filter(public=True).exclude(reserved_by__isnull=True)
 
         start_date = self.request.query_params.get('start_date')
 
