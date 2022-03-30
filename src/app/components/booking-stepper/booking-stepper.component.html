@@ -35,7 +35,7 @@
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Laboratories</mat-label>
               <mat-select
-                (selectionChange)="getKitsByLabId($event.value)"
+                (selectionChange)="getKitsByLabId($event.value.id)"
                 formControlName="selectedLab"
                 required
               >
