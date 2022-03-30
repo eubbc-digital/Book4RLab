@@ -7,3 +7,7 @@ mat-form-field {
 .reservation-data {
   margin-top: 10px;
 }
+
+.checkbox {
+  margin-left: 10px;
+}

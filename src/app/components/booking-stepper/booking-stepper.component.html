@@ -88,6 +88,7 @@
         [bookingId]="bookingId"
         [selectedKit]="selectedKit"
         [selectedLab]="selectedLab"
+        (reservationTypeEvent)="updateReservationType($event)"
       ></app-confirmation-form>
       <div class="space-between">
         <button

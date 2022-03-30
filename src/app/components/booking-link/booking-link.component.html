@@ -6,29 +6,34 @@
 
 <p><strong>It will start:</strong> {{ startDate }}.</p>
 
-<div *ngIf="areBookingLinksAvailable(); else loading">
-  <p>
-    <strong>Private access url: </strong
-    ><a [href]="privateBookingLink">{{ privateBookingLink }}</a>
-  </p>
-  <p><strong>QR:</strong></p>
-  <qr-code
-    class="center-container"
-    [value]="privateBookingLink"
-    size="200"
-    errorCorrectionLevel="M"
-  ></qr-code>
-  <p>
-    <strong>Public access url: </strong
-    ><a [href]="publicBookingLink">{{ publicBookingLink }}</a>
-  </p>
-  <p><strong>QR:</strong></p>
-  <qr-code
-    class="center-container"
-    [value]="publicBookingLink"
-    size="200"
-    errorCorrectionLevel="M"
-  ></qr-code>
+<div *ngIf="isBookingLinkAvailable(); else loading">
+  <div>
+    <p>
+      <strong>Private access url: </strong
+      ><a [href]="privateBookingLink">{{ privateBookingLink }}</a>
+    </p>
+    <p><strong>QR:</strong></p>
+    <qr-code
+      class="center-container"
+      [value]="privateBookingLink"
+      size="200"
+      errorCorrectionLevel="M"
+    ></qr-code>
+  </div>
+
+  <div *ngIf="publicBookingLink !== ''">
+    <p>
+      <strong>Public access url: </strong
+      ><a [href]="publicBookingLink">{{ publicBookingLink }}</a>
+    </p>
+    <p><strong>QR:</strong></p>
+    <qr-code
+      class="center-container"
+      [value]="publicBookingLink"
+      size="200"
+      errorCorrectionLevel="M"
+    ></qr-code>
+  </div>
 </div>
 
 <ng-template #loading>

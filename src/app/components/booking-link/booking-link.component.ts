@@ -14,10 +14,7 @@ export class BookingLinkComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  areBookingLinksAvailable(): boolean {
-    return (
-      this.privateBookingLink !== undefined &&
-      this.publicBookingLink !== undefined
-    );
+  isBookingLinkAvailable(): boolean {
+    return this.privateBookingLink !== undefined;
   }
 }

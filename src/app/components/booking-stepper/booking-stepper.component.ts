@@ -49,6 +49,7 @@ export class BookingStepperComponent implements OnInit {
   noAvailableData: boolean = false;
   restartSelectedHour: boolean = false;
   showSpinner: boolean = true;
+  publicReservation: boolean = false;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -214,17 +215,24 @@ export class BookingStepperComponent implements OnInit {
     this.saveReservation();
   }
 
+  updateReservationType(publicReservation: any): void {
+    this.publicReservation = publicReservation;
+  }
+
   saveReservation(): void {
     let booking: Booking = {
       id: this.bookingId,
       available: false,
+      public: this.publicReservation,
     };
 
     this.countdown.restart();
 
     this.bookingService.updateBooking(booking).subscribe((updatedBooking) => {
       this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
-      this.publicAccessUrl = `${this.privateAccessUrl}?pwd=${updatedBooking.password}`;
+      this.publicAccessUrl = this.publicReservation
+        ? `${this.privateAccessUrl}?pwd=${updatedBooking.password}`
+        : '';
       this.reservationDate = moment(updatedBooking.start_date).format(
         this.dateTimeFormat
       );
@@ -236,6 +244,7 @@ export class BookingStepperComponent implements OnInit {
       let booking: Booking = {
         id: this.bookingId,
         available: true,
+        public: false,
       };
 
       this.bookingService.updateBooking(booking).subscribe((_) => {
@@ -252,7 +261,9 @@ export class BookingStepperComponent implements OnInit {
   confirmReservation(): void {
     this.isEditable = false;
 
-    if (this.privateAccessUrl !== '' && this.publicAccessUrl !== '') {
+    if (this.publicReservation) this.saveReservation();
+
+    if (this.privateAccessUrl !== '') {
       this.toastService.success('Reservation made successfully');
 
       this.countdown.stop();

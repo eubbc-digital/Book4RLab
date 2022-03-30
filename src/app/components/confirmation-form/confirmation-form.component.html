@@ -31,5 +31,15 @@
     <p *ngIf="selectedKit != null">
       <strong>Materials:</strong> {{ selectedKit.name }}
     </p>
+    <p>
+      <strong>Reservation:</strong>
+      <mat-checkbox
+        class="checkbox"
+        [(ngModel)]="publicReservation"
+        (change)="updateReservationType()"
+      >
+        Public
+      </mat-checkbox>
+    </p>
   </div>
 </div>

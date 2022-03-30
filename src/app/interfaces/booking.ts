@@ -3,6 +3,7 @@ export interface Booking {
   start_date?: string;
   end_date?: string;
   available: boolean;
+  public: boolean;
   access_id?: string;
   password?: string;
   user?: number;

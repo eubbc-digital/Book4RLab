@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, SimpleChange } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  SimpleChange,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/interfaces/user';
 import { Kit } from 'src/app/interfaces/kit';
@@ -16,6 +23,10 @@ export class ConfirmationFormComponent implements OnInit {
   @Input() bookingId!: number;
   @Input() selectedKit: Kit = { id: 0, name: '' };
   @Input() selectedLab: Lab = { id: 0, name: '' };
+
+  @Output() reservationTypeEvent = new EventEmitter<boolean>();
+
+  publicReservation: boolean = false;
 
   currentUser: User = { email: '', name: '', last_name: '' };
   booking: Booking | undefined;
@@ -54,5 +65,9 @@ export class ConfirmationFormComponent implements OnInit {
       return moment(this.booking?.start_date).format('MMMM Do YYYY, h:mm a');
     }
     return '';
+  }
+
+  updateReservationType(): void {
+    this.reservationTypeEvent.emit(this.publicReservation);
   }
 }
