@@ -19,14 +19,22 @@ class BookingList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Booking.objects.all()
         kit = self.request.query_params.get('kit')
+        start_date = self.request.query_params.get('start_date')
+        end_date = self.request.query_params.get('end_date')
+
+        if start_date is not None and end_date is not None:
+            start_date_datetime = datetime.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%SZ')
+            end_date_datetime = datetime.datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%SZ')
+
+            queryset = queryset.filter(start_date__gte=start_date_datetime, start_date__lt=end_date_datetime)
 
         if kit is not None:
             if not kit.isdigit():
                 raise SuspiciousOperation('Kit id must be a number')
 
-            return queryset.filter(kit_id=int(kit))
+            queryset = queryset.filter(kit_id=int(kit))
 
-        return queryset
+        return queryset.filter(available=True)
 
 
 class BookingUserList(generics.ListAPIView):

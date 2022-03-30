@@ -65,6 +65,52 @@ class PrivateBookingApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
+    def test_retrieve_booking_list_within_date(self):
+        """Test retrieving a list of bookings within date range"""
+        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
+        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            owner=self.user,
+            reserved_by=self.user,
+            password='JKLNXNZUOQEJLKD',
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 13, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            owner=self.user,
+            reserved_by=self.user,
+            password='JKLNXNZUOQEJLKD',
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 13, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 15, 0, tzinfo=pytz.UTC),
+            available=False,
+            public=True,
+            owner=self.user,
+            reserved_by=self.user,
+            password='JKLNXNZUOQEJLKD',
+            kit=kit)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 17, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=False,
+            owner=self.user2,
+            reserved_by=self.user,
+            password='JKLNXNZUOQEJLKD',
+            kit=kit)
+
+        res = self.client.get(BOOKING_URL + '?start_date=2003-5-16T00:00:00Z&end_date=2003-5-17T00:00:00Z')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
+
     def test_retrieve_booking_public_list(self):
         """Test retrieving a list of bookings"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
@@ -103,7 +149,7 @@ class PrivateBookingApiTests(TestCase):
         self.assertEqual(len(res.data), 2)
 
     def test_retrieve_booking_public_list_by_start_date(self):
-        """Test retrieving a list of bookings with start date"""
+        """Test retrieving a list of public bookings with start date"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
         kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
 
