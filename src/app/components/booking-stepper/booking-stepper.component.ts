@@ -228,7 +228,7 @@ export class BookingStepperComponent implements OnInit {
 
     this.countdown.restart();
 
-    this.bookingService.updateBooking(booking).subscribe((updatedBooking) => {
+    this.bookingService.registerBooking(booking).subscribe((updatedBooking) => {
       this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
       this.publicAccessUrl = this.publicReservation
         ? `${this.privateAccessUrl}?pwd=${updatedBooking.password}`
@@ -245,6 +245,7 @@ export class BookingStepperComponent implements OnInit {
         id: this.bookingId,
         available: true,
         public: false,
+        reserved_by: null,
       };
 
       this.bookingService.updateBooking(booking).subscribe((_) => {

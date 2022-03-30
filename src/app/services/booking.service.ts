@@ -22,6 +22,10 @@ export class BookingService {
     return this.http.get<Booking>(`${this.url}${id}/`);
   }
 
+  registerBooking(booking: Booking): Observable<Booking> {
+    return this.http.patch<Booking>(`${this.url}${booking.id}/?register=true`, booking);
+  }
+
   updateBooking(booking: Booking): Observable<Booking> {
     return this.http.patch<Booking>(`${this.url}${booking.id}/`, booking);
   }

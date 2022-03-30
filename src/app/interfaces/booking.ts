@@ -6,6 +6,7 @@ export interface Booking {
   public: boolean;
   access_id?: string;
   password?: string;
-  user?: number;
+  owner?: number;
+  reserved_by?: number | null;
   kit?: number;
 }
