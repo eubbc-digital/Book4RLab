@@ -17,6 +17,11 @@ body {
   width: 50%;
 }
 
+.cols-3 {
+  float: left;
+  width: 33%;
+}
+
 .row:after {
   content: "";
   display: table;
@@ -28,7 +33,7 @@ body {
 }
 
 @media only screen and (max-width: 700px) {
-  .column {
+  .column, .cols-3 {
     width: 100%;
   }
 }
@@ -63,4 +68,8 @@ input[type="password"]::-ms-clear {
   .mat-typography h2 {
     font-size: 17px;
   }
+}
+
+.center {
+  margin: 0 auto;
 }

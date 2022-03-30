@@ -24,6 +24,7 @@ import { AccessComponent } from './components/access/access.component';
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { ReservationListComponent } from './components/reservation-list/reservation-list.component';
+import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ReservationListComponent } from './components/reservation-list/reservat
     RegistrationComponent,
     AccessComponent,
     ReservationListComponent,
+    ReservationCardComponent,
   ],
   imports: [
     BrowserModule,

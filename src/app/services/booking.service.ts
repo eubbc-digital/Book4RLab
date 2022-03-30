@@ -29,4 +29,8 @@ export class BookingService {
   updateBooking(booking: Booking): Observable<Booking> {
     return this.http.patch<Booking>(`${this.url}${booking.id}/`, booking);
   }
+
+  getPersonalBookingList() : Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.url}me/`);
+  }
 }

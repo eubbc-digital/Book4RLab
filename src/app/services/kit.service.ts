@@ -16,8 +16,12 @@ export class KitService {
     return this.http.get<Kit[]>(this.url);
   }
 
-  getKitsByLabId(labId: number) {
+  getKitsByLabId(labId: number): Observable<Kit[]> {
     const params = new HttpParams().set('laboratory', labId);
     return this.http.get<Kit[]>(this.url, { params });
+  }
+
+  getKitById(kitId: number): Observable<Kit> {
+    return this.http.get<Kit>(`${this.url}${kitId}/`);
   }
 }

@@ -1,0 +1,29 @@
+<mat-card class="reservation-card" *ngIf="dataReady">
+  <div class="row">
+    <div class="cols-2">
+      <h2>Reservation N° {{ reservation.id }}</h2>
+      <p><strong>Laboratory:</strong> {{ lab.name }}</p>
+      <p><strong>Kit:</strong> {{ kit.name }}</p>
+      <p>
+        <strong>Start date:</strong>
+        {{ getFormattedDate(reservation.start_date!) }}
+      </p>
+      <p>
+        <strong>End date:</strong>
+        {{ getFormattedDate(reservation.end_date!) }}
+      </p>
+      <p><strong>Type:</strong> {{ getReservationType() }}</p>
+    </div>
+    <div class="col-1 qr">
+      <qr-code
+        [value]="'remotelab.edu'"
+        size="170"
+        errorCorrectionLevel="M"
+      ></qr-code>
+    </div>
+  </div>
+  <p>
+    <strong>Link: </strong>
+    <a class="reservation-link" [href]="getAccessUrl()">{{ getAccessUrl() }}</a>
+  </p>
+</mat-card>

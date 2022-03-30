@@ -15,14 +15,20 @@
   </button>
 
   <mat-menu class="navbar-menu" #menu="matMenu">
+    <button mat-menu-item aria-label="Booking button" (click)="goToBooking()">
+      <mat-icon>book_online</mat-icon>
+      <span> Booking</span>
+    </button>
+
     <button
       mat-menu-item
-      aria-label="Reservation list icon"
+      aria-label="Reservation list button"
       (click)="goToReservationList()"
     >
       <mat-icon>list</mat-icon>
-      <span> Reservations</span>
+      <span> My reservations</span>
     </button>
+
     <button mat-menu-item aria-label="Logout icon" (click)="goToLogin()">
       <mat-icon>login</mat-icon>
       <span>Logout </span>
@@ -30,13 +36,17 @@
   </mat-menu>
 
   <ng-template #navbarButtons>
+    <button mat-button aria-label="Booking button" (click)="goToBooking()">
+      <mat-icon>book_online</mat-icon>
+      Booking
+    </button>
+
     <button
       mat-button
-      aria-label="Reservation list icon"
+      aria-label="Personal reservation list button"
       (click)="goToReservationList()"
     >
-      <mat-icon>list</mat-icon>
-      Reservations
+      My reservations
     </button>
 
     <button mat-button aria-label="Logout icon" (click)="goToLogin()">

@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "http://10.1.2.107:8000/api/",
+    "baseUrl": "http://eubbc-digital.upb.edu:8000/api/",
     "users": {
       "me": "users/me/",
       "login": "users/token/",

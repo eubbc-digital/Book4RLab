@@ -15,4 +15,8 @@ export class LabService {
   getLabs(): Observable<Lab[]> {
     return this.http.get<Lab[]>(this.url);
   }
+
+  getLabById(labId: number): Observable<Lab> {
+    return this.http.get<Lab>(`${this.url}${labId}/`);
+  }
 }

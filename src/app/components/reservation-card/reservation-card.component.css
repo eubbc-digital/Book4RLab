@@ -1,0 +1,45 @@
+.reservation-card {
+  margin: 20px 25px;
+}
+
+.qr {
+  margin-top: 5pxx;
+}
+
+.reservation-link {
+  word-break: break-word;
+}
+
+.cols-2 {
+  float: left;
+  width: 67%;
+}
+
+.col-1 {
+  float: left;
+  width: 33%;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .cols-2,
+  .col-1 {
+    width: 100%;
+  }
+
+  .qr {
+    margin-top: 0px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1500px) {
+  .cols-2 {
+    float: left;
+    width: 55%;
+  }
+
+  .col-1 {
+    float: left;
+    width: 45%;
+  }
+}
