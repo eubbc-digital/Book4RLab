@@ -12,7 +12,7 @@
         <strong>End date:</strong>
         {{ getFormattedDate(reservation.end_date!) }}
       </p>
-      <p><strong>Type:</strong> {{ getReservationType() }}</p>
+      <p *ngIf="privateList"><strong>Type:</strong> {{ getReservationType() }}</p>
     </div>
     <div class="col-1 qr">
       <qr-code

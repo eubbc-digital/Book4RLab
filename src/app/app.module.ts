@@ -27,6 +27,7 @@ import { PrivateReservationsComponent } from './components/private-reservations/
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { PublicReservationsComponent } from './components/public-reservations/public-reservations.component';
 import { CardElevationDirective } from './directives/card-elevation.directive';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { CardElevationDirective } from './directives/card-elevation.directive';
     PrivateReservationsComponent,
     PublicReservationsComponent,
     CardElevationDirective,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,

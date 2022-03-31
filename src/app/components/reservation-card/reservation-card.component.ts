@@ -14,6 +14,7 @@ import config from '../../config.json';
 })
 export class ReservationCardComponent implements OnInit {
   @Input() reservation!: Booking;
+  @Input() privateList: boolean = false;
 
   kit!: Kit;
   lab!: Lab;
@@ -29,7 +30,10 @@ export class ReservationCardComponent implements OnInit {
   }
 
   getAccessUrl(): string {
-    return `${config.remoteLabUrl}${this.reservation.access_id}`;
+    let privateUrl = `${config.remoteLabUrl}${this.reservation.access_id}`;
+    return this.privateList
+      ? privateUrl
+      : `${privateUrl}/pwd=${this.reservation.password}`;
   }
 
   getKit(): void {

@@ -71,25 +71,21 @@
   </form>
 </div>
 
-<div class="reservation-list center">
-  <div class="row" *ngIf="reservationList.length > 0">
+<div class="reservation-list center" *ngIf="reservationList.length > 0">
+  <div class="row">
     <div class="column" *ngFor="let reservation of reservationList">
       <app-reservation-card [reservation]="reservation"></app-reservation-card>
     </div>
   </div>
-
-  <div class="text-center message" *ngIf="showMessage">
-    <p>There are no public reservations in this date range.</p>
-    <img
-      class="image"
-      src="../../../assets/empty-folder.png"
-      alt="Empty folder"
-    />
-  </div>
-
-  <div class="spinner" *ngIf="showSpinner">
-    <div>
-      <mat-spinner [diameter]="80"></mat-spinner>
-    </div>
-  </div>
 </div>
+
+<div class="text-center message" *ngIf="showMessage">
+  <p>There are no public reservations in this date range.</p>
+  <img
+    class="image"
+    src="../../../assets/empty-folder.png"
+    alt="Empty folder"
+  />
+</div>
+
+<app-spinner *ngIf="showSpinner"></app-spinner>
