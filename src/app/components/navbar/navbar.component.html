@@ -22,8 +22,17 @@
 
     <button
       mat-menu-item
-      aria-label="Reservation list button"
-      (click)="goToReservationList()"
+      aria-label="Public reservation list button"
+      (click)="goToPublicReservations()"
+    >
+      <mat-icon>list</mat-icon>
+      <span>Public rooms</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="Personal reservation list button"
+      (click)="goToMyReservations()"
     >
       <mat-icon>list</mat-icon>
       <span> My reservations</span>
@@ -43,8 +52,16 @@
 
     <button
       mat-button
+      aria-label="Public reservation list button"
+      (click)="goToPublicReservations()"
+    >
+      Public rooms
+    </button>
+
+    <button
+      mat-button
       aria-label="Personal reservation list button"
-      (click)="goToReservationList()"
+      (click)="goToMyReservations()"
     >
       My reservations
     </button>

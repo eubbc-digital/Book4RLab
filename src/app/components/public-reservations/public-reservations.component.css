@@ -1,0 +1,28 @@
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+
+.message {
+  height: 450px;
+}
+
+.image {
+  width: 200px;
+}
+
+@media (max-width: 600px) {
+  .spinner {
+    height: 150px;
+  }
+
+  .image {
+    width: 150px;
+  }
+
+  .message {
+    height: 200px;
+  }
+}

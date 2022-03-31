@@ -28,8 +28,12 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
-  goToReservationList(): void {
-    this.router.navigateByUrl('/reservation-list');
+  goToMyReservations(): void {
+    this.router.navigateByUrl('/my-reservations');
+  }
+
+  goToPublicReservations(): void {
+    this.router.navigateByUrl('/public-reservations');
   }
 
   goToLogin(): void {

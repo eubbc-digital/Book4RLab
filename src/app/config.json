@@ -8,7 +8,11 @@
     },
     "labs": "booking/laboratories/",
     "kits": "booking/kits/",
-    "booking": "booking/"
+    "booking": {
+      "url": "booking/",
+      "myList": "booking/me/",
+      "publicReservations": "booking/public/"
+    }
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",

@@ -32,18 +32,13 @@ body {
   flex: 1 1 auto;
 }
 
-@media only screen and (max-width: 700px) {
-  .column, .cols-3 {
-    width: 100%;
-  }
-}
-
 .toast-container .ngx-toastr {
   box-shadow: 0 0 12px #3b3b3b !important;
 }
 
 .input-field {
   width: 100%;
+  padding-left: 10px;
   margin-bottom: 10px;
 }
 
@@ -64,12 +59,53 @@ input[type="password"]::-ms-clear {
   display: none;
 }
 
+.center {
+  margin: 0 auto;
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 17px;
+  padding-top: 30px;
+}
+
+.reservation-list {
+  width: 75%;
+}
+
 @media (max-width: 600px) {
+  .reservation-list {
+    width: 100%;
+  }
+
   .mat-typography h2 {
     font-size: 17px;
   }
+
+  .column,
+  .cols-3 {
+    width: 100%;
+  }
+
+  .input-field {
+    padding: 0px;
+  }
 }
 
-.center {
-  margin: 0 auto;
+@media (min-width: 600px) and (max-width: 1000px) {
+  .reservation-list {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1200px) {
+  .reservation-list {
+    width: 85%;
+  }
 }

@@ -8,7 +8,7 @@ import { Booking } from '../interfaces/booking';
   providedIn: 'root',
 })
 export class BookingService {
-  private url: string = `${config.api.baseUrl}${config.api.booking}`;
+  private url: string = `${config.api.baseUrl}${config.api.booking.url}`;
 
   constructor(private http: HttpClient) {}
 
@@ -23,14 +23,27 @@ export class BookingService {
   }
 
   registerBooking(booking: Booking): Observable<Booking> {
-    return this.http.patch<Booking>(`${this.url}${booking.id}/?register=true`, booking);
+    return this.http.patch<Booking>(
+      `${this.url}${booking.id}/?register=true`,
+      booking
+    );
   }
 
   updateBooking(booking: Booking): Observable<Booking> {
     return this.http.patch<Booking>(`${this.url}${booking.id}/`, booking);
   }
 
-  getPersonalBookingList() : Observable<Booking[]> {
-    return this.http.get<Booking[]>(`${this.url}me/`);
+  getPersonalBookingList(): Observable<Booking[]> {
+    let url = `${config.api.baseUrl}${config.api.booking.myList}`;
+    return this.http.get<Booking[]>(url);
+  }
+
+  getPublicReservations(kitId: number, startDate: string, endDate: string): Observable<Booking[]> {
+    let url = `${config.api.baseUrl}${config.api.booking.publicReservations}`;
+    let params = new HttpParams().set('kit', kitId);
+    params.append('start_date', startDate);
+    params.append('end_date', endDate);
+
+    return this.http.get<Booking[]>(url, { params });
   }
 }

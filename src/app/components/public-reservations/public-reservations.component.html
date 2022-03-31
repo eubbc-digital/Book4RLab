@@ -1,0 +1,95 @@
+<app-navbar></app-navbar>
+
+<div class="reservation-list center">
+  <p class="title">Public reservations</p>
+
+  <form [formGroup]="searcherControlGroup" (ngSubmit)="getPublicBookingList()">
+    <div class="row">
+      <div class="cols-3">
+        <mat-form-field appearance="fill" class="input-field">
+          <mat-label>Laboratories</mat-label>
+          <mat-select
+            formControlName="selectedLab"
+            (selectionChange)="getKitsByLabId($event.value.id)"
+            required
+          >
+            <mat-option *ngFor="let lab of labs" [value]="lab">
+              {{ lab.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="cols-3">
+        <mat-form-field class="input-field" appearance="fill">
+          <mat-label>Kit</mat-label>
+          <mat-select formControlName="selectedKit" required>
+            <mat-option *ngFor="let kit of kits" [value]="kit">
+              {{ kit.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="cols-3">
+        <mat-form-field class="input-field" appearance="fill">
+          <mat-label>Enter a date range</mat-label>
+
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              matStartDate
+              placeholder="Start date"
+              formControlName="startDate"
+              required
+            />
+            <input
+              matEndDate
+              placeholder="End date"
+              formControlName="endDate"
+              required
+            />
+          </mat-date-range-input>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+
+          <mat-error *ngIf="isStartDateInvalid()">
+            Invalid start date.
+          </mat-error>
+          <mat-error *ngIf="isEndDateInvalid()"> Invalid end date. </mat-error>
+          <mat-error *ngIf="isDateRangeIncomplete()">
+            Start date and end date are required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="text-center">
+      <button mat-raised-button type="submit" color="primary">
+        <span>SEARCH</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="reservation-list center">
+  <div class="row" *ngIf="reservationList.length > 0">
+    <div class="column" *ngFor="let reservation of reservationList">
+      <app-reservation-card [reservation]="reservation"></app-reservation-card>
+    </div>
+  </div>
+
+  <div class="text-center message" *ngIf="showMessage">
+    <p>There are no public reservations in this date range.</p>
+    <img
+      class="image"
+      src="../../../assets/empty-folder.png"
+      alt="Empty folder"
+    />
+  </div>
+
+  <div class="spinner" *ngIf="showSpinner">
+    <div>
+      <mat-spinner [diameter]="80"></mat-spinner>
+    </div>
+  </div>
+</div>

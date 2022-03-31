@@ -20,11 +20,12 @@ import { BookingLinkComponent } from './components/booking-link/booking-link.com
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { AccessComponent } from './components/access/access.component';
+import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
+import { PrivateReservationsComponent } from './components/private-reservations/private-reservations.component';
 
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
-import { ReservationListComponent } from './components/reservation-list/reservation-list.component';
-import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
+import { PublicReservationsComponent } from './components/public-reservations/public-reservations.component';
 
 @NgModule({
   declarations: [
@@ -38,8 +39,9 @@ import { ReservationCardComponent } from './components/reservation-card/reservat
     LoginComponent,
     RegistrationComponent,
     AccessComponent,
-    ReservationListComponent,
     ReservationCardComponent,
+    PrivateReservationsComponent,
+    PublicReservationsComponent,
   ],
   imports: [
     BrowserModule,
