@@ -148,10 +148,11 @@ class PrivateBookingApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
 
-    def test_retrieve_booking_public_list_by_start_date(self):
-        """Test retrieving a list of public bookings with start date"""
+    def test_retrieve_booking_public_list_by_date(self):
+        """Test retrieving a list of public bookings within date range and kit"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        kit1 = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        kit2 = Kit.objects.create(name='Kit 2', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -160,7 +161,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -169,7 +170,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -178,7 +179,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -187,7 +188,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            kit=kit1)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -196,12 +197,21 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            kit=kit2)
 
-        res = self.client.get(BOOKING_URL + 'public/?start_date=2004-01-01T0:00:00Z')
+        Booking.objects.create(start_date=datetime.datetime(2008, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2008, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            public=True,
+            owner=self.user2,
+            reserved_by=self.user,
+            password='JKLNXNZUOQEJLKD',
+            kit=kit1)
+
+        res = self.client.get(BOOKING_URL + 'public/?start_date=2004-01-01T0:00:00Z&end_date=2005-01-01T0:00:00Z&kit=' + str(kit1.id))
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(res.data), 3)
+        self.assertEqual(len(res.data), 2)
 
     def test_create_booking_successful(self):
         """Test create a new kit"""

@@ -63,12 +63,22 @@ class BookingPublicList(generics.ListAPIView):
         queryset = Booking.objects.filter(public=True).exclude(reserved_by__isnull=True)
 
         start_date = self.request.query_params.get('start_date')
-
-        if start_date is not None:
+        end_date = self.request.query_params.get('end_date')
+        kit = self.request.query_params.get('kit')
+        
+        if start_date is not None and end_date is not None:
             start_date_datetime = datetime.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%SZ')
-            return queryset.filter(start_date__gte=start_date_datetime)
+            end_date_datetime = datetime.datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%SZ')
 
-        return queryset
+            queryset = queryset.filter(start_date__gte=start_date_datetime, start_date__lt=end_date_datetime)
+
+        if kit is not None:
+            if not kit.isdigit():
+                raise SuspiciousOperation('Kit id must be a number')
+
+            queryset = queryset.filter(kit_id=int(kit))
+
+        return queryset.filter(available=True)
 
 
 class BookingDetail(generics.RetrieveUpdateAPIView):
