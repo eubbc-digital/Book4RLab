@@ -170,7 +170,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       const selectedKit = this.kits[0];
 
       this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
-      this.getHoursByKitIdAndDate(selectedKit.id, this.startAt);
+      this.getHoursByKitIdAndDate(selectedKit.id, this.selectedDate);
     } else {
       this.noAvailableData = true;
     }

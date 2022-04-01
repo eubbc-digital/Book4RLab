@@ -10,9 +10,12 @@ const routes: Routes = [
   {
     path: '',
     component: BookingStepperComponent,
-    canDeactivate: [PendingChangesGuard],
+    canDeactivate: [PendingChangesGuard]
   },
-  { path: 'access', component: AccessComponent },
+  {
+    path: 'access',
+    component: AccessComponent,
+  },
   {
     path: 'my-reservations',
     component: PrivateReservationsComponent,
