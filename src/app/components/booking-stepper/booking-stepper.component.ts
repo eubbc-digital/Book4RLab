@@ -65,6 +65,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   restartSelectedHour: boolean = false;
   showSpinner: boolean = true;
   publicReservation: boolean = false;
+  confirmedReservation: boolean = false;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -254,7 +255,9 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       public: this.publicReservation,
     };
 
-    this.countdown.restart();
+    if (!this.confirmedReservation) {
+      this.countdown.restart();
+    }
 
     this.bookingService.registerBooking(booking).subscribe((updatedBooking) => {
       this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
@@ -289,8 +292,9 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   confirmReservation(): void {
     this.isEditable = false;
+    this.confirmedReservation = true;
 
-    if (this.publicReservation) this.saveReservation();
+    this.saveReservation();
 
     if (this.privateAccessUrl !== '') {
       this.toastService.success('Reservation made successfully');
