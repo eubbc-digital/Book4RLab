@@ -94,8 +94,8 @@ export class PublicReservationsComponent implements OnInit {
       this.showSpinner = true;
 
       let kitId = this.kitControl.value.id;
-      let startDate = moment().utc(this.startDateControl.value).format();
-      let endDate = moment().utc(this.endDateControl.value).format();
+      let startDate = moment(this.startDateControl.value).utc().format();
+      let endDate = moment(this.endDateControl.value).utc().format();
 
       this.bookingService
         .getPublicReservations(kitId, startDate, endDate)

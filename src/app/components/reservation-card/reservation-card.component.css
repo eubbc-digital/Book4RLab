@@ -1,9 +1,7 @@
 .reservation-card {
-  margin: 20px 25px;
-}
-
-.qr {
-  margin-top: 5pxx;
+  margin: 10px 25px;
+  padding-bottom: 35px;
+  padding-top: 0px;
 }
 
 .reservation-link {
@@ -42,4 +40,14 @@
     float: left;
     width: 45%;
   }
+}
+
+.reservation-type-row {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon {
+  transform: scale(0.65);
+  margin-bottom: 4.5px;
 }

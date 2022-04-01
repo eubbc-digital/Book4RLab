@@ -36,9 +36,11 @@ export class LoginComponent implements OnInit {
         password: this.loginForm.controls['password'].value,
       };
       this.authService.login(user).subscribe((response) => {
-        localStorage.setItem('token', response.body.token);
-        this.router.navigateByUrl('');
-        this.toastr.success(`Welcome ${user.email}`);
+        if (response != undefined) {
+          localStorage.setItem('token', response.body.token);
+          this.router.navigateByUrl('');
+          this.toastr.success(`Welcome ${user.email}`);
+        }
       });
     } else {
       this.toastr.error(

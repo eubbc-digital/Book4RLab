@@ -22,12 +22,15 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { AccessComponent } from './components/access/access.component';
 import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
 import { PrivateReservationsComponent } from './components/private-reservations/private-reservations.component';
-
-// Interceptors
-import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { PublicReservationsComponent } from './components/public-reservations/public-reservations.component';
 import { CardElevationDirective } from './directives/card-elevation.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+
+// Interceptors
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+
+// Guards
+import { PendingChangesGuard } from './pending-changes.guard';
 
 @NgModule({
   declarations: [
@@ -71,6 +74,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
       useClass: AuthInterceptorService,
       multi: true,
     },
+    PendingChangesGuard,
   ],
   bootstrap: [AppComponent],
 })

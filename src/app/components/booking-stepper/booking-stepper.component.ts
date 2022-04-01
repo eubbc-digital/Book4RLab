@@ -1,29 +1,44 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatStepper, StepperOrientation } from '@angular/material/stepper';
+import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LabService } from 'src/app/services/lab.service';
-import { KitService } from 'src/app/services/kit.service';
-import { Lab } from 'src/app/interfaces/lab';
-import { Kit } from 'src/app/interfaces/kit';
-import { AvailableDate } from 'src/app/interfaces/available-date';
-import { BookingService } from 'src/app/services/booking.service';
 import * as moment from 'moment';
 import config from '../../config.json';
-import { Booking } from 'src/app/interfaces/booking';
-import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
+
+import { LabService } from 'src/app/services/lab.service';
+import { KitService } from 'src/app/services/kit.service';
 import { ToastrService } from 'ngx-toastr';
+import { ComponentCanDeactivate } from '../../pending-changes.guard';
+
+import { AvailableDate } from 'src/app/interfaces/available-date';
+import { BookingService } from 'src/app/services/booking.service';
+import { Lab } from 'src/app/interfaces/lab';
+import { Kit } from 'src/app/interfaces/kit';
+import { Booking } from 'src/app/interfaces/booking';
 
 @Component({
   selector: 'app-booking-stepper',
   templateUrl: './booking-stepper.component.html',
   styleUrls: ['./booking-stepper.component.css'],
 })
-export class BookingStepperComponent implements OnInit {
+export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   @ViewChild('cd', { static: false }) private countdown!: CountdownComponent;
   @ViewChild('stepper', { read: MatStepper }) private stepper!: MatStepper;
+
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event: any) {
+    this.undoReservation();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHander(event: any) {
+    if (this.bookingId !== 0) return false;
+
+    return true;
+  }
 
   reservationFormGroup!: FormGroup;
   confirmationFormGroup!: FormGroup;
@@ -59,6 +74,19 @@ export class BookingStepperComponent implements OnInit {
     leftTime: 420,
     format: 'mm:ss',
   };
+
+  canDeactivate(): Observable<boolean> | boolean {
+    if (this.bookingId != 0) {
+      let confirmUndoReservation = confirm(
+        'WARNING: You have unsaved changes. Press Cancel to go back and save these changes, or OK to lose these changes.'
+      );
+
+      if (!confirmUndoReservation) return false;
+      else this.undoReservation();
+    }
+
+    return true;
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -252,10 +280,10 @@ export class BookingStepperComponent implements OnInit {
         this.privateAccessUrl = '';
         this.publicAccessUrl = '';
         this.reservationDate = '';
-
-        this.countdown.restart();
-        this.countdown.stop();
       });
+
+      this.countdown.restart();
+      this.countdown.stop();
     }
   }
 
