@@ -112,13 +112,13 @@ class PrivateBookingApiTests(TestCase):
         self.assertEqual(len(res.data), 2)
 
     def test_retrieve_booking_public_list(self):
-        """Test retrieving a list of bookings"""
+        """Test retrieving a list of public bookings"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
         kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user,
             reserved_by=self.user,
@@ -127,7 +127,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user,
             reserved_by=self.user,
@@ -136,7 +136,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=False,
             owner=self.user2,
             reserved_by=self.user,
@@ -156,7 +156,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user,
             reserved_by=self.user,
@@ -165,7 +165,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user,
             reserved_by=self.user,
@@ -174,7 +174,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user2,
             reserved_by=self.user,
@@ -183,7 +183,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user2,
             reserved_by=self.user,
@@ -192,7 +192,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user2,
             reserved_by=self.user,
@@ -201,7 +201,7 @@ class PrivateBookingApiTests(TestCase):
 
         Booking.objects.create(start_date=datetime.datetime(2008, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2008, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
+            available=False,
             public=True,
             owner=self.user2,
             reserved_by=self.user,

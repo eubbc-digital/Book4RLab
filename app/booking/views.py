@@ -78,7 +78,7 @@ class BookingPublicList(generics.ListAPIView):
 
             queryset = queryset.filter(kit_id=int(kit))
 
-        return queryset.filter(available=True)
+        return queryset.filter(available=False)
 
 
 class BookingDetail(generics.RetrieveUpdateAPIView):
