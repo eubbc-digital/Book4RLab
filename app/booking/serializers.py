@@ -2,6 +2,8 @@ from rest_framework import serializers
 from booking.models import Booking, Kit, Laboratory
 from django.utils.crypto import get_random_string
 
+from users.serializers import UserSerializer
+
 class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -21,6 +23,15 @@ class BookingSerializer(serializers.ModelSerializer):
         validated_data['password'] = get_random_string(15)
         return Booking.objects.create(**validated_data)
 
+
+class PublicBookingSerializer(serializers.ModelSerializer):
+
+    reserved_by = UserSerializer()
+
+    class Meta:
+        model = Booking
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_id', 'password', 'owner', 'reserved_by', 'kit']
+        
 
 class KitSerializer(serializers.ModelSerializer):
 

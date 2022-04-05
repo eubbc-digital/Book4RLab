@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
-from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer
+from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer
 from booking.models import Booking, Kit, Laboratory
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -55,7 +55,7 @@ class BookingUserList(generics.ListAPIView):
 
 class BookingPublicList(generics.ListAPIView):
 
-    serializer_class = BookingSerializer
+    serializer_class = PublicBookingSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -84,6 +84,7 @@ class BookingPublicList(generics.ListAPIView):
 class BookingDetail(generics.RetrieveUpdateAPIView):
 
     queryset = Booking.objects.all()
+
     serializer_class = BookingSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
