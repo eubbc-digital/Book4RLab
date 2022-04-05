@@ -26,6 +26,10 @@ export class PublicReservationsComponent implements OnInit {
   labs: Lab[] = [];
   kits: Kit[] = [];
 
+  kitsId: number[] = [];
+
+  optionAll: Kit = { id: 0, name: 'All' };
+
   showMessage: boolean = false;
   showSpinner: boolean = false;
 
@@ -77,6 +81,11 @@ export class PublicReservationsComponent implements OnInit {
     this.kitService.getKitsByLabId(labId).subscribe((kits) => {
       this.kits = kits.reverse();
 
+      this.kitsId = this.kits.map((kit) => {
+        return kit.id;
+      });
+
+      this.kits.unshift(this.optionAll);
       this.setDataFromFirstAvailableKit();
     });
   }
@@ -100,19 +109,23 @@ export class PublicReservationsComponent implements OnInit {
       this.bookingService
         .getPublicReservations(kitId, startDate, endDate)
         .subscribe((reservations) => {
-          this.reservationList = reservations;
+          this.reservationList = reservations.filter((reservation) =>
+            this.kitListIncludesId(reservation.kit!)
+          );
 
           this.showSpinner = false;
 
           if (this.reservationList.length == 0) {
             this.showMessage = true;
           }
-
-          console.log(this.reservationList);
         });
     } else {
       this.toastService.error('Please fill in the data correctly.');
     }
+  }
+
+  kitListIncludesId(kitId: number): boolean {
+    return this.kitsId.includes(kitId);
   }
 
   isStartDateInvalid(): boolean {

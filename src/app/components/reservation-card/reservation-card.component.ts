@@ -54,6 +54,14 @@ export class ReservationCardComponent implements OnInit {
     return this.reservation.public ? 'Public' : 'Private';
   }
 
+  getReservedBy(): string {
+    return this.reservation.reserved_by !== null
+      ? `${this.reservation.reserved_by!.name} ${
+          this.reservation.reserved_by!.last_name
+        }`
+      : 'Information not available.';
+  }
+
   getFormattedDate(date: string): string {
     return moment(date).format(this.dateTimeFormat);
   }

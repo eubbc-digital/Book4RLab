@@ -7,6 +7,6 @@ export interface Booking {
   access_id?: string;
   password?: string;
   owner?: number;
-  reserved_by?: number | null;
+  reserved_by?: { email: string; last_name: string; name: string } | null;
   kit?: number;
 }

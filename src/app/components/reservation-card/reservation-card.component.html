@@ -12,6 +12,10 @@
         <strong>End date:</strong>
         {{ getFormattedDate(reservation.end_date!) }}
       </p>
+      <p *ngIf="!privateList">
+        <strong>Reserved by:</strong>
+        {{ getReservedBy() }}
+      </p>
       <p *ngIf="privateList" class="reservation-type-row">
         <span><strong>Type:</strong> {{ getReservationType() }}</span>
 

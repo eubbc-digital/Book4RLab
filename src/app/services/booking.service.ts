@@ -40,10 +40,13 @@ export class BookingService {
 
   getPublicReservations(kitId: number, startDate: string, endDate: string): Observable<Booking[]> {
     let url = `${config.api.baseUrl}${config.api.booking.publicReservations}`;
-    let params = new HttpParams()
-      .set('kit', kitId)
-      .set('start_date', startDate)
-      .set('end_date', endDate);
+    let params = new HttpParams();
+
+    if (kitId != 0) params = params.append('kit', kitId);
+
+    params = params.append('start_date', startDate);
+    params = params.append('end_date', endDate);
+
     return this.http.get<Booking[]>(url, { params });
   }
 }
