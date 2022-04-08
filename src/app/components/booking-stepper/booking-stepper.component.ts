@@ -66,6 +66,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   showSpinner: boolean = true;
   publicReservation: boolean = false;
   confirmedReservation: boolean = false;
+  isFirstStepCompleted: boolean = false;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -241,7 +242,20 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   followNextStep() {
     this.bookingId = this.reservationFormGroup.controls['selectedHour'].value;
-    this.saveReservation();
+
+    this.bookingService.getBookingById(this.bookingId).subscribe((booking) => {
+      if (booking !== undefined && booking.available) {
+        this.isFirstStepCompleted = true;
+        this.saveReservation();
+        this.stepper.next();
+      } else {
+        this.toastService.error(
+          'This booking is not av available. Please choose another.'
+        );
+
+        this.getHoursByKitIdAndDate(this.selectedKit.id, this.selectedDate);
+      }
+    });
   }
 
   updateReservationType(publicReservation: any): void {
@@ -255,9 +269,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       public: this.publicReservation,
     };
 
-    if (!this.confirmedReservation) {
-      this.countdown.restart();
-    }
+    if (!this.confirmedReservation) this.countdown.restart();
 
     this.bookingService.registerBooking(booking).subscribe((updatedBooking) => {
       this.privateAccessUrl = `${config.remoteLabUrl}${updatedBooking.access_id}`;
@@ -318,6 +330,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.countdown.restart();
     this.countdown.stop();
 
+    this.isFirstStepCompleted = false;
     this.stepper.reset();
 
     if (this.bookingId !== 0) {

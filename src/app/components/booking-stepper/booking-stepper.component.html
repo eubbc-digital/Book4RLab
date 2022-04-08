@@ -14,7 +14,7 @@
     id="stepper"
     (selectionChange)="onStepChange($event)"
   >
-    <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable">
+    <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable" [completed]="isFirstStepCompleted">
       <form [formGroup]="reservationFormGroup" (ngSubmit)="followNextStep()">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
@@ -74,7 +74,6 @@
             color="primary"
             [disabled]="!reservationFormGroup.valid"
             mat-raised-button
-            matStepperNext
           >
             Next
           </button>
