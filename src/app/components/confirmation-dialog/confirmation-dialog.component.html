@@ -1,0 +1,7 @@
+<p class="text-center"><strong>IMPORTANT</strong></p>
+<div mat-dialog-content>{{ data.message }}</div>
+<div mat-dialog-actions>
+  <div class="spacer"></div>
+  <button mat-button color="primary" mat-dialog-close>NO</button>
+  <button mat-button color="warn" (click)="confirm()">YES</button>
+</div>

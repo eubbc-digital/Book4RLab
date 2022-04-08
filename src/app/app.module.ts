@@ -31,6 +31,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { PendingChangesGuard } from './pending-changes.guard';
     PublicReservationsComponent,
     CardElevationDirective,
     SpinnerComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,

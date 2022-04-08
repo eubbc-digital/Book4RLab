@@ -1,5 +1,5 @@
 .card-booking-stepper {
-  width: 50%;
+  width: 70%;
   margin: 30px auto;
 }
 
@@ -16,6 +16,12 @@
     margin-left: -20px;
     margin-top: 10px;
     width: 120%;
+  }
+}
+
+@media (min-width: 1250px) {
+  .card-booking-stepper {
+    width: 50%;
   }
 }
 

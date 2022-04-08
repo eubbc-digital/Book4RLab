@@ -1,7 +1,10 @@
 .reservation-card {
   margin: 10px 25px;
-  padding-bottom: 35px;
   padding-top: 0px;
+}
+
+.extra-padding {
+  padding-bottom: 50px;
 }
 
 .reservation-link {

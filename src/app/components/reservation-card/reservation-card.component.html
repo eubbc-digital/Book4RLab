@@ -1,5 +1,11 @@
-<mat-card appCardElevation class="reservation-card" *ngIf="dataReady">
+<mat-card
+  appCardElevation
+  class="reservation-card"
+  [ngClass]="{ 'extra-padding': !showCancelButton() }"
+  *ngIf="dataReady"
+>
   <p class="title">Reservation N° {{ reservation.id }}</p>
+
   <div class="row">
     <div class="cols-2">
       <p><strong>Laboratory:</strong> {{ lab.name }}</p>
@@ -32,8 +38,14 @@
       ></qr-code>
     </div>
   </div>
-  <p>
+  <span>
     <strong>Link: </strong>
     <a class="reservation-link" [href]="getAccessUrl()">{{ getAccessUrl() }}</a>
-  </p>
+  </span>
+
+  <mat-card-actions align="end" *ngIf="showCancelButton()">
+    <button mat-button color="primary" (click)="openConfirmationDialog()">
+      CANCEL
+    </button>
+  </mat-card-actions>
 </mat-card>

@@ -16,6 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -35,6 +36,7 @@ const MaterialComponents = [
   MatCheckboxModule,
   MatMenuModule,
   MatPaginatorModule,
+  MatDialogModule,
 ];
 
 @NgModule({

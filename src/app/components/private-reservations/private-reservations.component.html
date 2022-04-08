@@ -6,6 +6,7 @@
   <div class="row">
     <div class="column" *ngFor="let reservation of reservationList">
       <app-reservation-card
+        (cancelReservationEvent)="getPersonalBookingList()"
         [reservation]="reservation"
         [privateList]="true"
       ></app-reservation-card>
