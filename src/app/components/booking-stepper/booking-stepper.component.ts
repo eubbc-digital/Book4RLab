@@ -250,7 +250,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
         this.stepper.next();
       } else {
         this.toastService.error(
-          'This booking is not av available. Please choose another.'
+          'This booking is not available. Please choose another.'
         );
 
         this.getHoursByKitIdAndDate(this.selectedKit.id, this.selectedDate);
