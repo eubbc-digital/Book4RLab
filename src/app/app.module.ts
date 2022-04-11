@@ -32,6 +32,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     CardElevationDirective,
     SpinnerComponent,
     ConfirmationDialogComponent,
+    ScrollToTopComponent,
   ],
   imports: [
     BrowserModule,

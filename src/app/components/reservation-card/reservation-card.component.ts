@@ -82,7 +82,7 @@ export class ReservationCardComponent implements OnInit {
   }
 
   showCancelButton(): boolean {
-    return moment(this.reservation.start_date).isAfter(moment());
+    return this.privateList && moment(this.reservation.start_date).isAfter(moment());
   }
 
   openConfirmationDialog(): void {
