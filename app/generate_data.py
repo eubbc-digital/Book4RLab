@@ -47,7 +47,8 @@ for laboratory_name in laboratories:
         'pk': pk_lab,
         'fields': {
             'name': laboratory_name,
-            'description': laboratory_name
+            'description': laboratory_name,
+            'url': 'http://www.upb.edu'
         }
     }
 

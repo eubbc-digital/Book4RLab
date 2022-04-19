@@ -48,7 +48,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Laboratory
-        fields = ['id', 'name', 'description']
+        fields = ['id', 'name', 'description', 'url']
         extra_kwargs = {
             'name': {'required': True}
         }

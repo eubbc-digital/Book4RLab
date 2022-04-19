@@ -68,7 +68,7 @@ class PrivateLaboratoryApiTests(TestCase):
 
     def test_retrieve_laboratory_detail(self):
         """Test retrieve a laboratory detail"""
-        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
+        laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry', url='http://www.upb.edu')
 
         res = self.client.get(LABORATORY_URL + str(laboratory.id) + '/')
         
@@ -76,5 +76,6 @@ class PrivateLaboratoryApiTests(TestCase):
         self.assertEqual(res.data, {
             'id': laboratory.id,
             'name': laboratory.name,
-            'description': laboratory.description
+            'description': laboratory.description,
+            'url': laboratory.url
         })

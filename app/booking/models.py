@@ -29,3 +29,4 @@ class Laboratory(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
     description = models.CharField(max_length=255, default='')
+    url = models.CharField(max_length=255, blank=True, null=True, default='')
