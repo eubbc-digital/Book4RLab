@@ -18,6 +18,5 @@
     "name": "Universidad Privada Boliviana",
     "acronym": "UPB"
   },
-  "loginUrl": "http://eubbc-digital.upb.edu:4200/access",
-  "remoteLabUrl": "https://remote.upb.edu/"
+  "loginUrl": "http://eubbc-digital.upb.edu:4200/access"
 }
