@@ -7,6 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import SuspiciousOperation
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.conf import settings
 
 import datetime
 
@@ -98,6 +101,9 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         if register is not None and register == 'true':
             instance.reserved_by = self.request.user
 
+            recipient = [self.request.user.email]
+            self.send_confirmation_email(instance, recipient)
+
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -107,6 +113,29 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
             serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
+
+    def send_confirmation_email(self, instance, recipient):
+        subject = 'Booking confirmed!'
+
+        print('Send confirmation email to: ' + str(recipient))
+
+        kit = Kit.objects.get(id=instance.kit_id)
+        laboratory = Laboratory.objects.get(id=kit.laboratory_id)
+
+        recipient = ['angelzenteno1@upb.edu']
+
+        body = ' Booking confirmed! \n'
+        body += f' Your booking for kit {instance.kit.name} has been confirmed\n'
+        body += f' Laboratory: {laboratory.name}\n'
+        body += ' Details available at http://eubbc-digital.upb.edu:4200/my-reservations'
+        body += '\n - UPB Team -'
+        
+        sender = settings.EMAIL_HOST_USER
+
+        try:
+            send_mail(subject, body, sender, recipient, fail_silently=True)
+        except BadHeaderError:
+            return HttpResponse("Invalid header found.")
 
 
 class KitList(generics.ListCreateAPIView):
