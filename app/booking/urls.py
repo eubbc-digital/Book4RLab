@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.BookingList.as_view(), name='bookinglist'),
     path('<int:pk>/', views.BookingDetail.as_view(), name='bookingdetail'),
     path('public/', views.BookingPublicList.as_view(), name='bookingpublic'),
+    path('reserve/', views.BookingAccess.as_view(), name='bookingreserve'),
     path('me/', views.BookingUserList.as_view(), name='bookinguser'),
     path('kits/', views.KitList.as_view(), name='kitlist'),
     path('kits/<int:pk>/', views.KitDetail.as_view(), name='kitdetail'),
