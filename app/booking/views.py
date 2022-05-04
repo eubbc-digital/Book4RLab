@@ -141,8 +141,6 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         kit = Kit.objects.get(id=instance.kit_id)
         laboratory = Laboratory.objects.get(id=kit.laboratory_id)
 
-        recipient = ['angelzenteno1@upb.edu']
-
         body = ' Booking confirmed! \n'
         body += f' Your booking for kit {instance.kit.name} has been confirmed\n'
         body += f' Laboratory: {laboratory.name}\n'
