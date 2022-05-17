@@ -76,7 +76,7 @@ input[type="password"]::-ms-clear {
 }
 
 .reservation-list {
-  width: 75%;
+  width: 80%;
 }
 
 @media (max-width: 600px) {

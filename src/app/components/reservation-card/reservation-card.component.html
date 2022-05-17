@@ -8,7 +8,7 @@
 
   <div class="row">
     <div class="cols-2">
-      <p><strong>Laboratory:</strong> {{ lab.name }}</p>
+      <p><strong>Lab:</strong> {{ lab.name }}</p>
       <p><strong>Kit:</strong> {{ kit.name }}</p>
       <p>
         <strong>Start date:</strong>
@@ -33,7 +33,7 @@
     <div class="col-1 qr">
       <qr-code
         [value]="getAccessUrl()"
-        size="150"
+        size="160"
         errorCorrectionLevel="M"
       ></qr-code>
     </div>

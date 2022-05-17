@@ -8,7 +8,7 @@
 }
 
 .reservation-link {
-  word-break: break-word;
+  word-break: break-all;
 }
 
 .cols-2 {
@@ -22,7 +22,7 @@
   text-align: center;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .cols-2,
   .col-1 {
     width: 100%;
@@ -33,7 +33,7 @@
   }
 }
 
-@media (min-width: 600px) and (max-width: 1500px) {
+@media (min-width: 800px) and (max-width: 1500px) {
   .cols-2 {
     float: left;
     width: 55%;
@@ -42,6 +42,10 @@
   .col-1 {
     float: left;
     width: 45%;
+  }
+
+  .extra-padding {
+    padding-bottom: 50px;
   }
 }
 

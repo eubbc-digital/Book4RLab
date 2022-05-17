@@ -45,10 +45,10 @@ export class ReservationCardComponent implements OnInit {
   }
 
   getAccessUrl(): string {
-    let privateUrl = `${this.lab.url}${this.reservation.access_id}`;
+    let privateUrl = `${this.lab.url}?access-url=${this.reservation.access_id}`;
     return this.privateList
       ? privateUrl
-      : `${privateUrl}/pwd=${this.reservation.password}`;
+      : `${privateUrl}&pwd=${this.reservation.password}`;
   }
 
   getKit(): void {
