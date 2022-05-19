@@ -45,10 +45,7 @@ export class ReservationCardComponent implements OnInit {
   }
 
   getAccessUrl(): string {
-    let privateUrl = `${this.lab.url}?access-url=${this.reservation.access_id}`;
-    return this.privateList
-      ? privateUrl
-      : `${privateUrl}&pwd=${this.reservation.password}`;
+    return `${this.lab.url}?access-url=${this.reservation.access_id}&pwd=${this.reservation.password}`;
   }
 
   getKit(): void {
@@ -82,7 +79,9 @@ export class ReservationCardComponent implements OnInit {
   }
 
   showCancelButton(): boolean {
-    return this.privateList && moment(this.reservation.start_date).isAfter(moment());
+    return (
+      this.privateList && moment(this.reservation.start_date).isAfter(moment())
+    );
   }
 
   openConfirmationDialog(): void {
@@ -105,9 +104,13 @@ export class ReservationCardComponent implements OnInit {
       .subscribe((response) => {
         if (response) {
           this.getReservations();
-          this.toastService.success('Your reservation was successfully deleted.');
+          this.toastService.success(
+            'Your reservation was successfully deleted.'
+          );
         } else {
-          this.toastService.error('There was a problem please try again later.');
+          this.toastService.error(
+            'There was a problem please try again later.'
+          );
         }
       });
   }

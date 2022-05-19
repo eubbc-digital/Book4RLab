@@ -4,4 +4,5 @@ export interface User {
   name?: string;
   last_name?: string;
   token?: string;
+  country?: string;
 }

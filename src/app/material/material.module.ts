@@ -17,6 +17,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -37,6 +38,7 @@ const MaterialComponents = [
   MatMenuModule,
   MatPaginatorModule,
   MatDialogModule,
+  MatAutocompleteModule,
 ];
 
 @NgModule({

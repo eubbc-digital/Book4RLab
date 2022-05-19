@@ -70,7 +70,6 @@ import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.c
       progressBar: true,
     }),
     HttpClientModule,
-    HttpClientModule,
   ],
   providers: [
     {

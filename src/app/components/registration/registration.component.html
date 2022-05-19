@@ -14,6 +14,29 @@
   </mat-form-field>
 
   <mat-form-field class="input-field">
+    <mat-label>Country</mat-label>
+    <mat-icon matSuffix>travel_explore</mat-icon>
+    <input
+      type="text"
+      matInput
+      formControlName="country"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="getCountryName">
+      <mat-option
+        *ngFor="let country of filteredOptions | async"
+        [value]="country"
+      >
+        {{ country.name }}
+      </mat-option>
+    </mat-autocomplete>
+
+    <mat-error *ngIf="getCountryControlError()">
+      Country value need match available options.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="input-field">
     <mat-label>Email</mat-label>
     <input matInput placeholder="user@gmail.com" formControlName="email" />
     <mat-icon matSuffix>email</mat-icon>
@@ -26,16 +49,13 @@
       [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"
     />
-    <mat-error
-      *ngIf="
-        passwordControl.errors != null && passwordControl.errors['minlength']
-      "
-    >
+    <mat-error *ngIf="getPasswordControlError()">
       Password must have at least 8 characters.
     </mat-error>
     <button
       mat-icon-button
       matSuffix
+      type="button"
       (click)="hidePassword = !hidePassword"
       [attr.aria-label]="'Hide password'"
       [attr.aria-pressed]="hidePassword"
@@ -58,6 +78,7 @@
     <button
       mat-icon-button
       matSuffix
+      type="button"
       (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
       [attr.aria-label]="'Hide password confirmation'"
       [attr.aria-pressed]="hidePasswordConfirmation"

@@ -12,6 +12,9 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/interfaces/user';
+import { Country } from 'src/app/interfaces/country';
+import { countries } from 'src/app/store/country-data-store';
+import { map, Observable, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-registration',
@@ -19,6 +22,8 @@ import { User } from 'src/app/interfaces/user';
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit {
+  countries: Country[] = countries;
+
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
 
@@ -26,12 +31,18 @@ export class RegistrationComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
+    country: new FormControl({}, [
+      Validators.required,
+      this.requireMatch.bind(this),
+    ]),
     password: new FormControl('', [
       Validators.minLength(8),
       Validators.required,
     ]),
     passwordConfirmation: new FormControl('', [Validators.required]),
   });
+
+  filteredOptions!: Observable<Country[]>;
 
   constructor(
     private authService: AuthService,
@@ -42,6 +53,12 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
     this.registrationForm.controls['passwordConfirmation'].addValidators(
       this.checkPasswords
+    );
+
+    this.filteredOptions = this.countryControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((name) => (name ? this.filterCountry(name) : this.countries.slice()))
     );
   }
 
@@ -54,6 +71,19 @@ export class RegistrationComponent implements OnInit {
     return pass === confirmPass ? null : { notSame: true };
   };
 
+  private requireMatch(control: FormControl): ValidationErrors | null {
+    const country: any = control.value;
+
+    if (
+      this.countries &&
+      country.name &&
+      this.filterCountry(country.name).length > 0
+    ) {
+      return null;
+    }
+    return { requireMatch: true };
+  }
+
   get passwordControl() {
     return this.registrationForm.controls['password'];
   }
@@ -62,19 +92,26 @@ export class RegistrationComponent implements OnInit {
     return this.registrationForm.controls['passwordConfirmation'];
   }
 
-  saveUser(formDirective: FormGroupDirective): void {
-    const user: User = {
-      name: this.registrationForm.controls['name'].value,
-      last_name: this.registrationForm.controls['lastName'].value,
-      email: this.registrationForm.controls['email'].value,
-      password: this.registrationForm.controls['password'].value,
-    };
+  get countryControl() {
+    return this.registrationForm.controls['country'];
+  }
 
+  saveUser(formDirective: FormGroupDirective): void {
     if (this.registrationForm.valid) {
-      this.toastr.success('Welcome', 'Successful registration');
+      const user: User = {
+        name: this.registrationForm.controls['name'].value,
+        last_name: this.registrationForm.controls['lastName'].value,
+        email: this.registrationForm.controls['email'].value,
+        password: this.passwordControl.value,
+        country: this.countryControl.value.code,
+      };
+
       this.authService.signUp(user).subscribe((response) => {
         if (response.status !== null && response.status === 201) {
-          this.toastr.success('Welcome', 'Successful registration');
+          this.toastr.success(
+            `Welcome ${user.name}`,
+            'Successful registration'
+          );
 
           let newUser: User = {
             email: response.body.email,
@@ -105,6 +142,32 @@ export class RegistrationComponent implements OnInit {
     return (
       this.passwordConfirmationControl.errors !== null &&
       this.passwordConfirmationControl.errors['notSame']
+    );
+  }
+
+  filterCountry(name: string): Country[] {
+    const filterValue = name.toLowerCase();
+
+    return this.countries.filter((country) =>
+      country.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getCountryName(country: any) {
+    return country ? country.name : null;
+  }
+
+  getPasswordControlError(): string {
+    return (
+      this.passwordControl.errors != null &&
+      this.passwordControl.errors['minlength']
+    );
+  }
+
+  getCountryControlError(): string {
+    return (
+      this.countryControl.errors != null &&
+      this.countryControl.errors['requireMatch']
     );
   }
 }
