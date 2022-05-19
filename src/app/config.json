@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "http://eubbc-digital.upb.edu:8002/api/",
+    "baseUrl": "http://eubbc-digital.upb.edu:8000/api/",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
@@ -18,5 +18,5 @@
     "name": "Universidad Privada Boliviana",
     "acronym": "UPB"
   },
-  "loginUrl": "http://localhost:4200/access"
+  "loginUrl": "http://eubbc-digital.upb.edu:4200/access"
 }
