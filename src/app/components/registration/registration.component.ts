@@ -119,7 +119,6 @@ export class RegistrationComponent implements OnInit {
           };
 
           this.authService.login(newUser).subscribe((response) => {
-            this.restartFields(formDirective);
             localStorage.setItem('token', response.body.token);
             this.router.navigateByUrl('');
           });
@@ -131,11 +130,6 @@ export class RegistrationComponent implements OnInit {
         'Invalid action'
       );
     }
-  }
-
-  restartFields(formDirective: FormGroupDirective): void {
-    formDirective.resetForm();
-    this.registrationForm.reset();
   }
 
   isPasswordConfirmationValid(): boolean {
