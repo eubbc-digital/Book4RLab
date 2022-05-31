@@ -21,5 +21,9 @@
   "appInformation": {
     "title": "Booking"
   },
-  "loginUrl": "http://eubbc-digital.upb.edu:4200/access"
+  "loginUrl": "http://eubbc-digital.upb.edu:4200/access",
+  "urlParams": {
+    "accessId": "access_id",
+    "password": "pwd"
+  }
 }

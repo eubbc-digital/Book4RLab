@@ -45,7 +45,7 @@ export class ReservationCardComponent implements OnInit {
   }
 
   getAccessUrl(): string {
-    return `${this.lab.url}?access_url=${this.reservation.access_id}&pwd=${this.reservation.password}`;
+    return `${this.lab.url}?${config.urlParams.accessId}=${this.reservation.access_id}&${config.urlParams.password}=${this.reservation.password}`;
   }
 
   getKit(): void {
