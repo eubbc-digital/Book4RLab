@@ -18,5 +18,8 @@
     "name": "Universidad Privada Boliviana",
     "acronym": "UPB"
   },
+  "appInformation": {
+    "title": "Booking"
+  },
   "loginUrl": "http://eubbc-digital.upb.edu:4200/access"
 }
