@@ -123,7 +123,7 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         register = self.request.query_params.get('register')
 
         if register is not None and register == 'true':
-            if instance.reserved_by is not None: 
+            if instance.reserved_by is None: 
                 instance.reserved_by = self.request.user
 
             # recipient = [self.request.user.email]
