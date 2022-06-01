@@ -125,8 +125,8 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         if register is not None and register == 'true':
             instance.reserved_by = self.request.user
 
-            recipient = [self.request.user.email]
-            self.send_confirmation_email(instance, recipient)
+            # recipient = [self.request.user.email]
+            # self.send_confirmation_email(instance, recipient)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
