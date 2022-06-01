@@ -15,6 +15,7 @@ import { ComponentCanDeactivate } from '../../pending-changes.guard';
 
 import { AvailableDate } from 'src/app/interfaces/available-date';
 import { BookingService } from 'src/app/services/booking.service';
+import { UserService } from 'src/app/services/user.service';
 import { Lab } from 'src/app/interfaces/lab';
 import { Kit } from 'src/app/interfaces/kit';
 import { Booking } from 'src/app/interfaces/booking';
@@ -96,6 +97,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     private kitService: KitService,
     private bookingService: BookingService,
     private toastService: ToastrService,
+    private userService: UserService,
     breakpointObserver: BreakpointObserver
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
@@ -246,14 +248,15 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.bookingService.getBookingById(this.bookingId).subscribe((booking) => {
       if (booking !== undefined && booking.available) {
         this.isFirstStepCompleted = true;
+
         this.saveReservation();
-        this.stepper.next();
       } else {
         this.toastService.error(
           'This booking is not available. Please choose another.'
         );
 
         this.getHoursByKitIdAndDate(this.selectedKit.id, this.selectedDate);
+        this.bookingId = 0;
       }
     });
   }
@@ -272,13 +275,27 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     if (!this.confirmedReservation) this.countdown.restart();
 
     this.bookingService.registerBooking(booking).subscribe((updatedBooking) => {
-      this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessId}=${updatedBooking.access_id}`;
-      this.publicAccessUrl = this.publicReservation
-        ? ''
-        : `${this.privateAccessUrl}?${config.urlParams.password}=${updatedBooking.password}`;
-      this.reservationDate = moment(updatedBooking.start_date).format(
-        this.dateTimeFormat
-      );
+      this.userService.getUserData().subscribe((response) => {
+        if (response && response.id == updatedBooking.reserved_by) {
+          this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessId}=${updatedBooking.access_id}`;
+          this.publicAccessUrl = this.publicReservation
+            ? ''
+            : `${this.privateAccessUrl}?${config.urlParams.password}=${updatedBooking.password}`;
+          this.reservationDate = moment(updatedBooking.start_date).format(
+            this.dateTimeFormat
+          );
+
+          if (!this.confirmedReservation) this.stepper.next();
+        } else {
+          this.toastService.error(
+            'This booking is not available. Please choose another.'
+          );
+
+          this.getHoursByKitIdAndDate(this.selectedKit.id, this.selectedDate);
+
+          this.bookingId = 0;
+        }
+      });
     });
   }
 
@@ -331,6 +348,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.countdown.stop();
 
     this.isFirstStepCompleted = false;
+    this.confirmedReservation = false;
     this.stepper.reset();
 
     if (this.bookingId !== 0) {
