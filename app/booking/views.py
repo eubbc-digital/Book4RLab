@@ -68,11 +68,16 @@ class BookingAccess(generics.ListAPIView):
         if access_id is not None:
             queryset = queryset.filter(access_id=access_id)
         
-        if queryset.count() == 1:
-            if not queryset[0].public:
-                queryset = queryset.filter(password=password)
+            if queryset.count() == 1:
+                if not queryset[0].public:
+                    queryset = queryset.filter(password=password)
 
-        return queryset
+            now = datetime.datetime.now()
+            queryset = queryset.filter(start_date__lte=now, end_date__gt=now)
+
+            return queryset
+
+        return None
 
 
 class BookingPublicList(generics.ListAPIView):
