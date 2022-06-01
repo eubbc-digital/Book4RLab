@@ -10,7 +10,7 @@
   <div>
     <p>
       <strong>Private access url: </strong
-      ><a [href]="privateBookingLink">{{ privateBookingLink }}</a>
+      ><a [href]="privateBookingLink" target="_blank">{{ privateBookingLink }}</a>
     </p>
     <p><strong>QR:</strong></p>
     <qr-code
@@ -24,7 +24,7 @@
   <!--<div *ngIf="publicBookingLink !== ''">
     <p>
       <strong>Public access url: </strong
-      ><a [href]="publicBookingLink">{{ publicBookingLink }}</a>
+      ><a [href]="publicBookingLink" target="_blank">{{ publicBookingLink }}</a>
     </p>
     <p><strong>QR:</strong></p>
     <qr-code
