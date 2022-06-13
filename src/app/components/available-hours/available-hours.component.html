@@ -16,10 +16,13 @@
           *ngFor="let item of hours"
           [value]="item.hour.bookingId"
         >
-          {{ item.hour.formattedHour }}
+          {{ item.hour.formattedStartHour }}
+          <span>&nbsp;-&nbsp;</span>
+          {{ item.hour.formattedEndHour }}
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
+
     <ng-template #elseBlock>No times available.</ng-template>
   </ng-template>
 </div>

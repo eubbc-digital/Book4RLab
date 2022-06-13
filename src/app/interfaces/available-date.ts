@@ -1,4 +1,8 @@
 export interface AvailableDate {
   formattedDate: string;
-  hour: { bookingId: number; formattedHour: string };
+  hour: {
+    bookingId: number;
+    formattedStartHour: string;
+    formattedEndHour: string;
+  };
 }

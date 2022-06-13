@@ -189,14 +189,20 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
         bookingList.forEach((booking) => {
           if (
             booking.available &&
-            this.isAvailableDateValid(booking.start_date)
+            this.isAvailableDateValid(booking.end_date)
           ) {
             let formattedDate = this.getFormattedDate(
               booking.start_date,
               this.dateFormat
             );
-            let formattedHour = this.getFormattedDate(
+
+            let formattedStartHour = this.getFormattedDate(
               booking.start_date,
+              this.hourFormat
+            );
+
+            let formattedEndHour = this.getFormattedDate(
+              booking.end_date,
               this.hourFormat
             );
 
@@ -204,7 +210,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
               formattedDate: formattedDate,
               hour: {
                 bookingId: booking.id,
-                formattedHour: formattedHour,
+                formattedStartHour: formattedStartHour,
+                formattedEndHour: formattedEndHour,
               },
             };
             availableDates.push(availableDate);
@@ -224,8 +231,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       });
   }
 
-  isAvailableDateValid(date: string | undefined): boolean {
-    return date !== null && moment(date).isAfter(moment());
+  isAvailableDateValid(endDate: string | undefined): boolean {
+    return endDate !== null && moment(moment()).isBefore(endDate);
   }
 
   getFormattedDate(date: string | undefined | Date, format: string): any {
