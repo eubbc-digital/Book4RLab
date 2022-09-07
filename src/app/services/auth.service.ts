@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { User } from '../interfaces/user';
@@ -33,12 +37,20 @@ export class AuthService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      this.toastr.error(
-        'A server error has ocurred please try later.',
-        'Error'
-      );
-      console.error(error);
+      if (error && error.error)
+        this.toastr.error(this.getServerErrorMessage(error), 'Error');
+
       return of(result as T);
     };
+  }
+
+  private getServerErrorMessage(error: HttpErrorResponse): string {
+    let errorMsg = 'A server error has ocurred please try later.';
+
+    if (error.error['non_field_errors'])
+      errorMsg = `${error.error['non_field_errors']}. Please check that your email and password are correct.`;
+    else if (error.error['email']) errorMsg = error.error['email'];
+
+    return errorMsg;
   }
 }
