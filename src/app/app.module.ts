@@ -25,14 +25,14 @@ import { PrivateReservationsComponent } from './components/private-reservations/
 import { PublicReservationsComponent } from './components/public-reservations/public-reservations.component';
 import { CardElevationDirective } from './directives/card-elevation.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 
 @NgModule({
   declarations: [

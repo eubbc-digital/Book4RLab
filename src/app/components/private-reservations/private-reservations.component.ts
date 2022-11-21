@@ -23,7 +23,6 @@ export class PrivateReservationsComponent implements OnInit {
     this.bookingService.getPersonalBookingList().subscribe((bookingList) => {
       this.showMessage = false;
       this.reservationList = bookingList;
-
       this.showSpinner = false;
 
       if (this.reservationList.length == 0) {

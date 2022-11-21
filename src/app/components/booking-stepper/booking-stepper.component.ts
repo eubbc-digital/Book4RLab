@@ -286,8 +286,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
         if (response && response.id == updatedBooking.reserved_by) {
           this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessId}=${updatedBooking.access_id}&${config.urlParams.password}=${updatedBooking.password}`;
           this.publicAccessUrl = this.publicReservation
-            ? ''
-            : `${this.selectedLab.url}?${config.urlParams.accessId}=${updatedBooking.access_id}`;
+            ? `${this.selectedLab.url}?${config.urlParams.accessId}=${updatedBooking.access_id}`
+            : '';
           this.reservationDate = moment(updatedBooking.start_date).format(
             this.dateTimeFormat
           );
