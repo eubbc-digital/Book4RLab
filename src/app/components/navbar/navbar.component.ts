@@ -42,5 +42,6 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.goToLogin();
   }
 }
