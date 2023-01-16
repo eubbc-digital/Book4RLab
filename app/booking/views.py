@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer
-from booking.models import Booking, Kit, Laboratory
+from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
+from booking.models import Booking, Kit, Laboratory, TimeFrame
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import SuspiciousOperation
@@ -126,8 +126,8 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
             if instance.reserved_by is None: 
                 instance.reserved_by = self.request.user
 
-            # recipient = [self.request.user.email]
-            # self.send_confirmation_email(instance, recipient)
+        recipient = [self.request.user.email]
+        self.send_confirmation_email(instance, recipient)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -203,3 +203,32 @@ class LaboratoryDetail(generics.RetrieveUpdateAPIView):
     serializer_class = LaboratorySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+
+class TimeFrameList(generics.ListCreateAPIView):
+
+    queryset = TimeFrame.objects.all()
+    serializer_class = TimeFrameSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = TimeFrame.objects.all()
+        kit = self.request.query_params.get('kit')
+
+        if kit is not None:
+            if not kit.isdigit():
+                raise SuspiciousOperation('Kit id must be a number')
+
+            return queryset.filter(kit_id=int(kit))
+
+        return queryset
+
+
+class TimeFrameDetail(generics.RetrieveUpdateAPIView):
+
+    queryset = TimeFrame.objects.all()
+    serializer_class = TimeFrameSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from booking.models import Booking, Kit, Laboratory
+from booking.models import Booking, Kit, Laboratory, TimeFrame
 from django.utils.crypto import get_random_string
 
 from users.serializers import UserSerializer
@@ -51,4 +51,19 @@ class LaboratorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'url']
         extra_kwargs = {
             'name': {'required': True}
+        }
+
+
+class TimeFrameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TimeFrame
+        fields = ['id', 'start_date', 'end_date', 'start_hour', 'end_hour', 'slot_duration', 'kit', 'enabled']
+        extra_kwargs = {
+            'start_date': {'required': True},
+            'end_date': {'required': True},
+            'start_hour': {'required': True},
+            'end_hour': {'required': True},
+            'slot_duration': {'required': True},
+            'kit': {'required': True}
         }

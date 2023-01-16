@@ -13,4 +13,6 @@ urlpatterns = [
     path('kits/<int:pk>/', views.KitDetail.as_view(), name='kitdetail'),
     path('laboratories/', views.LaboratoryList.as_view(), name='laboratorylist'),
     path('laboratories/<int:pk>/', views.LaboratoryDetail.as_view(), name='laboratorydetail'),
+    path('timeframes/', views.TimeFrameList.as_view(), name='timeframelist'),
+    path('timeframes/<int:pk>/', views.TimeFrameDetail.as_view(), name='timeframedetail'),
 ]
