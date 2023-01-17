@@ -41,7 +41,8 @@ class KitSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'laboratory']
         extra_kwargs = {
             'name': {'required': True},
-            'laboratory': {'required': True}
+            'laboratory': {'required': True},
+            'description': {'required': False},
         }
 
 
@@ -51,7 +52,8 @@ class LaboratorySerializer(serializers.ModelSerializer):
         model = Laboratory
         fields = ['id', 'name', 'description', 'url']
         extra_kwargs = {
-            'name': {'required': True}
+            'name': {'required': True},
+            'description': {'required': False},
         }
 
 
