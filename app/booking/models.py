@@ -44,7 +44,7 @@ class TimeFrame(models.Model):
     end_date = models.DateTimeField()
     start_hour = models.TimeField()
     end_hour = models.TimeField()
-    slot_duration = models.TimeField()
+    slot_duration = models.IntegerField()
     kit = models.ForeignKey('Kit', related_name='timeframes', on_delete=models.CASCADE)
     enabled = models.BooleanField(default=True)
     registration_date = models.DateTimeField(auto_now_add=True)

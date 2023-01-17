@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from booking.models import Booking, Kit, Laboratory, TimeFrame
 from django.utils.crypto import get_random_string
+from datetime import datetime, date, timedelta
 
 from users.serializers import UserSerializer
 
@@ -67,3 +68,47 @@ class TimeFrameSerializer(serializers.ModelSerializer):
             'slot_duration': {'required': True},
             'kit': {'required': True}
         }
+
+    def create(self, validated_data):
+        public = self.context['request'].data.get('public', False)
+
+        start_date = validated_data['start_date']
+        end_date = validated_data['end_date']
+        start_hour = validated_data['start_hour']
+        end_hour = validated_data['end_hour']
+
+        kit = validated_data['kit']
+        slot_duration = validated_data['slot_duration']
+
+        if start_date > end_date:
+            raise serializers.ValidationError("Start date must be before end date")
+        if start_hour > end_hour:
+            raise serializers.ValidationError("Start hour must be before end hour")
+
+        time_delta = end_date - start_date
+
+        number_of_days = time_delta.days        
+        number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
+
+        for _ in range(number_of_days + 1):
+            start_date = datetime.combine(start_date, start_hour).replace(tzinfo=datetime.now().astimezone().tzinfo)
+
+            for _ in range(number_of_slots):
+                end_date = start_date + timedelta(minutes=slot_duration)
+
+                booking = Booking.objects.create(
+                    start_date=start_date,
+                    end_date=end_date,
+                    available=True,
+                    public=public,
+                    password=get_random_string(15),
+                    owner=self.context['request'].user,
+                    kit=kit
+                )
+
+                booking.save()
+                start_date = end_date
+            
+            start_date = start_date + timedelta(days=1)
+
+        return TimeFrame.objects.create(**validated_data)
