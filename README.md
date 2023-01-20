@@ -59,6 +59,5 @@ This work was partially funded by the Erasmus+ Project “EUBBC-Digital” (No.
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## More information
-
+## More Information
 For more information about the project, please visit our [website](https://eubbc-digital.upb.edu/).
