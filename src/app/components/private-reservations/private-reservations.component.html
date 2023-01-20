@@ -1,0 +1,28 @@
+<app-navbar></app-navbar>
+
+<p class="title">My reservations</p>
+
+<div class="reservation-list center" *ngIf="reservationList.length > 0">
+  <div class="row">
+    <div class="column" *ngFor="let reservation of reservationList">
+      <app-reservation-card
+        (cancelReservationEvent)="getPersonalBookingList()"
+        [reservation]="reservation"
+        [privateList]="true"
+      ></app-reservation-card>
+    </div>
+  </div>
+</div>
+
+<div class="text-center message" *ngIf="showMessage">
+  <p>You did not make any reservation.</p>
+  <img
+    class="image"
+    src="../../../assets/empty-folder.png"
+    alt="Empty folder"
+  />
+</div>
+
+<app-spinner *ngIf="showSpinner"></app-spinner>
+
+<app-scroll-to-top></app-scroll-to-top>

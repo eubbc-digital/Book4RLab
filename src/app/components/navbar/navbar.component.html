@@ -1,0 +1,74 @@
+<mat-toolbar color="primary">
+  <div id="main-label" (click)="goToBooking()">
+    <img id="logo" src="../../../assets/logo.png" alt="logo" width="30px" />
+    <span id="navbar-title">Remote Lab Booking</span>
+  </div>
+  <span class="spacer"></span>
+  <button
+    type="button"
+    aria-label="side nav"
+    [matMenuTriggerFor]="menu"
+    mat-icon-button
+    *ngIf="(isHandset | async)!.matches; else navbarButtons"
+  >
+    <mat-icon aria-label="Side nav icon">menu</mat-icon>
+  </button>
+
+  <mat-menu class="navbar-menu" #menu="matMenu">
+    <button mat-menu-item aria-label="Booking button" (click)="goToBooking()">
+      <mat-icon>book_online</mat-icon>
+      <span>New booking</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="Public reservation list button"
+      (click)="goToPublicReservations()"
+    >
+      <mat-icon>list</mat-icon>
+      <span>Public rooms</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="Personal reservation list button"
+      (click)="goToMyReservations()"
+    >
+      <mat-icon>list</mat-icon>
+      <span> My reservations</span>
+    </button>
+
+    <button mat-menu-item aria-label="Logout icon" (click)="logout()">
+      <mat-icon>login</mat-icon>
+      <span>Logout </span>
+    </button>
+  </mat-menu>
+
+  <ng-template #navbarButtons>
+    <button mat-button aria-label="Booking button" (click)="goToBooking()">
+      <mat-icon>book_online</mat-icon>
+      New booking
+    </button>
+
+    <button
+      mat-button
+      aria-label="Public reservation list button"
+      (click)="goToPublicReservations()"
+    >
+      Public rooms
+    </button>
+
+    <button
+      mat-button
+      aria-label="Personal reservation list button"
+      (click)="goToMyReservations()"
+    >
+      My reservations
+    </button>
+
+    <button mat-button aria-label="Logout icon" (click)="logout()">
+      <mat-icon>login</mat-icon>
+      Logout
+    </button>
+  </ng-template>
+</mat-toolbar>

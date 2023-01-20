@@ -1,0 +1,12 @@
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+
+@media (max-width: 600px) {
+  .spinner {
+    height: 150px;
+  }
+}

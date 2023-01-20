@@ -1,0 +1,51 @@
+<mat-card
+  appCardElevation
+  class="reservation-card"
+  [ngClass]="{ 'extra-padding': !showCancelButton() }"
+  *ngIf="dataReady"
+>
+  <p class="title">Reservation N° {{ reservation.id }}</p>
+
+  <div class="row">
+    <div class="cols-2">
+      <p><strong>Lab:</strong> {{ lab.name }}</p>
+      <p><strong>Kit:</strong> {{ kit.name }}</p>
+      <p>
+        <strong>Start date:</strong>
+        {{ getFormattedDate(reservation.start_date!) }}
+      </p>
+      <p>
+        <strong>End date:</strong>
+        {{ getFormattedDate(reservation.end_date!) }}
+      </p>
+      <p *ngIf="!privateList">
+        <strong>Reserved by:</strong>
+        {{ getReservedBy() }}
+      </p>
+      <p *ngIf="privateList" class="reservation-type-row">
+        <span><strong>Type:</strong> {{ getReservationType() }}</span>
+
+        <mat-icon class="icon">
+          {{ reservation.public ? "public" : "lock" }}
+        </mat-icon>
+      </p>
+    </div>
+    <div class="col-1 qr">
+      <qr-code
+        [value]="getAccessUrl()"
+        size="160"
+        errorCorrectionLevel="M"
+      ></qr-code>
+    </div>
+  </div>
+  <span>
+    <strong>Link: </strong>
+    <a class="reservation-link" [href]="getAccessUrl()" target="_blank">{{ getAccessUrl() }}</a>
+  </span>
+
+  <mat-card-actions align="end" *ngIf="showCancelButton()">
+    <button mat-button color="primary" (click)="openConfirmationDialog()">
+      CANCEL
+    </button>
+  </mat-card-actions>
+</mat-card>

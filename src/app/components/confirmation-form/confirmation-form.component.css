@@ -1,0 +1,13 @@
+mat-form-field {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.reservation-data {
+  margin-top: 10px;
+}
+
+.checkbox {
+  margin-left: 10px;
+}

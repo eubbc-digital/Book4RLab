@@ -1,0 +1,21 @@
+footer {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#erasmus-logo {
+  margin-right: 20px;
+}
+
+#copyright {
+  margin-left: 20px;
+}
+
+@media (max-width: 600px) {
+  footer {
+    height: 150px;
+    flex-direction: column;
+  }
+}

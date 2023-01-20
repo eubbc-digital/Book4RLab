@@ -1,0 +1,17 @@
+.message {
+  height: 450px;
+}
+
+.image {
+  width: 200px;
+}
+
+@media (max-width: 600px) {
+  .image {
+    width: 150px;
+  }
+
+  .message {
+    height: 200px;
+  }
+}

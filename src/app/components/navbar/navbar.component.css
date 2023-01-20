@@ -1,0 +1,25 @@
+#logo {
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+#main-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+::ng-deep .mat-menu-panel {
+  width: 200px !important;
+}
+
+@media (max-width: 600px) {
+  #logo {
+    width: 25px;
+  }
+
+  #navbar-title {
+    font-size: 16px;
+  }
+}
