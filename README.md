@@ -42,23 +42,23 @@ This project was built using the following technologies:
  - Angular - The framework used for the user interface.
  - Docker - Used for containerization.
 
-### Authors
+## Authors
 
  - Adriana Orellana (Universidad Privada Boliviana - UPB)
  - Angel Zenteno (Universidad Privada Boliviana - UPB)
  - Alex Villazon (Universidad Privada Boliviana - UPB)
  - Omar Ormachea (Universidad Privada Boliviana - UPB)
 
-### Acknowledgments
+## Acknowledgments
 
 This work was partially funded by the Erasmus+ Project “EUBBC-Digital” (No.
 618925-EPP-1-2020-1-BR-EPPKA2-CBHE-JP)
 
 ![](assets/erasmus.jpeg)
 
-### License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-### More information
+## More information
 
 For more information about the project, please visit our [website](https://eubbc-digital.upb.edu/).
