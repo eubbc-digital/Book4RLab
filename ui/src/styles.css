@@ -36,6 +36,11 @@ body {
   box-shadow: 0 0 12px #3b3b3b !important;
 }
 
+/* ---------------- Form styles ---------------- */
+form {
+  padding: 30px;
+}
+
 .input-field {
   width: 100%;
   padding-left: 10px;
@@ -46,17 +51,13 @@ body {
   margin-top: 20px;
 }
 
-form {
-  padding: 30px;
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }
 
 .access-button {
   width: 100%;
-}
-
-input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear {
-  display: none;
 }
 
 .center {
@@ -74,9 +75,76 @@ input[type="password"]::-ms-clear {
   font-size: 17px;
   padding-top: 30px;
 }
+/* ------------------------------------------ */
 
 .reservation-list {
   width: 80%;
+}
+
+/* ---------------- Table styles ---------------- */
+.mat-card-title-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table {
+  border-radius: 10px;
+}
+
+.table-content {
+  width: 100%;
+  padding-top: 10px;
+}
+
+.table-header {
+  color: white;
+  padding: 18px 20px;
+  margin: 0px 15px;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+tr.no-data-row {
+  display: flex;
+  border-width: 0;
+  border-style: solid;
+  margin-top: 20px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.action-button {
+  color: grey;
+}
+
+.mobile-label {
+  display: none;
+}
+/* ------------------------------------------ */
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.page-content {
+  padding: 15px 40px 0px 40px;
+  background: #f1f5f9;
+  min-height: calc(100vh - 190px);
+  margin-top: 20px;
+}
+
+.dialog-responsive {
+  width: 40%;
 }
 
 @media (max-width: 600px) {
@@ -95,6 +163,33 @@ input[type="password"]::-ms-clear {
 
   .input-field {
     padding: 0px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .dialog-responsive {
+    width: 100%;
+  }
+
+  .mat-cell:first-of-type {
+    padding-left: 0px;
+  }
+
+  .mobile-label {
+    width: 80px;
+    display: inline-block;
+    font-weight: bold;
+    padding-left: 0px;
+  }
+
+  .mat-header-row {
+    display: none;
+  }
+
+  .mat-row {
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
   }
 }
 

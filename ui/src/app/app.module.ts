@@ -35,6 +35,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
+import { LabsComponent } from './pages/labs/labs.component';
+import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { PendingChangesGuard } from './pending-changes.guard';
     SpinnerComponent,
     ConfirmationDialogComponent,
     ScrollToTopComponent,
+    LabsComponent,
+    LabDialogComponent,
   ],
   imports: [
     BrowserModule,

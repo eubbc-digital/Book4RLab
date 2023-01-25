@@ -5,12 +5,13 @@ import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper
 import { AccessComponent } from './pages/access/access.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
+import { LabsComponent } from './pages/labs/labs.component';
 
 const routes: Routes = [
   {
     path: '',
     component: BookingStepperComponent,
-    canDeactivate: [PendingChangesGuard]
+    canDeactivate: [PendingChangesGuard],
   },
   {
     path: 'access',
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'public-reservations',
     component: PublicReservationsComponent,
+  },
+  {
+    path: 'labs',
+    component: LabsComponent,
   },
 ];
 
