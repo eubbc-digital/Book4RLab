@@ -9,10 +9,6 @@
   color: white;
 }
 
-.mat-column-id {
-  flex: 0 0 10%;
-}
-
 .mat-column-url {
   flex: 0 0 50%;
 }

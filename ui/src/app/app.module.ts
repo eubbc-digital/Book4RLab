@@ -37,6 +37,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { PendingChangesGuard } from './pending-changes.guard';
 import { LabsComponent } from './pages/labs/labs.component';
 import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
+import { KitsComponent } from './pages/kits/kits.component';
+import { KitDialogComponent } from './components/kit-dialog/kit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component
     ScrollToTopComponent,
     LabsComponent,
     LabDialogComponent,
+    KitsComponent,
+    KitDialogComponent,
   ],
   imports: [
     BrowserModule,

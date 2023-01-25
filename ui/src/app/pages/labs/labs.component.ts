@@ -44,7 +44,7 @@ export class LabsComponent implements OnInit {
   }
 
   goToAssignments(labId: number): void {
-    this.router.navigate(['/kit-assignment'], {
+    this.router.navigate(['/kits'], {
       queryParams: {
         lab: labId,
       },

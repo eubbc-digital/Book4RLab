@@ -1,16 +1,19 @@
 <app-navbar></app-navbar>
 
 <div class="page-content">
+  <div>
+    <h3><strong>Lab:</strong> {{ selectedLab.id }}</h3>
+  </div>
   <div class="mat-elevation-z2 table">
-    <mat-card class="table-header mat-elevation-z8" id="labs-header">
+    <mat-card class="table-header mat-elevation-z8" id="kits-header">
       <mat-card-title-group>
         <mat-card-title class="table-title">{{ tableTitle }}</mat-card-title>
         <div>
           <button
             mat-fab
-            id="labs-header-btn"
-            aria-label="Add lab button"
-            (click)="openLabDialog()"
+            id="kits-header-btn"
+            aria-label="Add kit button"
+            (click)="openKitDialog()"
           >
             <mat-icon>add</mat-icon>
           </button>
@@ -40,13 +43,13 @@
           </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="url">
-          <mat-header-cell *matHeaderCellDef mat-sort-header
-            >URL</mat-header-cell
-          >
+        <ng-container matColumnDef="description">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Description
+          </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <span class="mobile-label">URL:</span>
-            {{ element.url }}
+            <span class="mobile-label">Description: </span>
+            {{ element.description }}
           </mat-cell>
         </ng-container>
 
@@ -57,7 +60,7 @@
             <button
               mat-icon-button
               class="action-button"
-              (click)="updateLab(element)"
+              (click)="updateKit(element)"
             >
               <mat-icon>edit</mat-icon>
             </button>
@@ -68,9 +71,6 @@
             >
               <mat-icon>delete</mat-icon>
             </button>
-            <button mat-icon-button class="action-button" (click)="goToAssignments(element.id)">
-              <mat-icon>assignment_add</mat-icon>
-            </button>
           </mat-cell>
         </ng-container>
 
@@ -78,7 +78,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
         <tr class="mat-row no-data-row" *matNoDataRow>
-          <td class="mat-cell">There are not registered labs.</td>
+          <td class="mat-cell">There are not assigned kits.</td>
         </tr>
       </mat-table>
     </div>

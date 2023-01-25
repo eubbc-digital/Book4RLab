@@ -6,6 +6,7 @@ import { AccessComponent } from './pages/access/access.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
 import { LabsComponent } from './pages/labs/labs.component';
+import { KitsComponent } from './pages/kits/kits.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'labs',
     component: LabsComponent,
+  },
+  {
+    path: 'kits',
+    component: KitsComponent,
   },
 ];
 
