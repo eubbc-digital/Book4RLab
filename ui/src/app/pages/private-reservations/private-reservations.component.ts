@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Booking } from 'src/app/interfaces/booking';
 import { BookingService } from 'src/app/services/booking.service';
+import { Booking } from 'src/app/interfaces/booking';
 
 @Component({
   selector: 'app-private-reservations',
@@ -25,9 +25,7 @@ export class PrivateReservationsComponent implements OnInit {
       this.reservationList = bookingList;
       this.showSpinner = false;
 
-      if (this.reservationList.length == 0) {
-        this.showMessage = true;
-      }
+      if (this.reservationList.length == 0) this.showMessage = true;
     });
   }
 }

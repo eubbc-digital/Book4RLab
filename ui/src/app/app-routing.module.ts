@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PendingChangesGuard } from './pending-changes.guard';
-import { BookingStepperComponent } from './components/booking-stepper/booking-stepper.component';
-import { AccessComponent } from './components/access/access.component';
-import { PrivateReservationsComponent } from './components/private-reservations/private-reservations.component';
-import { PublicReservationsComponent } from './components/public-reservations/public-reservations.component';
+import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
+import { AccessComponent } from './pages/access/access.component';
+import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
+import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
 
 const routes: Routes = [
   {
