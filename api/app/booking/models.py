@@ -27,6 +27,7 @@ class Kit(models.Model):
     laboratory = models.ForeignKey('Laboratory', related_name='reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
+    enabled = models.BooleanField(default=True)
     
 
 class Laboratory(models.Model):
@@ -36,6 +37,7 @@ class Laboratory(models.Model):
     url = models.CharField(max_length=255, blank=True, null=True, default='')
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
+    enabled = models.BooleanField(default=True)
 
 
 class TimeFrame(models.Model):

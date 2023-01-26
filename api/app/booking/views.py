@@ -163,13 +163,13 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
 class KitList(generics.ListCreateAPIView):
 
-    queryset = Kit.objects.all()
+    queryset = Kit.objects.filter(enabled=True)
     serializer_class = KitSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = Kit.objects.all()
+        queryset = Kit.objects.filter(enabled=True)
         laboratory = self.request.query_params.get('laboratory')
 
         if laboratory is not None:
@@ -183,7 +183,7 @@ class KitList(generics.ListCreateAPIView):
 
 class KitDetail(generics.RetrieveUpdateAPIView):
 
-    queryset = Kit.objects.all()
+    queryset = Kit.objects.filter(enabled=True)
     serializer_class = KitSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -191,7 +191,7 @@ class KitDetail(generics.RetrieveUpdateAPIView):
 
 class LaboratoryList(generics.ListCreateAPIView):
 
-    queryset = Laboratory.objects.all()
+    queryset = Laboratory.objects.filter(enabled=True)
     serializer_class = LaboratorySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -199,7 +199,7 @@ class LaboratoryList(generics.ListCreateAPIView):
 
 class LaboratoryDetail(generics.RetrieveUpdateAPIView):
 
-    queryset = Laboratory.objects.all()
+    queryset = Laboratory.objects.filter(enabled=True)
     serializer_class = LaboratorySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)

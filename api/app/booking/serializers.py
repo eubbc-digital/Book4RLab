@@ -38,7 +38,7 @@ class KitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Kit
-        fields = ['id', 'name', 'description', 'laboratory']
+        fields = ['id', 'name', 'description', 'laboratory', 'enabled']
         extra_kwargs = {
             'name': {'required': True},
             'laboratory': {'required': True},
@@ -50,7 +50,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Laboratory
-        fields = ['id', 'name', 'description', 'url']
+        fields = ['id', 'name', 'description', 'url', 'enabled']
         extra_kwargs = {
             'name': {'required': True},
             'description': {'required': False},
