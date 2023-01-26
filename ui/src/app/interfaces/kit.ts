@@ -3,4 +3,5 @@ export interface Kit {
   name?: string;
   description?: string;
   laboratory?: number;
+  enabled?: boolean;
 }

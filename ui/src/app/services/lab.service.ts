@@ -19,4 +19,12 @@ export class LabService {
   getLabById(labId: number): Observable<Lab> {
     return this.http.get<Lab>(`${this.url}${labId}/`);
   }
+
+  addLab(lab: Lab) {
+    return this.http.post<Lab>(this.url, lab);
+  }
+
+  updateLab(newLab: Lab, id: number) {
+    return this.http.put<Lab>(`${this.url}${id}/`, newLab);
+  }
 }

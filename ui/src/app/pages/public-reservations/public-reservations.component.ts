@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Booking } from 'src/app/interfaces/booking';
-import { Kit } from 'src/app/interfaces/kit';
-import { Lab } from 'src/app/interfaces/lab';
+
 import { BookingService } from 'src/app/services/booking.service';
 import { KitService } from 'src/app/services/kit.service';
 import { LabService } from 'src/app/services/lab.service';
 import { ToastrService } from 'ngx-toastr';
+
+import { Booking } from 'src/app/interfaces/booking';
+import { Kit } from 'src/app/interfaces/kit';
+import { Lab } from 'src/app/interfaces/lab';
 import * as moment from 'moment';
 
 @Component({
@@ -63,18 +65,16 @@ export class PublicReservationsComponent implements OnInit {
   getLaboratories(): void {
     this.labService.getLabs().subscribe((labs) => {
       this.labs = labs;
-      this.selectFirstAvailableLab();
+      if (this.labs.length > 0) this.selectFirstAvailableLab();
     });
   }
 
   selectFirstAvailableLab(): void {
-    if (this.labs.length > 0) {
-      const selectedLab = this.labs[0];
+    const selectedLab = this.labs[0];
 
-      this.labControl.setValue(selectedLab);
+    this.labControl.setValue(selectedLab);
 
-      this.getKitsByLabId(selectedLab.id!);
-    }
+    this.getKitsByLabId(selectedLab.id!);
   }
 
   getKitsByLabId(labId: number) {
@@ -86,15 +86,14 @@ export class PublicReservationsComponent implements OnInit {
       });
 
       this.kits.unshift(this.optionAll);
-      this.setDataFromFirstAvailableKit();
+
+      if (this.kits.length > 0) this.setDataFromFirstAvailableKit();
     });
   }
 
   setDataFromFirstAvailableKit(): void {
-    if (this.kits.length > 0) {
-      const selectedKit = this.kits[0];
-      this.searcherControlGroup.controls['selectedKit'].setValue(selectedKit);
-    }
+    const selectedKit = this.kits[0];
+    this.searcherControlGroup.controls['selectedKit'].setValue(selectedKit);
   }
 
   getPublicBookingList(): void {

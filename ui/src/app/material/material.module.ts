@@ -18,6 +18,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -39,6 +42,9 @@ const MaterialComponents = [
   MatPaginatorModule,
   MatDialogModule,
   MatAutocompleteModule,
+  MatDividerModule,
+  MatListModule,
+  MatTableModule,
 ];
 
 @NgModule({

@@ -8,17 +8,18 @@ import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import config from '../../config.json';
 
+import { ComponentCanDeactivate } from '../../pending-changes.guard';
+
 import { LabService } from 'src/app/services/lab.service';
 import { KitService } from 'src/app/services/kit.service';
 import { ToastrService } from 'ngx-toastr';
-import { ComponentCanDeactivate } from '../../pending-changes.guard';
-
-import { AvailableDate } from 'src/app/interfaces/available-date';
 import { BookingService } from 'src/app/services/booking.service';
 import { UserService } from 'src/app/services/user.service';
+
 import { Lab } from 'src/app/interfaces/lab';
 import { Kit } from 'src/app/interfaces/kit';
 import { Booking } from 'src/app/interfaces/booking';
+import { AvailableDate } from 'src/app/interfaces/available-date';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -62,9 +63,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   availableHoursBySelectedDate: AvailableDate[] = [];
 
   isEditable: boolean = true;
-  noAvailableData: boolean = false;
-  restartSelectedHour: boolean = false;
-  showSpinner: boolean = true;
+  showSpinner: boolean = false;
   publicReservation: boolean = false;
   confirmedReservation: boolean = false;
   isFirstStepCompleted: boolean = false;
@@ -112,7 +111,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
     this.labService.getLabs().subscribe((labs) => {
       this.labs = labs;
-      this.selectFirstAvailableLab();
+
+      if (this.labs.length > 0) this.selectFirstAvailableLab();
     });
   }
 
@@ -150,34 +150,27 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   }
 
   selectFirstAvailableLab(): void {
-    if (this.labs.length > 0) {
-      const selectedLab = this.labs[0];
+    const selectedLab = this.labs[0];
 
-      this.reservationFormGroup.controls['selectedLab'].setValue(selectedLab);
+    this.reservationFormGroup.controls['selectedLab'].setValue(selectedLab);
 
-      this.getKitsByLabId(selectedLab.id!);
-    }
+    this.getKitsByLabId(selectedLab.id!);
   }
 
   getKitsByLabId(labId: number): void {
     this.kitService.getKitsByLabId(labId).subscribe((kits) => {
       this.kits = kits.reverse();
 
-      this.setDataFromFirstAvailableKit();
+      if (this.kits.length > 0) this.setDataFromFirstAvailableKit();
     });
   }
 
   setDataFromFirstAvailableKit(): void {
-    if (this.kits.length > 0) {
-      this.noAvailableData = false;
+    const selectedKit = this.kits[0];
 
-      const selectedKit = this.kits[0];
+    this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
 
-      this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
-      this.getHoursByKitIdAndDate(selectedKit.id, this.selectedDate);
-    } else {
-      this.noAvailableData = true;
-    }
+    this.getHoursByKitIdAndDate(selectedKit.id, this.selectedDate);
   }
 
   getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
@@ -363,13 +356,12 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       this.resetBookingId();
     }
 
-    this.selectFirstAvailableLab();
+    if (this.labs.length > 0) this.selectFirstAvailableLab();
   }
 
   onStepChange(event: any) {
-    if (event.selectedIndex == 0 && event.previouslySelectedIndex == 1) {
+    if (event.selectedIndex == 0 && event.previouslySelectedIndex == 1)
       this.undoReservation();
-    }
   }
 
   resetBookingId(): void {

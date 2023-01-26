@@ -8,7 +8,7 @@ import { Booking } from '../interfaces/booking';
   providedIn: 'root',
 })
 export class BookingService {
-  private url: string = `${config.api.baseUrl}${config.api.booking.url}`;
+  private url: string = config.api.baseUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -38,7 +38,11 @@ export class BookingService {
     return this.http.get<Booking[]>(url);
   }
 
-  getPublicReservations(kitId: number, startDate: string, endDate: string): Observable<Booking[]> {
+  getPublicReservations(
+    kitId: number,
+    startDate: string,
+    endDate: string
+  ): Observable<Booking[]> {
     let url = `${config.api.baseUrl}${config.api.booking.publicReservations}`;
     let params = new HttpParams();
 
