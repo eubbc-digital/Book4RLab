@@ -11,7 +11,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // Components
 import { AppComponent } from './app.component';
-import { BookingStepperComponent } from './components/booking-stepper/booking-stepper.component';
 import { AvailableHoursComponent } from './components/available-hours/available-hours.component';
 import { ConfirmationFormComponent } from './components/confirmation-form/confirmation-form.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -19,20 +18,29 @@ import { FooterComponent } from './components/footer/footer.component';
 import { BookingLinkComponent } from './components/booking-link/booking-link.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { AccessComponent } from './components/access/access.component';
 import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
-import { PrivateReservationsComponent } from './components/private-reservations/private-reservations.component';
-import { PublicReservationsComponent } from './components/public-reservations/public-reservations.component';
 import { CardElevationDirective } from './directives/card-elevation.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
+
+// Pages
+import { AccessComponent } from './pages/access/access.component';
+import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
+import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
+import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
 
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
+import { LabsComponent } from './pages/labs/labs.component';
+import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
+import { KitsComponent } from './pages/kits/kits.component';
+import { KitDialogComponent } from './components/kit-dialog/kit-dialog.component';
+import { TimeframesComponent } from './pages/timeframes/timeframes.component';
+import { TimeframeDialogComponent } from './components/timeframe-dialog/timeframe-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +61,12 @@ import { PendingChangesGuard } from './pending-changes.guard';
     SpinnerComponent,
     ConfirmationDialogComponent,
     ScrollToTopComponent,
+    LabsComponent,
+    LabDialogComponent,
+    KitsComponent,
+    KitDialogComponent,
+    TimeframesComponent,
+    TimeframeDialogComponent,
   ],
   imports: [
     BrowserModule,

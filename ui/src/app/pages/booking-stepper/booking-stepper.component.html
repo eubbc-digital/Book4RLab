@@ -1,0 +1,121 @@
+<app-navbar></app-navbar>
+
+<mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
+  <countdown
+    #cd
+    class="timer"
+    [config]="timerConfig"
+    (event)="handleEvent($event)"
+  ></countdown>
+  <mat-stepper
+    #stepper
+    [orientation]="(stepperOrientation | async)!"
+    linear
+    id="stepper"
+    (selectionChange)="onStepChange($event)"
+  >
+    <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable" [completed]="isFirstStepCompleted">
+      <form [formGroup]="reservationFormGroup" (ngSubmit)="followNextStep()">
+        <ng-template matStepLabel>Select date and time</ng-template>
+        <div class="row">
+          <div class="column">
+            <h2>Available dates</h2>
+            <mat-card class="calendar-card">
+              <mat-calendar
+                [selected]="reservationFormGroup.controls['selectedDate'].value"
+                [startAt]="startAt"
+                [minDate]="minDate"
+                [maxDate]="maxDate"
+                (selectedChange)="onSelectDate($event)"
+              ></mat-calendar>
+            </mat-card>
+          </div>
+
+          <div class="column">
+            <mat-form-field appearance="fill" class="selector">
+              <mat-label>Laboratories</mat-label>
+              <mat-select
+                (selectionChange)="getKitsByLabId($event.value.id)"
+                formControlName="selectedLab"
+                required
+              >
+                <mat-option *ngFor="let lab of labs" [value]="lab">{{
+                  lab.name
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="selector">
+              <mat-label>Materials</mat-label>
+              <mat-select
+                formControlName="selectedKit"
+                (selectionChange)="
+                  getHoursByKitIdAndDate($event.value.id, selectedDate)
+                "
+              >
+                <mat-option *ngFor="let kit of kits" [value]="kit">
+                  {{ kit.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <app-available-hours
+              [showSpinner]="showSpinner"
+              [hours]="availableHoursBySelectedDate"
+              (unavailableHoursEvent)="resetSelectedHour()"
+              (selectedHourEvent)="updateSelectedHour($event)"
+            >
+            </app-available-hours>
+          </div>
+        </div>
+
+        <div class="next-step">
+          <button
+            color="primary"
+            [disabled]="!reservationFormGroup.valid"
+            mat-raised-button
+          >
+            Next
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [editable]="isEditable">
+      <ng-template matStepLabel>Confirm reservation</ng-template>
+      <app-confirmation-form
+        [bookingId]="bookingId"
+        [selectedKit]="selectedKit"
+        [selectedLab]="selectedLab"
+        (reservationTypeEvent)="updateReservationType($event)"
+      ></app-confirmation-form>
+      <div class="space-between">
+        <button
+          mat-raised-button
+          matStepperPrevious
+          color="primary"
+          (click)="undoReservation()"
+        >
+          Back
+        </button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          (click)="confirmReservation()"
+        >
+          Done
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Reservation details</ng-template>
+      <app-booking-link
+        [startDate]="reservationDate"
+        [privateBookingLink]="privateAccessUrl"
+        [publicBookingLink]="publicAccessUrl"
+      ></app-booking-link>
+    </mat-step>
+  </mat-stepper>
+</mat-card>

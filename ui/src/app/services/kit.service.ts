@@ -24,4 +24,12 @@ export class KitService {
   getKitById(kitId: number): Observable<Kit> {
     return this.http.get<Kit>(`${this.url}${kitId}/`);
   }
+
+  addKit(kit: Kit) {
+    return this.http.post<Kit>(this.url, kit);
+  }
+
+  updateKit(newKit: Kit, id: number) {
+    return this.http.put<Kit>(`${this.url}${id}/`, newKit);
+  }
 }
