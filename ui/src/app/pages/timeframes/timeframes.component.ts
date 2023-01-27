@@ -118,11 +118,6 @@ export class TimeframesComponent implements OnInit {
     });
   }
 
-  updateTimeframe(timeframe: Timeframe): void {
-    this.selectedTimeFrame = timeframe;
-    this.openTimeframeDialog();
-  }
-
   deleteTimeframe(id: number): void {
     this.timeframeService.deleteTimeframe(id).subscribe({
       next: (_) => {
