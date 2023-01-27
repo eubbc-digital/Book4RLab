@@ -8,7 +8,7 @@ import { Booking } from '../interfaces/booking';
   providedIn: 'root',
 })
 export class BookingService {
-  private url: string = config.api.baseUrl;
+  private url: string = `${config.api.baseUrl}${config.api.booking.url}`;
 
   constructor(private http: HttpClient) {}
 

@@ -159,7 +159,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   getKitsByLabId(labId: number): void {
     this.kitService.getKitsByLabId(labId).subscribe((kits) => {
-      this.kits = kits.reverse();
+      this.kits = kits;
 
       if (this.kits.length > 0) this.setDataFromFirstAvailableKit();
     });
@@ -175,7 +175,9 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
     this.showSpinner = true;
+
     let availableDates: AvailableDate[] = [];
+    
     this.bookingService
       .getBookingListByKitId(kitId)
       .subscribe((bookingList) => {
