@@ -1,5 +1,5 @@
 export interface Kit {
-  id: number;
+  id?: number;
   name?: string;
   description?: string;
   laboratory?: number;
