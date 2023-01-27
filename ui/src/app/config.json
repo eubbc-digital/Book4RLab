@@ -1,17 +1,17 @@
 {
   "api": {
-    "baseUrl": "http://eubbc-digital.upb.edu:8000/api/",
+    "baseUrl": "https://eubbc-digital.upb.edu/booking/api/",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
       "signup": "users/signup/"
     },
-    "labs": "booking/laboratories/",
-    "kits": "booking/kits/",
+    "labs": "laboratories/",
+    "kits": "kits/",
     "booking": {
-      "url": "booking/",
-      "myList": "booking/me/",
-      "publicReservations": "booking/public/"
+      "url": "bookings/",
+      "myList": "me/",
+      "publicReservations": "public/"
     }
   },
   "organizationData": {
@@ -21,7 +21,7 @@
   "appInformation": {
     "title": "Booking"
   },
-  "loginUrl": "http://eubbc-digital.upb.edu:4200/access",
+  "loginUrl": "https://eubbc-digital.upb.edu/booking/access",
   "urlParams": {
     "accessId": "access_id",
     "password": "pwd"
