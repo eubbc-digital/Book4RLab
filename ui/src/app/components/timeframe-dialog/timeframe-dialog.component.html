@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="text-center">{{ title }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="timeframeForm">
+    <mat-form-field class="input-field" appearance="fill">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input
+        formGroupName="dates"
+        [rangePicker]="picker"
+        [min]="minDate"
+        required
+      >
+        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input matEndDate formControlName="end" placeholder="End date" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="picker">
+        <mat-icon matDatepickerToggleIcon>
+          calendar_month
+        </mat-icon></mat-datepicker-toggle
+      >
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="startDateControl!.hasError('matDatepickerParse')">
+        Invalid start date.
+      </mat-error>
+      <mat-error *ngIf="endDateControl!.hasError('matDatepickerParse')">
+        Invalid end date.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Start hour</mat-label>
+      <input matInput type="time" formControlName="startHour" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>End hour</mat-label>
+      <input matInput type="time" formControlName="endHour" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Slot duration (min)</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="slotDuration"
+        min="15"
+        max="120"
+      />
+      <mat-error *ngIf="slotDurationControl!.hasError('min')">
+        The minimum value allowed is 15 min.
+      </mat-error>
+      <mat-error *ngIf="slotDurationControl!.hasError('max')">
+        The maximum value allowed is 120 min.
+      </mat-error>
+    </mat-form-field>
+
+    <p class="mat-small">* Indicates required fields.</p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="resetDialog()">Cancel</button>
+  <button
+    type="submit"
+    mat-raised-button
+    cdkFocusInitial
+    color="primary"
+    (click)="save()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

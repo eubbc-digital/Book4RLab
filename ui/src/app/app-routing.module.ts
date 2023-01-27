@@ -7,6 +7,7 @@ import { PrivateReservationsComponent } from './pages/private-reservations/priva
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
 import { LabsComponent } from './pages/labs/labs.component';
 import { KitsComponent } from './pages/kits/kits.component';
+import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
   {
     path: 'kits',
     component: KitsComponent,
+  },
+  {
+    path: 'timeframes',
+    component: TimeframesComponent,
   },
 ];
 

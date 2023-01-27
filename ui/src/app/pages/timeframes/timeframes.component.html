@@ -1,0 +1,124 @@
+<app-navbar></app-navbar>
+
+<div class="page-content">
+  <div>
+    <h3><strong>Kit:</strong> {{ selectedKit.name }}</h3>
+  </div>
+  <div class="mat-elevation-z2 table">
+    <mat-card class="table-header mat-elevation-z8" id="timeframes-header">
+      <mat-card-title-group>
+        <mat-card-title class="table-title">{{ tableTitle }}</mat-card-title>
+        <div>
+          <button
+            mat-fab
+            id="timeframes-header-btn"
+            aria-label="Add timeframe button"
+            (click)="openTimeframeDialog()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-card-title-group>
+    </mat-card>
+
+    <div *ngIf="!isLoading; else spinner">
+      <mat-table class="table-content" [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header
+            >Id</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">Id:</span>
+            {{ element.id }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header
+            >Start date</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">Start date</span>
+            {{ getFormattedDate(element.start_date) | date }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="endDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            End date
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">End date: </span>
+            {{ getFormattedDate(element.end_date) | date }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="startHour">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Start hour
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">Start hour</span>
+            {{ getFormattedHour(element.start_hour) }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="endHour">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            End hour
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">End hour: </span>
+            {{ getFormattedHour(element.end_hour) }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="slotDuration">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Slot duration [min]
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">Slot duration [min]:</span>
+            {{ element.slot_duration }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <span class="mobile-label">Action:</span>
+            <button
+              mat-icon-button
+              class="action-button"
+              (click)="updateTimeframe(element)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="action-button"
+              (click)="openDeleteDialog(element.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+        <tr class="mat-row no-data-row" *matNoDataRow>
+          <td class="mat-cell">There are not assigned timeframes.</td>
+        </tr>
+      </mat-table>
+    </div>
+
+    <ng-template #spinner>
+      <div class="spinner-container">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-template>
+
+    <mat-paginator [pageSizeOptions]="[10, 20]"> </mat-paginator>
+  </div>
+</div>
