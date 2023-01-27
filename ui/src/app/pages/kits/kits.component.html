@@ -2,7 +2,7 @@
 
 <div class="page-content">
   <div>
-    <h3><strong>Lab:</strong> {{ selectedLab.id }}</h3>
+    <h3><strong>Laboratory:</strong> {{ selectedLab.name }}</h3>
   </div>
   <div class="mat-elevation-z2 table">
     <mat-card class="table-header mat-elevation-z8" id="kits-header">
@@ -24,9 +24,9 @@
     <div *ngIf="!isLoading; else spinner">
       <mat-table class="table-content" [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="id">
-          <mat-header-cell *matHeaderCellDef mat-sort-header
-            >Id</mat-header-cell
-          >
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Id
+          </mat-header-cell>
           <mat-cell *matCellDef="let element">
             <span class="mobile-label">Id:</span>
             {{ element.id }}
@@ -70,6 +70,13 @@
               (click)="openDeleteDialog(element)"
             >
               <mat-icon>delete</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="action-button"
+              (click)="goToAssignments(element.id)"
+            >
+              <mat-icon>assignment_add</mat-icon>
             </button>
           </mat-cell>
         </ng-container>

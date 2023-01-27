@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
 
 import { KitService } from 'src/app/services/kit.service';
+import { LabService } from 'src/app/services/lab.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
@@ -40,6 +41,7 @@ export class KitsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private kitService: KitService,
+    private labService: LabService,
     private toastr: ToastrService
   ) {}
 
@@ -47,23 +49,41 @@ export class KitsComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.selectedLab.id = params['lab'];
 
+      this.labService
+        .getLabById(this.selectedLab.id!)
+        .subscribe((response) => (this.selectedLab = response));
+
       this.getKitsByLabId();
     });
   }
 
+  goToAssignments(kitId: number): void {
+    this.router.navigate(['/timeframes'], {
+      queryParams: {
+        kit: kitId,
+      },
+    });
+  }
+
   getKitsByLabId(): void {
-    this.isLoading = true;
-    this.kitService
-      .getKitsByLabId(this.selectedLab.id!)
-      .subscribe((response) => {
-        this.dataSource = new MatTableDataSource(response);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.isLoading = false;
-      });
+    if (this.selectedLab.id) {
+      this.isLoading = true;
+
+      this.kitService
+        .getKitsByLabId(this.selectedLab.id)
+        .subscribe((response) => {
+          this.dataSource = new MatTableDataSource(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.isLoading = false;
+        });
+    }
   }
 
   openKitDialog(): void {
+    if (!this.selectedKit)
+      this.selectedKit = { laboratory: this.selectedLab.id };
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;

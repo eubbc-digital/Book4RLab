@@ -29,11 +29,12 @@ export class KitDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.dialogData) {
+    this.labId = this.dialogData.laboratory!;
+
+    if (this.dialogData.id) {
       const kit = this.dialogData;
 
-      this.selectedKitId = kit.id;
-      this.labId = kit.laboratory!;
+      this.selectedKitId = kit.id!;
       this.kitForm.controls['name'].setValue(kit.name!);
       this.kitForm.controls['description'].setValue(kit.description);
 
@@ -44,7 +45,9 @@ export class KitDialogComponent implements OnInit {
   }
 
   addKit(): void {
-    this.kitService.addKit(this.kitForm.value).subscribe({
+    const kit = this.getKit();
+
+    this.kitService.addKit(kit).subscribe({
       next: (_) => {
         this.resetDialog('The kit has been created successfully.');
       },
@@ -57,10 +60,9 @@ export class KitDialogComponent implements OnInit {
   }
 
   updateKit(): void {
-    let newKit = this.kitForm.value;
-    newKit.laboratory = this.labId;
+    const kit = this.getKit();
 
-    this.kitService.updateKit(newKit, this.selectedKitId).subscribe({
+    this.kitService.updateKit(kit, this.selectedKitId).subscribe({
       next: (_) => {
         this.resetDialog('The kit has been updated successfully.');
       },
@@ -72,10 +74,17 @@ export class KitDialogComponent implements OnInit {
     });
   }
 
+  getKit(): Kit {
+    const kit = this.kitForm.value;
+    kit.laboratory = this.labId;
+
+    return kit;
+  }
+
   save(): void {
     if (this.kitForm.valid) {
-      if (!this.dialogData) this.addKit();
-      else this.updateKit();
+      if (this.dialogData.id) this.updateKit();
+      else this.addKit();
     } else {
       this.toastr.error('Please fill in correctly the data.');
     }

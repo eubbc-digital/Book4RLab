@@ -170,7 +170,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
     this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
 
-    this.getHoursByKitIdAndDate(selectedKit.id, this.selectedDate);
+    this.getHoursByKitIdAndDate(selectedKit.id!, this.selectedDate);
   }
 
   getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
@@ -255,7 +255,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
           'This booking is not available. Please choose another.'
         );
 
-        this.getHoursByKitIdAndDate(this.selectedKit.id, this.selectedDate);
+        this.getHoursByKitIdAndDate(this.selectedKit.id!, this.selectedDate);
         this.bookingId = 0;
       }
     });
@@ -291,7 +291,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
             'This booking is not available. Please choose another.'
           );
 
-          this.getHoursByKitIdAndDate(this.selectedKit.id, this.selectedDate);
+          this.getHoursByKitIdAndDate(this.selectedKit.id!, this.selectedDate);
 
           this.bookingId = 0;
         }

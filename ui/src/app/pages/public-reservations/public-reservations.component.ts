@@ -82,7 +82,7 @@ export class PublicReservationsComponent implements OnInit {
       this.kits = kits.reverse();
 
       this.kitsId = this.kits.map((kit) => {
-        return kit.id;
+        return kit.id!;
       });
 
       this.kits.unshift(this.optionAll);
