@@ -12,7 +12,8 @@ class Booking(models.Model):
     password = models.CharField(max_length=15, blank=True, null=True, default=None)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner', on_delete=models.CASCADE)
     reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reserved_by', on_delete=models.CASCADE, blank=True, null=True, default=None)
-    kit = models.ForeignKey('Kit', related_name='reservations', on_delete=models.CASCADE)
+    kit = models.ForeignKey('Kit', related_name='kit_reservations', on_delete=models.CASCADE)
+    timeframe = models.ForeignKey('TimeFrame', related_name='tf_reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     
@@ -27,6 +28,7 @@ class Kit(models.Model):
     laboratory = models.ForeignKey('Laboratory', related_name='reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
+    enabled = models.BooleanField(default=True)
     
 
 class Laboratory(models.Model):
@@ -36,6 +38,7 @@ class Laboratory(models.Model):
     url = models.CharField(max_length=255, blank=True, null=True, default='')
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
+    enabled = models.BooleanField(default=True)
 
 
 class TimeFrame(models.Model):
