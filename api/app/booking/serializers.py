@@ -9,7 +9,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_id', 'password', 'owner', 'reserved_by', 'kit']
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_id', 'password', 'owner', 'reserved_by', 'kit', 'timeframe']
         extra_kwargs = {
             'start_date': {'required': True},
             'end_date': {'required': True},
@@ -92,6 +92,8 @@ class TimeFrameSerializer(serializers.ModelSerializer):
         number_of_days = time_delta.days        
         number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
 
+        timeframe = TimeFrame.objects.create(**validated_data)
+
         for _ in range(number_of_days + 1):
             start_date = datetime.combine(start_date, start_hour).replace(tzinfo=datetime.now().astimezone().tzinfo)
 
@@ -105,6 +107,7 @@ class TimeFrameSerializer(serializers.ModelSerializer):
                     public=public,
                     password=get_random_string(15),
                     owner=self.context['request'].user,
+                    timeframe=timeframe,
                     kit=kit
                 )
 
@@ -113,4 +116,4 @@ class TimeFrameSerializer(serializers.ModelSerializer):
             
             start_date = start_date + timedelta(days=1)
 
-        return TimeFrame.objects.create(**validated_data)
+        return timeframe

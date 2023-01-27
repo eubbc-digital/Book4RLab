@@ -225,7 +225,7 @@ class TimeFrameList(generics.ListCreateAPIView):
         return queryset
 
 
-class TimeFrameDetail(generics.RetrieveUpdateAPIView):
+class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = TimeFrame.objects.all()
     serializer_class = TimeFrameSerializer
