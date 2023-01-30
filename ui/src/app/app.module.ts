@@ -23,6 +23,7 @@ import { CardElevationDirective } from './directives/card-elevation.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 // Pages
 import { AccessComponent } from './pages/access/access.component';
@@ -67,6 +68,7 @@ import { TimeframeDialogComponent } from './components/timeframe-dialog/timefram
     KitDialogComponent,
     TimeframesComponent,
     TimeframeDialogComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,

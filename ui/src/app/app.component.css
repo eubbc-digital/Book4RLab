@@ -1,0 +1,24 @@
+mat-sidenav {
+  width: 280px;
+  border-right: none;
+  background: #12134b;
+  color: white;
+  padding: 16px;
+  background: url("./../assets/techlab.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.content {
+  height: calc(100vh - 98px);
+  margin: 16px;
+  margin-left: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+mat-sidenav-container {
+  height: 100vh;
+}

@@ -21,6 +21,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -45,6 +46,7 @@ const MaterialComponents = [
   MatDividerModule,
   MatListModule,
   MatTableModule,
+  MatSidenavModule,
 ];
 
 @NgModule({
