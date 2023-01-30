@@ -1,3 +1,9 @@
+﻿"""
+Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+MIT License - See LICENSE file in the root directory
+Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+"""
+
 from rest_framework import serializers
 from booking.models import Booking, Kit, Laboratory, TimeFrame
 from django.utils.crypto import get_random_string

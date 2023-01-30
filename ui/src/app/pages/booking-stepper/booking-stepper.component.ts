@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -20,6 +26,8 @@ import { Lab } from 'src/app/interfaces/lab';
 import { Kit } from 'src/app/interfaces/kit';
 import { Booking } from 'src/app/interfaces/booking';
 import { AvailableDate } from 'src/app/interfaces/available-date';
+
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -61,12 +69,14 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   labs: Lab[] = [];
   kits: Kit[] = [];
   availableHoursBySelectedDate: AvailableDate[] = [];
+  availableDates: AvailableDate[] = [];
 
   isEditable: boolean = true;
   showSpinner: boolean = false;
   publicReservation: boolean = false;
   confirmedReservation: boolean = false;
   isFirstStepCompleted: boolean = false;
+  showCalendar = false;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -118,6 +128,31 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   ngAfterViewInit() {
     this.initializeCountdown();
+  }
+
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    if (view === 'month') {
+      const date = cellDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+
+      const availableReservations = this.getAvailableReservationsByDate(date);
+
+      if (availableReservations == 0) return '';
+      else if (availableReservations < 5) return 'yellow-date';
+      else return 'green-date';
+    }
+    return '';
+  };
+
+  getAvailableReservationsByDate(date: string): number {
+    let reservations = this.availableDates.filter(
+      (availableDate) => availableDate.formattedDate == date
+    );
+
+    return reservations.length;
   }
 
   handleSize(event: any) {
@@ -176,8 +211,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
     this.showSpinner = true;
 
-    let availableDates: AvailableDate[] = [];
-    
+    this.availableDates = [];
+
     this.bookingService
       .getBookingListByKitId(kitId)
       .subscribe((bookingList) => {
@@ -209,7 +244,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
                 formattedEndHour: formattedEndHour,
               },
             };
-            availableDates.push(availableDate);
+            this.availableDates.push(availableDate);
           }
         });
 
@@ -218,10 +253,13 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
           this.dateFormat
         );
 
-        this.availableHoursBySelectedDate = availableDates.filter(
+        this.availableHoursBySelectedDate = this.availableDates.filter(
           (availableDate) =>
             availableDate.formattedDate == formattedSelectedDate
         );
+
+        if (!this.showCalendar) this.showCalendar = true;
+        
         this.showSpinner = false;
       });
   }

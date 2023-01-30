@@ -1,3 +1,9 @@
+﻿"""
+Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+MIT License - See LICENSE file in the root directory
+Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+"""
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _

@@ -1,3 +1,9 @@
+﻿"""
+Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+MIT License - See LICENSE file in the root directory
+Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+"""
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase

@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -23,6 +29,7 @@ import { CardElevationDirective } from './directives/card-elevation.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 // Pages
 import { AccessComponent } from './pages/access/access.component';
@@ -67,6 +74,7 @@ import { TimeframeDialogComponent } from './components/timeframe-dialog/timefram
     KitDialogComponent,
     TimeframesComponent,
     TimeframeDialogComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,

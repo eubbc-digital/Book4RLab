@@ -14,21 +14,38 @@
     id="stepper"
     (selectionChange)="onStepChange($event)"
   >
-    <mat-step [stepControl]="reservationFormGroup" [editable]="isEditable" [completed]="isFirstStepCompleted">
+    <mat-step
+      [stepControl]="reservationFormGroup"
+      [editable]="isEditable"
+      [completed]="isFirstStepCompleted"
+    >
       <form [formGroup]="reservationFormGroup" (ngSubmit)="followNextStep()">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
           <div class="column">
             <h2>Available dates</h2>
-            <mat-card class="calendar-card">
+            <mat-card class="calendar-card" *ngIf="showCalendar; else spinner">
               <mat-calendar
                 [selected]="reservationFormGroup.controls['selectedDate'].value"
                 [startAt]="startAt"
                 [minDate]="minDate"
                 [maxDate]="maxDate"
                 (selectedChange)="onSelectDate($event)"
+                [dateClass]="dateClass"
               ></mat-calendar>
             </mat-card>
+            <ng-template #spinner>
+              <app-spinner></app-spinner>
+            </ng-template>
+
+            <div class="info">
+              <div class="box green-date"></div>
+              <span> There are many slots available. </span>
+            </div>
+            <div class="info">
+              <div class="box yellow-date"></div>
+              <span>There are few slots available.</span>
+            </div>
           </div>
 
           <div class="column">

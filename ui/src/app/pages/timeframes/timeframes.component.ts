@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -116,11 +122,6 @@ export class TimeframesComponent implements OnInit {
         this.deleteTimeframe(id);
       }
     });
-  }
-
-  updateTimeframe(timeframe: Timeframe): void {
-    this.selectedTimeFrame = timeframe;
-    this.openTimeframeDialog();
   }
 
   deleteTimeframe(id: number): void {

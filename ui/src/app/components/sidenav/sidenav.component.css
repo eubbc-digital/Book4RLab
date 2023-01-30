@@ -1,0 +1,32 @@
+.logo-container {
+  padding: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#sidenav-title {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+#logo-img {
+  width: 40px;
+  margin-right: 10px;
+}
+
+#divider {
+  background-color: white;
+}
+
+.side-nav-content {
+  padding-top: 20px;
+}
+
+.mat-list-item {
+  color: white;
+}
+
+.item-icon {
+  margin-right: 15px;
+}

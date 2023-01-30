@@ -1,3 +1,9 @@
+﻿"""
+Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+MIT License - See LICENSE file in the root directory
+Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+"""
+
 from django.shortcuts import render
 from rest_framework import generics
 from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer

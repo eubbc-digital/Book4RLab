@@ -1,3 +1,9 @@
+﻿"""
+Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+MIT License - See LICENSE file in the root directory
+Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+"""
+
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
