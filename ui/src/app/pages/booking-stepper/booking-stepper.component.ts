@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';

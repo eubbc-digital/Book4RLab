@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.

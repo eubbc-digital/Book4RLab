@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';

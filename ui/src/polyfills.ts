@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.

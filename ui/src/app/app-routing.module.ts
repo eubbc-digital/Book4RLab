@@ -1,3 +1,9 @@
+﻿/*
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PendingChangesGuard } from './pending-changes.guard';
