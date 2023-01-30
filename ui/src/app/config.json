@@ -8,6 +8,7 @@
     },
     "labs": "laboratories/",
     "kits": "kits/",
+    "timeframes": "timeframes",
     "booking": {
       "url": "bookings/",
       "myList": "me/",
