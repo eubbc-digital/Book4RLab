@@ -1,13 +1,23 @@
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
+from django.contrib.auth.models import Group
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('name',)
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object"""
 
+    groups = GroupSerializer(many=True)
+
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'password', 'name', 'last_name', 'country')
+        fields = ('id', 'email', 'password', 'name', 'last_name',
+                  'country', 'groups', 'is_staff', 'is_superuser')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
 
     def create(self, validated_data):
