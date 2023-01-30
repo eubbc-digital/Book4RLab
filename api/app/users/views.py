@@ -10,8 +10,12 @@ from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
-from users.serializers import UserSerializer, AuthTokenSerializer
+from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
 
+from django.contrib.auth.models import Group
+
+professor_group, created = Group.objects.get_or_create(name='professors')
+student_group, created = Group.objects.get_or_create(name='students')
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user"""
@@ -26,7 +30,7 @@ class CreateTokenView(ObtainAuthToken):
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user"""
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 

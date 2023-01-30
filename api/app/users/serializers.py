@@ -15,20 +15,33 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """Serializer for the user object"""
+class UserProfileSerializer(serializers.ModelSerializer):
+    """Serializer for the user profile object"""
 
     groups = GroupSerializer(many=True)
+    
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'name', 'last_name', 'country', 'groups')
+        read_only_fields = ('id', 'email')
+
+class UserSerializer(serializers.ModelSerializer):
+    """Serializer for the user object"""
 
     class Meta:
         model = get_user_model()
         fields = ('id', 'email', 'password', 'name', 'last_name',
-                  'country', 'groups', 'is_staff', 'is_superuser')
+                  'country')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
 
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""
-        return get_user_model().objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
+
+        group = Group.objects.get(name='students')
+        user.groups.add(group)
+
+        return user
 
     def update(self, instance, validated_data):
         """Update a user, setting the password correctly and return it"""
