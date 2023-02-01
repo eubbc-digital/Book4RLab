@@ -12,10 +12,6 @@ from rest_framework.settings import api_settings
 
 from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
 
-from django.contrib.auth.models import Group
-
-professor_group, created = Group.objects.get_or_create(name='professors')
-student_group, created = Group.objects.get_or_create(name='students')
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user"""
