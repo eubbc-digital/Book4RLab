@@ -123,6 +123,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       this.labs = labs;
 
       if (this.labs.length > 0) this.selectFirstAvailableLab();
+      else this.showCalendar = true;
     });
   }
 
@@ -197,6 +198,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       this.kits = kits;
 
       if (this.kits.length > 0) this.setDataFromFirstAvailableKit();
+      else this.showCalendar = true;
     });
   }
 

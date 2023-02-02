@@ -82,6 +82,7 @@ export class RegistrationComponent implements OnInit {
 
     if (
       this.countries &&
+      country &&
       country.name &&
       this.filterCountry(country.name).length > 0
     ) {

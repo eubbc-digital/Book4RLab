@@ -4,7 +4,7 @@ mat-sidenav {
   background: #12134b;
   color: white;
   padding: 16px;
-  background: url("./../assets/techlab.jpg");
+  background: url("/assets/lab.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

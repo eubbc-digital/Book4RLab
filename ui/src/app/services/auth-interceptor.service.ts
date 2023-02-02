@@ -40,7 +40,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     }
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === 401) {
+        if (err.status === 401 || err.status === 0) {
           console.log(err);
           window.location.href = config.loginUrl;
         }
