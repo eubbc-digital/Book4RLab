@@ -5,7 +5,7 @@
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TimeframeService } from 'src/app/services/timeframe.service';
 import { ToastrService } from 'ngx-toastr';
@@ -22,14 +22,14 @@ export class TimeframeDialogComponent implements OnInit {
   selectedTimeframeId = 0;
   kitId = 0;
 
-  timeframeForm = new FormGroup({
-    dates: new FormGroup({
-      start: new FormControl('', [Validators.required]),
-      end: new FormControl('', [Validators.required]),
+  timeframeForm = new UntypedFormGroup({
+    dates: new UntypedFormGroup({
+      start: new UntypedFormControl('', [Validators.required]),
+      end: new UntypedFormControl('', [Validators.required]),
     }),
-    startHour: new FormControl('', [Validators.required]),
-    endHour: new FormControl('', [Validators.required]),
-    slotDuration: new FormControl('', [Validators.required]),
+    startHour: new UntypedFormControl('', [Validators.required]),
+    endHour: new UntypedFormControl('', [Validators.required]),
+    slotDuration: new UntypedFormControl('', [Validators.required]),
   });
 
   minDate = new Date();

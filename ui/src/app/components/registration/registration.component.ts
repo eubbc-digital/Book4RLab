@@ -6,8 +6,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormControl,
+  UntypedFormGroup,
+  UntypedFormControl,
   FormGroupDirective,
   ValidatorFn,
   ValidationErrors,
@@ -33,19 +33,19 @@ export class RegistrationComponent implements OnInit {
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
 
-  registrationForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    country: new FormControl({}, [
+  registrationForm = new UntypedFormGroup({
+    name: new UntypedFormControl('', [Validators.required]),
+    lastName: new UntypedFormControl('', [Validators.required]),
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
+    country: new UntypedFormControl({}, [
       Validators.required,
       this.requireMatch.bind(this),
     ]),
-    password: new FormControl('', [
+    password: new UntypedFormControl('', [
       Validators.minLength(8),
       Validators.required,
     ]),
-    passwordConfirmation: new FormControl('', [Validators.required]),
+    passwordConfirmation: new UntypedFormControl('', [Validators.required]),
   });
 
   filteredOptions!: Observable<Country[]>;
@@ -77,7 +77,7 @@ export class RegistrationComponent implements OnInit {
     return pass === confirmPass ? null : { notSame: true };
   };
 
-  private requireMatch(control: FormControl): ValidationErrors | null {
+  private requireMatch(control: UntypedFormControl): ValidationErrors | null {
     const country: any = control.value;
 
     if (

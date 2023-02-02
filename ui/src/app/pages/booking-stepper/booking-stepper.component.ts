@@ -5,7 +5,7 @@
 */
 
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
@@ -50,8 +50,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     return true;
   }
 
-  reservationFormGroup!: FormGroup;
-  confirmationFormGroup!: FormGroup;
+  reservationFormGroup!: UntypedFormGroup;
+  confirmationFormGroup!: UntypedFormGroup;
 
   cols: number;
   bookingId: number = 0;
@@ -101,7 +101,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   }
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private labService: LabService,
     private kitService: KitService,
     private bookingService: BookingService,

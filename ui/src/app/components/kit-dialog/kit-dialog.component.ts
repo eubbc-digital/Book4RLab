@@ -5,7 +5,7 @@
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Kit } from 'src/app/interfaces/kit';
@@ -22,9 +22,9 @@ export class KitDialogComponent implements OnInit {
   selectedKitId = 0;
   labId = 0;
 
-  kitForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
+  kitForm = new UntypedFormGroup({
+    name: new UntypedFormControl('', [Validators.required]),
+    description: new UntypedFormControl(''),
   });
 
   constructor(

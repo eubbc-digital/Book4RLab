@@ -5,7 +5,7 @@
 */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 
 import { BookingService } from 'src/app/services/booking.service';
 import { KitService } from 'src/app/services/kit.service';
@@ -23,11 +23,11 @@ import * as moment from 'moment';
   styleUrls: ['./public-reservations.component.css'],
 })
 export class PublicReservationsComponent implements OnInit {
-  searcherControlGroup = new FormGroup({
-    selectedLab: new FormControl('', [Validators.required]),
-    selectedKit: new FormControl('', [Validators.required]),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
+  searcherControlGroup = new UntypedFormGroup({
+    selectedLab: new UntypedFormControl('', [Validators.required]),
+    selectedKit: new UntypedFormControl('', [Validators.required]),
+    startDate: new UntypedFormControl('', [Validators.required]),
+    endDate: new UntypedFormControl('', [Validators.required]),
   });
 
   reservationList: Booking[] = [];
