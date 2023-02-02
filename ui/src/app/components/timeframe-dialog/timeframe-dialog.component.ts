@@ -5,10 +5,12 @@
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { TimeframeService } from 'src/app/services/timeframe.service';
 import { ToastrService } from 'ngx-toastr';
+
 import { Timeframe } from 'src/app/interfaces/timeframe';
 
 @Component({
@@ -22,14 +24,14 @@ export class TimeframeDialogComponent implements OnInit {
   selectedTimeframeId = 0;
   kitId = 0;
 
-  timeframeForm = new UntypedFormGroup({
-    dates: new UntypedFormGroup({
-      start: new UntypedFormControl('', [Validators.required]),
-      end: new UntypedFormControl('', [Validators.required]),
+  timeframeForm = new FormGroup({
+    dates: new FormGroup({
+      start: new FormControl<Date | null>(null, [Validators.required]),
+      end: new FormControl<Date | null>(null, [Validators.required]),
     }),
-    startHour: new UntypedFormControl('', [Validators.required]),
-    endHour: new UntypedFormControl('', [Validators.required]),
-    slotDuration: new UntypedFormControl('', [Validators.required]),
+    startHour: new FormControl('', [Validators.required]),
+    endHour: new FormControl('', [Validators.required]),
+    slotDuration: new FormControl('', [Validators.required]),
   });
 
   minDate = new Date();
@@ -48,8 +50,8 @@ export class TimeframeDialogComponent implements OnInit {
       const timeframe = this.dialogData;
 
       this.selectedTimeframeId = timeframe.id!;
-      this.startDateControl?.setValue(timeframe.start_date);
-      this.endDateControl?.setValue(timeframe.end_date);
+      this.startDateControl?.setValue(timeframe.start_date!);
+      this.endDateControl?.setValue(timeframe.end_date!);
       this.timeframeForm.controls['startHour'].setValue(timeframe.start_hour!);
       this.timeframeForm.controls['endHour'].setValue(timeframe.end_hour!);
       this.timeframeForm.controls['slotDuration'].setValue(
@@ -92,7 +94,7 @@ export class TimeframeDialogComponent implements OnInit {
   }
 
   updateTimeframe(): void {
-    let newTimeframe = this.timeframeForm.value;
+    let newTimeframe = <Timeframe>this.timeframeForm.value;
     newTimeframe.kit = this.kitId;
 
     this.timeframeService
@@ -121,11 +123,11 @@ export class TimeframeDialogComponent implements OnInit {
   getFormattedTimeframe(): Timeframe {
     const timeframe: Timeframe = {};
 
-    timeframe.start_date = this.startDateControl?.value;
-    timeframe.end_date = this.endDateControl?.value;
-    timeframe.start_hour = this.timeframeForm.get('startHour')?.value;
-    timeframe.end_hour = this.timeframeForm.get('endHour')?.value;
-    timeframe.slot_duration = this.timeframeForm.get('slotDuration')?.value;
+    timeframe.start_date = this.startDateControl?.value!;
+    timeframe.end_date = this.endDateControl?.value!;
+    timeframe.start_hour = this.timeframeForm.get('startHour')?.value!;
+    timeframe.end_hour = this.timeframeForm.get('endHour')?.value!;
+    timeframe.slot_duration = this.timeframeForm.get('slotDuration')?.value!;
     timeframe.kit = this.kitId;
 
     return timeframe;

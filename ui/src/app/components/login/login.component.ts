@@ -5,7 +5,7 @@
 */
 
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -19,9 +19,9 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   hide: boolean = true;
-  loginForm = new UntypedFormGroup({
-    email: new UntypedFormControl('', [Validators.required, Validators.email]),
-    password: new UntypedFormControl('', [
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
       Validators.required,
       Validators.minLength(8),
     ]),
@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const user: User = {
-        email: this.loginForm.controls['email'].value,
-        password: this.loginForm.controls['password'].value,
+        email: this.loginForm.controls['email'].value!,
+        password: this.loginForm.controls['password'].value!,
       };
       this.authService.login(user).subscribe((response) => {
         if (response != undefined) {

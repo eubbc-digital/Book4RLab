@@ -1,14 +1,17 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { ToastrService } from 'ngx-toastr';
 import { LabService } from 'src/app/services/lab.service';
+
+import { Lab } from 'src/app/interfaces/lab';
 
 @Component({
   selector: 'app-lab-dialog',
@@ -20,15 +23,15 @@ export class LabDialogComponent implements OnInit {
 
   selectedLabId = 0;
 
-  labForm = new UntypedFormGroup({
-    name: new UntypedFormControl('', [Validators.required]),
-    url: new UntypedFormControl('', [
+  labForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    url: new FormControl('', [
       Validators.required,
       Validators.pattern(
         '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
       ),
     ]),
-    description: new UntypedFormControl(''),
+    description: new FormControl(''),
   });
 
   constructor(
@@ -66,7 +69,7 @@ export class LabDialogComponent implements OnInit {
   }
 
   addLab(): void {
-    this.labService.addLab(this.labForm.value).subscribe({
+    this.labService.addLab(<Lab>this.labForm.value).subscribe({
       next: (_) => {
         this.resetDialog('The lab has been created successfully.');
       },
@@ -80,7 +83,7 @@ export class LabDialogComponent implements OnInit {
 
   updateLab(): void {
     this.labService
-      .updateLab(this.labForm.value, this.selectedLabId)
+      .updateLab(<Lab>this.labForm.value, this.selectedLabId)
       .subscribe({
         next: (_) => {
           this.resetDialog('The lab has been updated successfully.');

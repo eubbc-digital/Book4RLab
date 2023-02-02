@@ -6,12 +6,12 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
   FormGroupDirective,
   ValidatorFn,
   ValidationErrors,
   AbstractControl,
+  FormGroup,
+  FormControl,
 } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -33,19 +33,19 @@ export class RegistrationComponent implements OnInit {
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
 
-  registrationForm = new UntypedFormGroup({
-    name: new UntypedFormControl('', [Validators.required]),
-    lastName: new UntypedFormControl('', [Validators.required]),
-    email: new UntypedFormControl('', [Validators.required, Validators.email]),
-    country: new UntypedFormControl({}, [
+  registrationForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    country: new FormControl<Country | null>(null, [
       Validators.required,
       this.requireMatch.bind(this),
     ]),
-    password: new UntypedFormControl('', [
+    password: new FormControl('', [
       Validators.minLength(8),
       Validators.required,
     ]),
-    passwordConfirmation: new UntypedFormControl('', [Validators.required]),
+    passwordConfirmation: new FormControl('', [Validators.required]),
   });
 
   filteredOptions!: Observable<Country[]>;
@@ -63,7 +63,7 @@ export class RegistrationComponent implements OnInit {
 
     this.filteredOptions = this.countryControl.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) => (typeof value === 'string' ? value : value!.name)),
       map((name) => (name ? this.filterCountry(name) : this.countries.slice()))
     );
   }
@@ -77,7 +77,7 @@ export class RegistrationComponent implements OnInit {
     return pass === confirmPass ? null : { notSame: true };
   };
 
-  private requireMatch(control: UntypedFormControl): ValidationErrors | null {
+  private requireMatch(control: FormControl): ValidationErrors | null {
     const country: any = control.value;
 
     if (
@@ -105,11 +105,11 @@ export class RegistrationComponent implements OnInit {
   saveUser(formDirective: FormGroupDirective): void {
     if (this.registrationForm.valid) {
       const user: User = {
-        name: this.registrationForm.controls['name'].value,
-        last_name: this.registrationForm.controls['lastName'].value,
-        email: this.registrationForm.controls['email'].value,
-        password: this.passwordControl.value,
-        country: this.countryControl.value.code,
+        name: this.registrationForm.controls['name'].value!,
+        last_name: this.registrationForm.controls['lastName'].value!,
+        email: this.registrationForm.controls['email'].value!,
+        password: this.passwordControl.value!,
+        country: this.countryControl.value!.code,
       };
 
       this.authService.signUp(user).subscribe((response) => {
@@ -121,7 +121,7 @@ export class RegistrationComponent implements OnInit {
 
           let newUser: User = {
             email: response.body.email,
-            password: this.registrationForm.controls['password'].value,
+            password: this.registrationForm.controls['password'].value!,
           };
 
           this.authService.login(newUser).subscribe((response) => {

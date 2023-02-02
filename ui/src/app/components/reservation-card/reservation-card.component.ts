@@ -7,13 +7,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { Booking } from 'src/app/interfaces/booking';
-import { Kit } from 'src/app/interfaces/kit';
-import { Lab } from 'src/app/interfaces/lab';
+
 import { KitService } from 'src/app/services/kit.service';
 import { LabService } from 'src/app/services/lab.service';
 import { BookingService } from 'src/app/services/booking.service';
 import { ToastrService } from 'ngx-toastr';
+
+import { Booking } from 'src/app/interfaces/booking';
+import { Kit } from 'src/app/interfaces/kit';
+import { Lab } from 'src/app/interfaces/lab';
 import * as moment from 'moment';
 import config from '../../config.json';
 
