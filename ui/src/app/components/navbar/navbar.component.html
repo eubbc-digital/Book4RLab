@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <div id="main-label" (click)="goToBooking()">
+  <div id="main-label" (click)="goToBooking()" *ngIf="showLogo">
     <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
     <span id="navbar-title">Remote Lab Booking</span>
   </div>

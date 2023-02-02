@@ -14,6 +14,7 @@ import { QrCodeModule } from 'ng-qrcode';
 import { CountdownModule } from 'ngx-countdown';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 
 // Components
 import { AppComponent } from './app.component';
@@ -30,6 +31,12 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { LabsComponent } from './pages/labs/labs.component';
+import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
+import { KitsComponent } from './pages/kits/kits.component';
+import { KitDialogComponent } from './components/kit-dialog/kit-dialog.component';
+import { TimeframesComponent } from './pages/timeframes/timeframes.component';
+import { TimeframeDialogComponent } from './components/timeframe-dialog/timeframe-dialog.component';
 
 // Pages
 import { AccessComponent } from './pages/access/access.component';
@@ -42,12 +49,6 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
-import { LabsComponent } from './pages/labs/labs.component';
-import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
-import { KitsComponent } from './pages/kits/kits.component';
-import { KitDialogComponent } from './components/kit-dialog/kit-dialog.component';
-import { TimeframesComponent } from './pages/timeframes/timeframes.component';
-import { TimeframeDialogComponent } from './components/timeframe-dialog/timeframe-dialog.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { TimeframeDialogComponent } from './components/timeframe-dialog/timefram
       progressBar: true,
     }),
     HttpClientModule,
+    NgHttpLoaderModule.forRoot(),
   ],
   providers: [
     {
