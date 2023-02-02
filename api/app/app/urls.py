@@ -28,4 +28,5 @@ urlpatterns = [
     path('', include('booking.urls')),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
+    path("accounts/", include("django.contrib.auth.urls")),
 ] + static('/static/', document_root=settings.STATIC_ROOT) 
