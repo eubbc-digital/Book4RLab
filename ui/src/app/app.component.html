@@ -1,4 +1,18 @@
-<mat-sidenav-container *ngIf="router.url != '/access' && showSidenav; else login">
+<ng-http-loader
+  [backdrop]="true"
+  backgroundColor="#ffffff"
+  [debounceDelay]="100"
+  [extraDuration]="300"
+  [minDuration]="300"
+  opacity="12"
+  [backdropBackgroundColor]="'#3f51b5'"
+  [spinner]="spinkit.skDoubleBounce"
+>
+</ng-http-loader>
+
+<mat-sidenav-container
+  *ngIf="router.url != '/access' && showSidenav; else login"
+>
   <mat-sidenav mode="side" opened>
     <app-sidenav></app-sidenav>
   </mat-sidenav>

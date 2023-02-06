@@ -23,7 +23,6 @@
   "appInformation": {
     "title": "Booking"
   },
-  "loginUrl": "http://localhost:4200/access",
   "urlParams": {
     "accessId": "access_id",
     "password": "pwd"
