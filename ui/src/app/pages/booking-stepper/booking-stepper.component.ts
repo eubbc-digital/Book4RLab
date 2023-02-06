@@ -173,7 +173,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       selectedLab: ['', Validators.required],
       selectedKit: ['', Validators.required],
       selectedHour: ['', Validators.required],
-      selectedDate: ['', Validators.required],
+      selectedDate: [new Date(), Validators.required],
     });
   }
 

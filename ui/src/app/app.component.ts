@@ -1,11 +1,12 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Spinkit } from 'ng-http-loader';
 
 import { UserService } from './services/user.service';
 
@@ -20,6 +21,8 @@ export class AppComponent implements OnInit {
   title = 'remote-lab-booking';
 
   showSidenav = false;
+
+  public spinkit = Spinkit; 
 
   constructor(public router: Router, private userService: UserService) {}
 
