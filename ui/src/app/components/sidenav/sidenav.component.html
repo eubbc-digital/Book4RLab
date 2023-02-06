@@ -7,13 +7,13 @@
   <mat-divider id="divider"></mat-divider>
 
   <div class="side-nav-content">
-    <mat-list-item
+    <a
+      mat-list-item
       routerLink="/labs"
       routerLinkActive="list-item-active"
       (click)="closeSidebar()"
     >
-      <mat-icon class="item-icon">dashboard</mat-icon> 
-      <span>Laboratories</span>
-    </mat-list-item>
+      <mat-icon class="item-icon">dashboard</mat-icon> Laboratories
+    </a>
   </div>
 </mat-nav-list>

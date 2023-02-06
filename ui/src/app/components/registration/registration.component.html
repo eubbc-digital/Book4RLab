@@ -48,6 +48,7 @@
       matInput
       [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"
+      autocomplete="on"
     />
     <mat-error *ngIf="getPasswordControlError()">
       Password must have at least 8 characters.
@@ -71,6 +72,7 @@
       matInput
       [type]="hidePasswordConfirmation ? 'password' : 'text'"
       formControlName="passwordConfirmation"
+      autocomplete="on"
     />
     <mat-error *ngIf="isPasswordConfirmationValid()">
       Password and confirmation password does not match.

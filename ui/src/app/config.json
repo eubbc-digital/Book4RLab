@@ -4,11 +4,12 @@
     "users": {
       "me": "users/me/",
       "login": "users/token/",
-      "signup": "users/signup/"
+      "signup": "users/signup/",
+      "passwordReset": "accounts/password_reset/"
     },
     "labs": "laboratories/",
     "kits": "kits/",
-    "timeframes": "timeframes",
+    "timeframes": "timeframes/",
     "booking": {
       "url": "bookings/",
       "myList": "me/",
@@ -22,7 +23,7 @@
   "appInformation": {
     "title": "Booking"
   },
-  "loginUrl": "https://eubbc-digital.upb.edu/booking/access",
+  "loginUrl": "http://localhost:4200/access",
   "urlParams": {
     "accessId": "access_id",
     "password": "pwd"

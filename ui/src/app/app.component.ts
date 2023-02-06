@@ -5,7 +5,6 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Spinkit } from 'ng-http-loader';
 import { Router } from '@angular/router';
 
 import { UserService } from './services/user.service';
@@ -19,8 +18,6 @@ import { Group } from './enums/group';
 })
 export class AppComponent implements OnInit {
   title = 'remote-lab-booking';
-
-  public spinkit = Spinkit;
 
   showSidenav = false;
 

@@ -7,10 +7,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+
 import { User } from 'src/app/interfaces/user';
-import { Router } from '@angular/router';
+import config from '../../config.json';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +22,9 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   hide: boolean = true;
+
+  passwordResetUrl = `${config.api.baseUrl}${config.api.users.passwordReset}`;
+
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
@@ -35,11 +41,19 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  get emailControl() {
+    return this.loginForm.controls['email'];
+  }
+
+  get passwordControl() {
+    return this.loginForm.controls['password'];
+  }
+
   onSubmit(): void {
     if (this.loginForm.valid) {
       const user: User = {
-        email: this.loginForm.controls['email'].value!,
-        password: this.loginForm.controls['password'].value!,
+        email: this.emailControl.value!,
+        password: this.passwordControl.value!,
       };
       this.authService.login(user).subscribe((response) => {
         if (response != undefined) {
@@ -56,17 +70,20 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  getEmailErrorMessage() {
-    if (this.loginForm.controls['email'].hasError('required')) {
-      return 'You must enter a value';
-    }
+  getEmailErrorMessage(): string {
+    if (this.emailControl.hasError('required'))
+      return 'You must enter an email.';
 
-    return this.loginForm.controls['email'].hasError('email')
-      ? 'Not a valid email'
-      : '';
+    return this.emailControl.hasError('email') ? 'Not a valid email.' : '';
   }
 
-  isInvalidEmail(): boolean {
-    return this.loginForm.controls['email'].invalid;
+  getPasswordErrorMessage(): string {
+    if (this.passwordControl.hasError('required')) {
+      return 'You must enter a password.';
+    }
+
+    return this.passwordControl.hasError('minlength')
+      ? 'Password must have at least 8 characters.'
+      : '';
   }
 }

@@ -14,7 +14,6 @@ import { QrCodeModule } from 'ng-qrcode';
 import { CountdownModule } from 'ngx-countdown';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgHttpLoaderModule } from 'ng-http-loader';
 
 // Components
 import { AppComponent } from './app.component';
@@ -93,7 +92,6 @@ import { PendingChangesGuard } from './pending-changes.guard';
       progressBar: true,
     }),
     HttpClientModule,
-    NgHttpLoaderModule.forRoot(),
   ],
   providers: [
     {

@@ -26,8 +26,8 @@
             <h2>Available dates</h2>
             <mat-card class="calendar-card" *ngIf="showCalendar; else spinner">
               <mat-calendar
-                [selected]="reservationFormGroup.controls['selectedDate'].value"
-                [startAt]="startAt"
+                #calendar
+                [selected]="selectedDate"
                 [minDate]="minDate"
                 [maxDate]="maxDate"
                 (selectedChange)="onSelectDate($event)"
@@ -39,12 +39,12 @@
             </ng-template>
 
             <div class="info">
-              <div class="box green-date"></div>
-              <span> There are many slots available. </span>
-            </div>
-            <div class="info">
               <div class="box yellow-date"></div>
               <span>There are few slots available.</span>
+            </div>
+            <div class="info">
+              <div class="box green-date"></div>
+              <span> There are many slots available. </span>
             </div>
           </div>
 

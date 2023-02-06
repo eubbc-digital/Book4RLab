@@ -1,17 +1,15 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { KitService } from 'src/app/services/kit.service';
 import { ToastrService } from 'ngx-toastr';
-
 import { Kit } from 'src/app/interfaces/kit';
+import { KitService } from 'src/app/services/kit.service';
 
 @Component({
   selector: 'app-kit-dialog',
@@ -24,9 +22,9 @@ export class KitDialogComponent implements OnInit {
   selectedKitId = 0;
   labId = 0;
 
-  kitForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
+  kitForm = new UntypedFormGroup({
+    name: new UntypedFormControl('', [Validators.required]),
+    description: new UntypedFormControl(''),
   });
 
   constructor(
@@ -44,7 +42,7 @@ export class KitDialogComponent implements OnInit {
 
       this.selectedKitId = kit.id!;
       this.kitForm.controls['name'].setValue(kit.name!);
-      this.kitForm.controls['description'].setValue(kit.description!);
+      this.kitForm.controls['description'].setValue(kit.description);
 
       this.title = 'Update kit';
     } else {
@@ -83,7 +81,7 @@ export class KitDialogComponent implements OnInit {
   }
 
   getKit(): Kit {
-    const kit = <Kit>this.kitForm.value;
+    const kit = this.kitForm.value;
     kit.laboratory = this.labId;
 
     return kit;

@@ -1,11 +1,11 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
@@ -26,8 +26,6 @@ import { Lab } from 'src/app/interfaces/lab';
 import { Kit } from 'src/app/interfaces/kit';
 import { Booking } from 'src/app/interfaces/booking';
 import { AvailableDate } from 'src/app/interfaces/available-date';
-
-import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -50,13 +48,12 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     return true;
   }
 
-  reservationFormGroup!: UntypedFormGroup;
-  confirmationFormGroup!: UntypedFormGroup;
+  reservationFormGroup!: FormGroup;
+  confirmationFormGroup!: FormGroup;
 
   cols: number;
   bookingId: number = 0;
 
-  startAt = new Date();
   minDate = new Date();
   maxDate = new Date(new Date().setMonth(new Date().getMonth() + 5));
 
@@ -76,7 +73,10 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   publicReservation: boolean = false;
   confirmedReservation: boolean = false;
   isFirstStepCompleted: boolean = false;
+
+  dateChanged = false;
   showCalendar = false;
+  changeMonth = false;
 
   privateAccessUrl!: string;
   publicAccessUrl!: string;
@@ -86,6 +86,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     leftTime: 420,
     format: 'mm:ss',
   };
+
+  dateClass!: (cellDate: Date, view: any) => any;
 
   canDeactivate(): Observable<boolean> | boolean {
     if (this.bookingId != 0) {
@@ -101,7 +103,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   }
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private labService: LabService,
     private kitService: KitService,
     private bookingService: BookingService,
@@ -131,22 +133,24 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.initializeCountdown();
   }
 
-  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
-    if (view === 'month') {
-      const date = cellDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
+  setupCalendarClass() {
+    this.dateClass = (cellDate, view) => {
+      if (view === 'month') {
+        const date = cellDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
 
-      const availableReservations = this.getAvailableReservationsByDate(date);
+        const availableReservations = this.getAvailableReservationsByDate(date);
 
-      if (availableReservations == 0) return '';
-      else if (availableReservations < 5) return 'yellow-date';
-      else return 'green-date';
-    }
-    return '';
-  };
+        if (availableReservations == 0) return [''];
+        else if (availableReservations < 5) return ['yellow-date'];
+        else return ['green-date'];
+      }
+      return [''];
+    };
+  }
 
   getAvailableReservationsByDate(date: string): number {
     let reservations = this.availableDates.filter(
@@ -169,7 +173,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       selectedLab: ['', Validators.required],
       selectedKit: ['', Validators.required],
       selectedHour: ['', Validators.required],
-      selectedDate: [this.startAt, Validators.required],
+      selectedDate: ['', Validators.required],
     });
   }
 
@@ -207,10 +211,14 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
     this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
 
+    this.dateChanged = false;
+
     this.getHoursByKitIdAndDate(selectedKit.id!, this.selectedDate);
   }
 
   getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
+    if (!this.dateChanged) this.showCalendar = false;
+
     this.showSpinner = true;
 
     this.availableDates = [];
@@ -260,8 +268,10 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
             availableDate.formattedDate == formattedSelectedDate
         );
 
-        if (!this.showCalendar) this.showCalendar = true;
-        
+        this.setupCalendarClass();
+
+        if (!this.dateChanged) this.showCalendar = true;
+
         this.showSpinner = false;
       });
   }
@@ -279,6 +289,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   }
 
   onSelectDate(event: any): void {
+    this.dateChanged = true;
     this.reservationFormGroup.controls['selectedDate'].setValue(event);
     let kit = this.reservationFormGroup.controls['selectedKit'].value;
     this.getHoursByKitIdAndDate(kit.id, event);
@@ -313,6 +324,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       available: false,
       public: this.publicReservation,
     };
+
+    console.log(booking)
 
     if (!this.confirmedReservation) this.countdown.restart();
 

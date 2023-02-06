@@ -13,15 +13,14 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import config from '../config.json';
+import { catchError, first } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor() {}
+  constructor(private router: Router) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -38,11 +37,16 @@ export class AuthInterceptorService implements HttpInterceptor {
         },
       });
     }
+
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === 401 || err.status === 0) {
+        if (
+          err.status === 401 ||
+          (err.status === 0 && this.router.url != '/access')
+        ) {
           console.log(err);
-          window.location.href = config.loginUrl;
+          localStorage.removeItem('token');
+          this.router.navigate(['access']);
         }
 
         return throwError(err);

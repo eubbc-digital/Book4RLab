@@ -47,10 +47,6 @@ form {
   margin-bottom: 10px;
 }
 
-.input-field + .access-button {
-  margin-top: 20px;
-}
-
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;

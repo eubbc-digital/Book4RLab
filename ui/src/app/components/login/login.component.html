@@ -3,7 +3,9 @@
     <mat-label>Email</mat-label>
     <input matInput placeholder="user@gmail.com" formControlName="email" />
     <mat-icon matSuffix>email</mat-icon>
-    <mat-error *ngIf="isInvalidEmail()">{{ getEmailErrorMessage() }}</mat-error>
+    <mat-error *ngIf="emailControl.invalid">
+      {{ getEmailErrorMessage() }}
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field class="input-field">
@@ -12,6 +14,7 @@
       matInput
       [type]="hide ? 'password' : 'text'"
       formControlName="password"
+      autocomplete="on"
     />
     <button
       mat-icon-button
@@ -23,7 +26,16 @@
     >
       <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
+    <mat-error *ngIf="passwordControl.invalid">
+      {{ getPasswordErrorMessage() }}
+    </mat-error>
   </mat-form-field>
+
+  <p id="password-link">
+    <a class="mat-caption" [href]="passwordResetUrl" target="_blank">
+      Forgot password?
+    </a>
+  </p>
 
   <button class="access-button" type="submit" mat-raised-button color="primary">
     Sign In

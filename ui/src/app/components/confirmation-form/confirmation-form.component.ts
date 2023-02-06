@@ -8,6 +8,7 @@ import {
   Component,
   OnInit,
   Input,
+  SimpleChange,
   Output,
   EventEmitter,
 } from '@angular/core';

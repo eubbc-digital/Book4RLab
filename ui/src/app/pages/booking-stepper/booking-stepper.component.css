@@ -51,12 +51,12 @@ form {
 }
 
 ::ng-deep.green-date {
-  background: rgb(57, 165, 45);
+  background: rgb(57, 165, 45) !important;;
   border-radius: 100%;
 }
 
 ::ng-deep.yellow-date {
-  background: rgb(222, 203, 31);
+  background: rgb(222, 203, 31) !important;;
   border-radius: 100%;
 }
 
