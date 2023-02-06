@@ -9,8 +9,8 @@ from booking.models import Booking, Kit, Laboratory, TimeFrame
 from core import models
 
 class BookingAdmin(admin.ModelAdmin):
-    fields = ('start_date', 'end_date', 'available', 'public', 'access_id', 'password', 'owner', 'reserved_by', 'kit')
-    readonly_fields = ('access_id',)
+    fields = ('start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'kit')
+    readonly_fields = ('access_key',)
 
 admin.site.register(Laboratory)
 admin.site.register(Kit)

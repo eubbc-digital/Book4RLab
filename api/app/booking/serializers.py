@@ -15,13 +15,13 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_id', 'password', 'owner', 'reserved_by', 'kit', 'timeframe']
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'kit', 'timeframe']
         extra_kwargs = {
             'start_date': {'required': True},
             'end_date': {'required': True},
             'available': {'required': True},
             'public': {'required': True},
-            'access_id': {'required': True},
+            'access_key': {'required': True},
             'user': {'required': True},
             'kit': {'required': True}
         }
@@ -37,7 +37,7 @@ class PublicBookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_id', 'password', 'owner', 'reserved_by', 'kit']
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'kit']
         
 
 class KitSerializer(serializers.ModelSerializer):

@@ -68,11 +68,11 @@ class BookingAccess(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Booking.objects.all()
-        access_id = self.request.query_params.get('access_id')
+        access_key = self.request.query_params.get('access_key')
         password = self.request.query_params.get('pwd')
 
-        if access_id is not None:
-            queryset = queryset.filter(access_id=access_id)
+        if access_key is not None:
+            queryset = queryset.filter(access_key=access_key)
         
             if queryset.count() == 1:
                 if not queryset[0].public:

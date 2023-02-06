@@ -14,7 +14,7 @@ class Booking(models.Model):
     end_date = models.DateTimeField()
     available = models.BooleanField(default=True)
     public = models.BooleanField(default=False)
-    access_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    access_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     password = models.CharField(max_length=15, blank=True, null=True, default=None)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner', on_delete=models.CASCADE)
     reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reserved_by', on_delete=models.CASCADE, blank=True, null=True, default=None)
