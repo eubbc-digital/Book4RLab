@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('end_date', models.DateTimeField()),
                 ('available', models.BooleanField(default=True)),
                 ('public', models.BooleanField(default=False)),
-                ('access_key', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
+                ('access_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
                 ('password', models.CharField(max_length=15)),
                 ('kit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservations', to='booking.kit')),
             ],
