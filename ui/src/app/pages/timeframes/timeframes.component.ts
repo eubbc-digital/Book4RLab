@@ -142,7 +142,11 @@ export class TimeframesComponent implements OnInit {
     return new Date(date).toDateString();
   }
 
-  getFormattedHour(hour: string) {
-    return hour.slice(0, -3);
+  convertUTCHourToLocalTime(hour: string): string {
+    const date = new Date();
+    const timezoneOffset = date.getTimezoneOffset() * 60000;
+    const localTime = new Date(date.toLocaleDateString() + ' ' + hour);
+    const utcTime = new Date(localTime.getTime() - timezoneOffset);
+    return utcTime.toString().substring(16, 21);
   }
 }
