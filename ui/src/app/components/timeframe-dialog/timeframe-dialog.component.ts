@@ -1,11 +1,15 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TimeframeService } from 'src/app/services/timeframe.service';
 import { ToastrService } from 'ngx-toastr';
@@ -123,8 +127,12 @@ export class TimeframeDialogComponent implements OnInit {
 
     timeframe.start_date = this.startDateControl?.value;
     timeframe.end_date = this.endDateControl?.value;
-    timeframe.start_hour = this.timeframeForm.get('startHour')?.value;
-    timeframe.end_hour = this.timeframeForm.get('endHour')?.value;
+    timeframe.start_hour = this.convertHourToUTC(
+      this.timeframeForm.get('startHour')?.value
+    );
+    timeframe.end_hour = this.convertHourToUTC(
+      this.timeframeForm.get('endHour')?.value
+    );
     timeframe.slot_duration = this.timeframeForm.get('slotDuration')?.value;
     timeframe.kit = this.kitId;
 
@@ -135,5 +143,13 @@ export class TimeframeDialogComponent implements OnInit {
     if (msg) this.toastr.success(msg);
     this.timeframeForm.reset();
     this.dialogRef.close(msg);
+  }
+
+  convertHourToUTC(hour: string): string {
+    const date = new Date();
+    const timezoneOffset = date.getTimezoneOffset() * 60000;
+    const localTime = new Date(date.toLocaleDateString() + ' ' + hour);
+    const utcTime = new Date(localTime.getTime() + timezoneOffset);
+    return utcTime.toString().substring(16, 21);
   }
 }
