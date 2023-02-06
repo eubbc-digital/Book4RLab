@@ -5,6 +5,6 @@
 */
 
 export enum Group {
-  Professors = 'professors',
+  Professors = 'instructors',
   Students = 'students',
 }

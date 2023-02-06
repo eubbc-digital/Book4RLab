@@ -10,7 +10,7 @@ export interface Booking {
   end_date?: string;
   available: boolean;
   public: boolean;
-  access_id?: string;
+  access_key?: string;
   password?: string;
   owner?: number | null;
   reserved_by?: { email: string; last_name: string; name: string } | null;

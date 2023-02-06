@@ -24,7 +24,7 @@
     "title": "Booking"
   },
   "urlParams": {
-    "accessId": "access_id",
+    "accessKey": "access_key",
     "password": "pwd"
   }
 }
