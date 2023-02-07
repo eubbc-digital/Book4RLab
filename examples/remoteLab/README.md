@@ -28,7 +28,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 Run `docker-compose up --build` to build a remote lab example on port 4300.
 
-Navigate to http://localhost:4300 in your web browser to visualize a basic UI for the remote lab.
+Navigate to `http://localhost:4300` in your web browser to visualize a basic UI for the remote lab.
+
+Check the [Book4Lab wiki](https://github.com/eubbc-digital/Book4RLab/wiki) for more information about creating a booking service for remote labs.
 
 ## Remote lab example
 
