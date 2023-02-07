@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -18,6 +18,7 @@ import { LabDialogComponent } from 'src/app/components/lab-dialog/lab-dialog.com
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 
 import { Lab } from 'src/app/interfaces/lab';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-labs',
@@ -28,6 +29,8 @@ export class LabsComponent implements OnInit {
   tableTitle = 'Labs';
 
   isLoading = false;
+
+  userId!: number;
 
   selectedLab?: Lab;
 
@@ -41,12 +44,17 @@ export class LabsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private router: Router,
+    private userService: UserService,
     private labService: LabService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.getLabs();
+    this.userService.getUserData().subscribe((user) => {
+      this.userId = user.id!;
+
+      this.getLabs(this.userId);
+    });
   }
 
   goToAssignments(labId: number): void {
@@ -57,9 +65,9 @@ export class LabsComponent implements OnInit {
     });
   }
 
-  getLabs(): void {
+  getLabs(owner: number): void {
     this.isLoading = true;
-    this.labService.getLabs().subscribe((response) => {
+    this.labService.getLabs(owner).subscribe((response) => {
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -78,7 +86,7 @@ export class LabsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((response) => {
       if (response) {
-        this.getLabs();
+        this.getLabs(this.userId);
         this.selectedLab = undefined;
       }
     });
@@ -115,7 +123,7 @@ export class LabsComponent implements OnInit {
     this.labService.updateLab(lab, lab.id!).subscribe({
       next: (_) => {
         this.toastr.success('The lab has been deleted successfully.');
-        this.getLabs();
+        this.getLabs(this.userId);
       },
       error: (e) => {
         this.toastr.error(

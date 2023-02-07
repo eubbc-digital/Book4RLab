@@ -6,8 +6,11 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   UntypedFormControl,
   UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -32,7 +35,10 @@ export class TimeframeDialogComponent implements OnInit {
       end: new UntypedFormControl('', [Validators.required]),
     }),
     startHour: new UntypedFormControl('', [Validators.required]),
-    endHour: new UntypedFormControl('', [Validators.required]),
+    endHour: new UntypedFormControl('', [
+      Validators.required,
+      this.endDateValidator(),
+    ]),
     slotDuration: new UntypedFormControl('', [Validators.required]),
   });
 
@@ -76,6 +82,14 @@ export class TimeframeDialogComponent implements OnInit {
 
   get slotDurationControl() {
     return this.timeframeForm.get('slotDuration');
+  }
+
+  get startHourControl() {
+    return this.timeframeForm.get('startHour');
+  }
+
+  get endHourControl() {
+    return this.timeframeForm.get('endHour');
   }
 
   addTimeframe(): void {
@@ -127,12 +141,8 @@ export class TimeframeDialogComponent implements OnInit {
 
     timeframe.start_date = this.startDateControl?.value;
     timeframe.end_date = this.endDateControl?.value;
-    timeframe.start_hour = this.convertHourToUTC(
-      this.timeframeForm.get('startHour')?.value
-    );
-    timeframe.end_hour = this.convertHourToUTC(
-      this.timeframeForm.get('endHour')?.value
-    );
+    timeframe.start_hour = this.convertHourToUTC(this.startHourControl?.value);
+    timeframe.end_hour = this.convertHourToUTC(this.endHourControl?.value);
     timeframe.slot_duration = this.timeframeForm.get('slotDuration')?.value;
     timeframe.kit = this.kitId;
 
@@ -151,5 +161,21 @@ export class TimeframeDialogComponent implements OnInit {
     const localTime = new Date(date.toLocaleDateString() + ' ' + hour);
     const utcTime = new Date(localTime.getTime() + timezoneOffset);
     return utcTime.toString().substring(16, 21);
+  }
+
+  endDateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (this.timeframeForm) {
+        const date = new Date();
+        const startDate = new Date(
+          date.toLocaleDateString() + ' ' + this.startHourControl?.value
+        );
+        const endDate = new Date(
+          date.toLocaleDateString() + ' ' + control.value
+        );
+
+        return endDate <= startDate ? { invalidEndHour: true } : null;
+      } else return null;
+    };
   }
 }
