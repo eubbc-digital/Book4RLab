@@ -28,6 +28,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['password'] = get_random_string(15)
+        validated_data['owner'] = self.context['request'].user
         return Booking.objects.create(**validated_data)
 
 
@@ -51,6 +52,10 @@ class KitSerializer(serializers.ModelSerializer):
             'description': {'required': False},
         }
 
+    def create(self, validated_data):
+        validated_data['owner'] = self.context['request'].user
+        return Kit.objects.create(**validated_data)
+
 
 class LaboratorySerializer(serializers.ModelSerializer):
 
@@ -61,6 +66,10 @@ class LaboratorySerializer(serializers.ModelSerializer):
             'name': {'required': True},
             'description': {'required': False},
         }
+
+    def create(self, validated_data):
+        validated_data['owner'] = self.context['request'].user
+        return Laboratory.objects.create(**validated_data)
 
 
 class TimeFrameSerializer(serializers.ModelSerializer):
@@ -90,14 +99,17 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
         if start_date > end_date:
             raise serializers.ValidationError("Start date must be before end date")
-        if start_hour > end_hour:
-            raise serializers.ValidationError("Start hour must be before end hour")
 
         time_delta = end_date - start_date
+        number_of_days = time_delta.days   
 
-        number_of_days = time_delta.days        
-        number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
-
+        if start_hour > end_hour:
+            yesterday = datetime.now() - timedelta(1)
+            number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(yesterday, start_hour)).total_seconds() / 60) / slot_duration)
+        else:
+            number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
+            
+        validated_data['owner'] = self.context['request'].user
         timeframe = TimeFrame.objects.create(**validated_data)
 
         for _ in range(number_of_days + 1):
