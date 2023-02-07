@@ -197,10 +197,21 @@ class KitDetail(generics.RetrieveUpdateAPIView):
 
 class LaboratoryList(generics.ListCreateAPIView):
 
-    queryset = Laboratory.objects.filter(enabled=True)
     serializer_class = LaboratorySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Laboratory.objects.filter(enabled=True)
+        owner = self.request.query_params.get('owner')
+
+        if owner is not None:
+            if not owner.isdigit():
+                raise SuspiciousOperation('Owner id must be a number')
+
+            return queryset.filter(owner_id=int(owner))
+
+        return queryset
 
 
 class LaboratoryDetail(generics.RetrieveUpdateAPIView):
