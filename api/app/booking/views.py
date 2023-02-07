@@ -156,7 +156,7 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         body = ' Booking confirmed! \n'
         body += f' Your booking for kit {instance.kit.name} has been confirmed\n'
         body += f' Laboratory: {laboratory.name}\n'
-        body += ' Details available at http://eubbc-digital.upb.edu:4200/my-reservations'
+        body += ' Details available at https://eubbc-digital.upb.edu/booking/my-reservations'
         body += '\n - UPB Team -'
         
         sender = settings.EMAIL_HOST_USER

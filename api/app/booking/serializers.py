@@ -99,14 +99,16 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
         if start_date > end_date:
             raise serializers.ValidationError("Start date must be before end date")
-        if start_hour > end_hour:
-            raise serializers.ValidationError("Start hour must be before end hour")
 
         time_delta = end_date - start_date
+        number_of_days = time_delta.days   
 
-        number_of_days = time_delta.days        
-        number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
-
+        if start_hour > end_hour:
+            yesterday = datetime.now() - timedelta(1)
+            number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(yesterday, start_hour)).total_seconds() / 60) / slot_duration)
+        else:
+            number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
+            
         validated_data['owner'] = self.context['request'].user
         timeframe = TimeFrame.objects.create(**validated_data)
 
