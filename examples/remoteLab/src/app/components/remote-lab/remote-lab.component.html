@@ -1,0 +1,29 @@
+<div>
+  <app-navbar></app-navbar>
+  <div class="center">
+    Time Limit: 
+  </div>
+  <div class="center">
+    <countdown #cd [config]="config" (event)="handleEvent($event)"></countdown>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-chart></app-chart>
+    </div>
+    <div class="col">
+      <app-experiment-view></app-experiment-view>
+      <div class="row">
+        <div class="col">
+          <mat-card class="card" id="microcontroller-card">
+            <app-light-controller></app-light-controller>
+            <app-actuator-controller></app-actuator-controller>
+          </mat-card>
+        </div>
+        <div class="col"><app-camera-controller></app-camera-controller></div>
+      </div>
+      <div class="row">
+      </div>
+    </div>
+  </div>
+  <app-data-table></app-data-table>
+</div>

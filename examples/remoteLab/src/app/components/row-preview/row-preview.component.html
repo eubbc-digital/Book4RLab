@@ -1,0 +1,36 @@
+<div>
+  <p class="title">Data view</p>
+  <div mat-dialog-content>
+    <p><strong>Date:</strong></p>
+    <p><strong>Name:</strong></p>
+
+    <p><strong>Spectra:</strong></p>
+    <div class="center">
+      <img
+        id="spectrum-img"
+        alt="Spectrum image"
+      />
+    </div>
+
+    <div>
+      <apx-chart
+        id="calibrated-chart"
+        [series]="series"
+        [chart]="chart"
+        [dataLabels]="dataLabels"
+        [markers]="markers"
+        [annotations]="annotations"
+        [fill]="fill"
+        [yaxis]="yaxis"
+        [xaxis]="xaxis"
+      >
+      </apx-chart>
+    </div>
+    <p><strong>Description:</strong></p>
+  </div>
+  <div mat-dialog-actions class="actions">
+    <button mat-raised-button cdkFocusInitial color="primary" (click)="close()">
+      OK
+    </button>
+  </div>
+</div>

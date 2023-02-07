@@ -1,0 +1,49 @@
+<div class="table-container">
+  <div class="row" id="table-header">
+    <span id="table-title">Saved data</span>
+    <div class="spacer"></div>
+    <!--<button mat-raised-button color="primary">EXPORT TO PDF</button>-->
+  </div>
+
+  <table
+    mat-table
+    class="mat-elevation-z8"
+    #noteTable
+    *ngIf="emptyTable"
+  >
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let element"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let i = index; let element">
+        <button mat-icon-button>
+          <mat-icon class="icon">
+            remove_red_eye
+          </mat-icon>
+        </button>
+        <button mat-icon-button>
+          <mat-icon class="icon"
+            >delete</mat-icon
+          >
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <ng-template #emptyTable>
+    <p>You don't have saved data.</p>
+  </ng-template>
+
+  <mat-divider class="divider"></mat-divider>
+</div>

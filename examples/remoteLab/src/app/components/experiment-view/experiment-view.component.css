@@ -1,0 +1,17 @@
+#experiment-img {
+  width: 95%;
+  height: 320px;
+}
+
+#experiment-card {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.placeholder-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  height: auto;
+}

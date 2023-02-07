@@ -1,0 +1,10 @@
+<div>
+  <p class="title">Important</p>
+  <div mat-dialog-content>
+    <p>Are you sure you want to delete this item?</p>
+  </div>
+  <div mat-dialog-actions class="actions">
+    <button mat-raised-button color="success" cdkFocusInitial (click)="close()">NO</button>
+    <button mat-raised-button color="warn" cdkFocusInitial (click)="deleteConfirmation()">YES</button>
+  </div>
+</div>
