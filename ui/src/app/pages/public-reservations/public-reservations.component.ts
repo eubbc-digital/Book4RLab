@@ -5,7 +5,12 @@
 */
 
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
+import {
+  UntypedFormGroup,
+  UntypedFormControl,
+  Validators,
+} from '@angular/forms';
 
 import { BookingService } from 'src/app/services/booking.service';
 import { KitService } from 'src/app/services/kit.service';
@@ -45,8 +50,11 @@ export class PublicReservationsComponent implements OnInit {
     private labService: LabService,
     private kitService: KitService,
     private bookingService: BookingService,
-    private toastService: ToastrService
-  ) {}
+    private toastService: ToastrService,
+    private dateAdapter: DateAdapter<Date>
+  ) {
+    this.dateAdapter.setLocale('en-GB');
+  }
 
   ngOnInit(): void {
     this.getLaboratories();

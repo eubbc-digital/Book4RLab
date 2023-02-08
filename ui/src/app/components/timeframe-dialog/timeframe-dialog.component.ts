@@ -1,10 +1,11 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, Inject, OnInit } from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
 import {
   AbstractControl,
   UntypedFormControl,
@@ -48,8 +49,11 @@ export class TimeframeDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dialogData: Timeframe,
     private dialogRef: MatDialogRef<TimeframeDialogComponent>,
     private toastr: ToastrService,
-    private timeframeService: TimeframeService
-  ) {}
+    private timeframeService: TimeframeService,
+    private dateAdapter: DateAdapter<Date>
+  ) {
+    this.dateAdapter.setLocale('en-GB');
+  }
 
   ngOnInit(): void {
     this.kitId = this.dialogData.kit!;
