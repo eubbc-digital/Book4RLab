@@ -116,12 +116,13 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
         for _ in range(number_of_days + 1):
             start_date = datetime.combine(start_date, start_hour).replace(tzinfo=datetime.now().astimezone().tzinfo)
+            accumulated_date =  start_date
 
             for _ in range(number_of_slots):
-                end_date = start_date + timedelta(minutes=slot_duration)
+                end_date = accumulated_date + timedelta(minutes=slot_duration)
 
                 booking = Booking(
-                    start_date=start_date,
+                    start_date=accumulated_date,
                     end_date=end_date,
                     available=True,
                     public=public,
@@ -132,7 +133,7 @@ class TimeFrameSerializer(serializers.ModelSerializer):
                 )
                 bookings.append(booking)
 
-                start_date = end_date
+                accumulated_date = end_date
             
             start_date = start_date + timedelta(days=1)
 
