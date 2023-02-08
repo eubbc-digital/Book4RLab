@@ -45,7 +45,7 @@ class KitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Kit
-        fields = ['id', 'name', 'description', 'laboratory', 'enabled']
+        fields = ['id', 'name', 'description', 'laboratory', 'enabled', 'owner']
         extra_kwargs = {
             'name': {'required': True},
             'laboratory': {'required': True},
@@ -61,7 +61,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Laboratory
-        fields = ['id', 'name', 'description', 'url', 'enabled']
+        fields = ['id', 'name', 'description', 'url', 'enabled', 'owner']
         extra_kwargs = {
             'name': {'required': True},
             'description': {'required': False},
@@ -76,7 +76,7 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimeFrame
-        fields = ['id', 'start_date', 'end_date', 'start_hour', 'end_hour', 'slot_duration', 'kit', 'enabled']
+        fields = ['id', 'start_date', 'end_date', 'start_hour', 'end_hour', 'slot_duration', 'kit', 'enabled', 'owner']
         extra_kwargs = {
             'start_date': {'required': True},
             'end_date': {'required': True},

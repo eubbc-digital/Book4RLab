@@ -16,6 +16,7 @@ from rest_framework import status
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.conf import settings
+from booking.permissions import IsOwnerOrReadOnly
 
 import datetime
 
@@ -172,7 +173,7 @@ class KitList(generics.ListCreateAPIView):
     queryset = Kit.objects.filter(enabled=True)
     serializer_class = KitSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
         queryset = Kit.objects.filter(enabled=True)
@@ -192,14 +193,14 @@ class KitDetail(generics.RetrieveUpdateAPIView):
     queryset = Kit.objects.filter(enabled=True)
     serializer_class = KitSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
 
 class LaboratoryList(generics.ListCreateAPIView):
 
     serializer_class = LaboratorySerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
         queryset = Laboratory.objects.filter(enabled=True)
@@ -227,7 +228,7 @@ class TimeFrameList(generics.ListCreateAPIView):
     queryset = TimeFrame.objects.all()
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
         queryset = TimeFrame.objects.all()
@@ -247,5 +248,5 @@ class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TimeFrame.objects.all()
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     
