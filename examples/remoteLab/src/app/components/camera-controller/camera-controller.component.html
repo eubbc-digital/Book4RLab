@@ -1,0 +1,39 @@
+<mat-card class="card" id="camera-controller">
+  <p class="title">Camera controller</p>
+  <div class="row">
+    <div class="col center">
+      <div id="arrow-container">
+        <div class="top">
+          <button id="up" mat-mini-fab color="primary">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          </button>
+        </div>
+
+        <div class="middle">
+          <button id="left" mat-mini-fab color="primary">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+          </button>
+          <button id="right" mat-mini-fab color="primary">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="bottom">
+          <button id="down" mat-mini-fab color="primary">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="zoom-container">
+    <button id="zoom-in-button" mat-raised-button color="primary">
+      <mat-icon>add_circle_outline</mat-icon>
+      <span>ZOOM IN</span>
+    </button>
+    <button mat-raised-button color="primary">
+      <mat-icon>remove_circle_outline</mat-icon>
+      <span>ZOOM OUT</span>
+    </button>
+  </div>
+</mat-card>

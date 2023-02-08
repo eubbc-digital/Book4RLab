@@ -5,7 +5,7 @@
 */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Lab } from '../interfaces/lab';
 import config from '../config.json';
@@ -18,8 +18,9 @@ export class LabService {
 
   constructor(private http: HttpClient) {}
 
-  getLabs(): Observable<Lab[]> {
-    return this.http.get<Lab[]>(this.url);
+  getLabs(owner?: number): Observable<Lab[]> {
+    const labsUrl = owner ? `${this.url}?owner=${owner}` : this.url;
+    return this.http.get<Lab[]>(labsUrl);
   }
 
   getLabById(labId: number): Observable<Lab> {

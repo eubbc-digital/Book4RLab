@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit } from '@angular/core';
 import {
@@ -44,8 +44,12 @@ export class RegistrationComponent implements OnInit {
     password: new UntypedFormControl('', [
       Validators.minLength(8),
       Validators.required,
+      this.matchValidator('passwordConfirmation', true),
     ]),
-    passwordConfirmation: new UntypedFormControl('', [Validators.required]),
+    passwordConfirmation: new UntypedFormControl('', [
+      Validators.required,
+      this.matchValidator('password'),
+    ]),
   });
 
   filteredOptions!: Observable<Country[]>;
@@ -57,10 +61,6 @@ export class RegistrationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.registrationForm.controls['passwordConfirmation'].addValidators(
-      this.checkPasswords
-    );
-
     this.filteredOptions = this.countryControl.valueChanges.pipe(
       startWith(''),
       map((value) => (typeof value === 'string' ? value : value.name)),
@@ -68,14 +68,22 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  checkPasswords: ValidatorFn = (
-    group: AbstractControl
-  ): ValidationErrors | null => {
-    let pass = this.registrationForm.controls['password'].value;
-    let confirmPass =
-      this.registrationForm.controls['passwordConfirmation'].value;
-    return pass === confirmPass ? null : { notSame: true };
-  };
+  matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.parent && reverse) {
+        const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
+        if (c) {
+          c.updateValueAndValidity();
+        }
+        return null;
+      }
+      return !!control.parent &&
+        !!control.parent.value &&
+        control.value === (control.parent?.controls as any)[matchTo].value
+        ? null
+        : { notSame: true };
+    };
+  }
 
   private requireMatch(control: UntypedFormControl): ValidationErrors | null {
     const country: any = control.value;

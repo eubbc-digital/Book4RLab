@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+  <div id="main-label">
+    <img id="logo" src="../../../assets/logo.png" alt="logo" width="30px">
+    <span id="navbar-title">{{ appName }}</span>
+  </div>
+  <div class="spacer"></div>
+  <button mat-button aria-label="Login icon" (click)="logout()">
+    <mat-icon>login</mat-icon>
+    Logout
+  </button>
+</mat-toolbar>

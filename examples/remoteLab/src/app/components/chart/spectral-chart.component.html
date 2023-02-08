@@ -1,0 +1,64 @@
+<mat-card class="card">
+  <p class="title">Data</p>
+
+  <ng-template #elseBlock> <p>No content.</p></ng-template>
+
+  <apx-chart
+    id="chart"
+    [series]="series"
+    [chart]="chart"
+    [dataLabels]="dataLabels"
+    [markers]="markers"
+    [fill]="fill"
+    [yaxis]="yaxis"
+    [xaxis]="xaxis"
+    [tooltip]="tooltip"
+    [autoUpdateSeries]="true"
+  >
+  </apx-chart>
+
+  <div *ngIf="updateStreaming; else loggedOut" class="align-end">
+    <button mat-raised-button color="primary">
+      <mat-icon>pause_circle_outline</mat-icon>
+      <span class="label">STREAMING</span>
+    </button>
+  </div>
+
+  <ng-template #loggedOut>
+    <div class="align-end">
+      <button mat-raised-button color="success">
+        <mat-icon>play_circle_outline</mat-icon
+        ><span class="label">STREAMING</span>
+      </button>
+    </div>
+  </ng-template>
+
+  <p class="label"><strong>Selected data:</strong></p>
+  <div class="row">
+    <mat-form-field class="col" id="wavelenght-input" appearance="fill">
+      <mat-label>x</mat-label>
+      <input matInput readonly />
+    </mat-form-field>
+    <mat-form-field class="col" appearance="fill">
+      <mat-label>y</mat-label>
+      <input matInput readonly />
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field class="col" id="note-name-input" appearance="fill">
+      <mat-label>Note name</mat-label>
+      <input matInput [(ngModel)]="noteName" />
+    </mat-form-field>
+    <mat-form-field class="col" appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="1"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="center">
+    <button mat-raised-button color="primary">
+      SAVE
+    </button>
+  </div>
+</mat-card>

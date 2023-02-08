@@ -1,0 +1,18 @@
+#navbar-title {
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+#logo {
+  margin-bottom: 5px;
+}
+
+mat-toolbar {
+  margin-bottom: 20px;
+}
+
+#main-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
