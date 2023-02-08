@@ -25,7 +25,7 @@ export class LabDialogComponent implements OnInit {
     url: new UntypedFormControl('', [
       Validators.required,
       Validators.pattern(
-        '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
+        '(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]'
       ),
     ]),
     description: new UntypedFormControl(''),
