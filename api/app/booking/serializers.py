@@ -112,13 +112,15 @@ class TimeFrameSerializer(serializers.ModelSerializer):
         validated_data['owner'] = self.context['request'].user
         timeframe = TimeFrame.objects.create(**validated_data)
 
+        bookings = []
+
         for _ in range(number_of_days + 1):
             start_date = datetime.combine(start_date, start_hour).replace(tzinfo=datetime.now().astimezone().tzinfo)
 
             for _ in range(number_of_slots):
                 end_date = start_date + timedelta(minutes=slot_duration)
 
-                booking = Booking.objects.create(
+                booking = Booking(
                     start_date=start_date,
                     end_date=end_date,
                     available=True,
@@ -128,10 +130,12 @@ class TimeFrameSerializer(serializers.ModelSerializer):
                     timeframe=timeframe,
                     kit=kit
                 )
+                bookings.append(booking)
 
-                booking.save()
                 start_date = end_date
             
             start_date = start_date + timedelta(days=1)
+
+        Booking.objects.bulk_create(bookings)
 
         return timeframe
