@@ -23,7 +23,8 @@ class BookingSerializer(serializers.ModelSerializer):
             'public': {'required': True},
             'access_key': {'required': True},
             'user': {'required': True},
-            'kit': {'required': True}
+            'kit': {'required': True},
+            'owner': {'required': False}
         }
 
     def create(self, validated_data):
@@ -50,6 +51,7 @@ class KitSerializer(serializers.ModelSerializer):
             'name': {'required': True},
             'laboratory': {'required': True},
             'description': {'required': False},
+            'owner': {'required': False}
         }
 
     def create(self, validated_data):
@@ -65,6 +67,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'name': {'required': True},
             'description': {'required': False},
+            'owner': {'required': False}
         }
 
     def create(self, validated_data):
@@ -83,7 +86,8 @@ class TimeFrameSerializer(serializers.ModelSerializer):
             'start_hour': {'required': True},
             'end_hour': {'required': True},
             'slot_duration': {'required': True},
-            'kit': {'required': True}
+            'kit': {'required': True},
+            'owner': {'required': False}
         }
 
     def create(self, validated_data):
