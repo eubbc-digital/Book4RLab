@@ -67,7 +67,8 @@ class LaboratorySerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'name': {'required': True},
             'description': {'required': False},
-            'owner': {'required': False}
+            'owner': {'required': False},
+            'image': {'required': False}
         }
 
     def create(self, validated_data):
