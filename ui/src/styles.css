@@ -22,6 +22,11 @@ body {
   width: 33%;
 }
 
+.cols-4 {
+  float: left;
+  width: 25%;
+}
+
 .row:after {
   content: "";
   display: table;
@@ -34,6 +39,10 @@ body {
 
 .toast-container .ngx-toastr {
   box-shadow: 0 0 12px #3b3b3b !important;
+}
+
+.container {
+  padding: 70px;
 }
 
 /* ---------------- Form styles ---------------- */
@@ -157,7 +166,8 @@ tr.no-data-row {
   }
 
   .column,
-  .cols-3 {
+  .cols-3,
+  .cols-4 {
     width: 100%;
   }
 
@@ -202,5 +212,9 @@ tr.no-data-row {
 @media (min-width: 1000px) and (max-width: 1200px) {
   .reservation-list {
     width: 85%;
+  }
+
+  .cols-4 {
+    width: 50%;
   }
 }
