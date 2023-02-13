@@ -1,9 +1,11 @@
 <mat-toolbar color="primary">
-  <div id="main-label" (click)="goToBooking()" *ngIf="showLogo">
+  <div id="main-label" (click)="goToBooking()">
     <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
-    <span id="navbar-title">Remote Lab Booking</span>
+    <span id="navbar-title">Book4RLab</span>
   </div>
+
   <span class="spacer"></span>
+
   <button
     type="button"
     aria-label="side nav"
@@ -15,6 +17,16 @@
   </button>
 
   <mat-menu class="navbar-menu" #menu="matMenu">
+    <button
+      mat-menu-item
+      aria-label="Labs button"
+      (click)="goToLabManager()"
+      *ngIf="showLabsButton"
+    >
+      <mat-icon>science</mat-icon>
+      <span>Labs</span>
+    </button>
+
     <button mat-menu-item aria-label="Booking button" (click)="goToBooking()">
       <mat-icon>book_online</mat-icon>
       <span>New booking</span>
@@ -45,6 +57,15 @@
   </mat-menu>
 
   <ng-template #navbarButtons>
+    <button
+      mat-button
+      aria-label="Labs button"
+      (click)="goToLabManager()"
+      *ngIf="showLabsButton"
+    >
+      <span>Labs</span>
+    </button>
+
     <button mat-button aria-label="Booking button" (click)="goToBooking()">
       <mat-icon>book_online</mat-icon>
       New booking

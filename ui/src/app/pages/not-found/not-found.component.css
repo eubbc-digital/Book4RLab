@@ -1,0 +1,24 @@
+.page-404 {
+  padding: 60px 0;
+  background: #fff;
+  height: 85vh;
+}
+
+.page-404 img {
+  width: 150px;
+}
+
+#title-404 {
+  font-size: 80px;
+  margin-bottom: 50px;
+}
+
+h3 {
+  font-size: 40px;
+  font-weight: 100;
+  margin-bottom: 30px;
+}
+
+.msg-box-404 {
+  margin-top: 40px;
+}

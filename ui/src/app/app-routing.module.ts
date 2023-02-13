@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -14,10 +14,12 @@ import { PublicReservationsComponent } from './pages/public-reservations/public-
 import { LabsComponent } from './pages/labs/labs.component';
 import { KitsComponent } from './pages/kits/kits.component';
 import { TimeframesComponent } from './pages/timeframes/timeframes.component';
+import { LabsContainerComponent } from './components/labs-container/labs-container.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'booking',
     component: BookingStepperComponent,
     canDeactivate: [PendingChangesGuard],
   },
@@ -25,6 +27,7 @@ const routes: Routes = [
     path: 'access',
     component: AccessComponent,
   },
+  { path: '', redirectTo: '/booking', pathMatch: 'full' },
   {
     path: 'my-reservations',
     component: PrivateReservationsComponent,
@@ -44,6 +47,10 @@ const routes: Routes = [
   {
     path: 'timeframes',
     component: TimeframesComponent,
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
   },
 ];
 

@@ -30,7 +30,6 @@ import { CardElevationDirective } from './directives/card-elevation.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { LabsComponent } from './pages/labs/labs.component';
 import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
 import { KitsComponent } from './pages/kits/kits.component';
@@ -43,6 +42,7 @@ import { AccessComponent } from './pages/access/access.component';
 import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
@@ -75,7 +75,7 @@ import { PendingChangesGuard } from './pending-changes.guard';
     KitDialogComponent,
     TimeframesComponent,
     TimeframeDialogComponent,
-    SidenavComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
