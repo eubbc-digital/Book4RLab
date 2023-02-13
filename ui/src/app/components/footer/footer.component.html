@@ -1,6 +1,12 @@
 <footer>
-  <img id="erasmus-logo" src="./assets/erasmus.jpg" width="210px" />
-  <p id="copyright">
-    <strong>{{ acronym }} </strong>- Copyright &copy; {{ getCurrentYear() }}
-  </p>
+  <div>
+    <img id="erasmus-logo" src="./assets/erasmus.jpg" width="210px" />
+
+    <div>
+      <strong>{{ acronym }} </strong>- Copyright &copy; {{ getCurrentYear() }}
+      <span id="version"
+        >- <strong>Version {{ version }}</strong></span
+      >
+    </div>
+  </div>
 </footer>
