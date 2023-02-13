@@ -14,6 +14,8 @@ import config from '../../config.json';
 })
 export class FooterComponent implements OnInit {
   acronym: string = config.organizationData.acronym;
+  version: string = config.version;
+
   constructor() {}
 
   ngOnInit(): void {}

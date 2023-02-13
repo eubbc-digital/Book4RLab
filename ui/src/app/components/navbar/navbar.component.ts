@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import {
   BreakpointObserver,
@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
     Breakpoints.Handset
   );
 
-  showLogo = true;
+  showLabsButton = false;
 
   constructor(
     private router: Router,
@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUserData().subscribe((user) => {
       user.groups!.forEach((group) => {
-        if (group.name === Group.Professors) this.showLogo = false;
+        if (group.name === Group.Professors) this.showLabsButton = true;
       });
     });
   }
@@ -62,5 +62,9 @@ export class NavbarComponent implements OnInit {
   logout(): void {
     localStorage.removeItem('token');
     this.goToLogin();
+  }
+
+  goToLabManager(): void {
+    this.router.navigateByUrl('/labs');
   }
 }
