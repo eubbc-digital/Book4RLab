@@ -63,11 +63,12 @@ class LaboratorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Laboratory
-        fields = ['id', 'name', 'description', 'url', 'enabled', 'owner']
+        fields = '__all__'
         extra_kwargs = {
             'name': {'required': True},
             'description': {'required': False},
-            'owner': {'required': False}
+            'owner': {'required': False},
+            'image': {'required': False}
         }
 
     def create(self, validated_data):

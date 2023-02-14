@@ -41,6 +41,10 @@ class Kit(models.Model):
 class Laboratory(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
+    instructor = models.CharField(max_length=255, blank=False, default='')
+    university = models.CharField(max_length=255, blank=False, default='')
+    course = models.CharField(max_length=255, blank=False, default='')
+    image = models.ImageField(upload_to='laboratories', blank=True, null=True, default=None)
     description = models.CharField(max_length=255, default='')
     url = models.CharField(max_length=255, blank=True, null=True, default='')
     registration_date = models.DateTimeField(auto_now_add=True)

@@ -6,3 +6,4 @@ django-light==0.1.0.post3
 uuid==1.30
 pytz==2022.1
 gunicorn==20.1.0
+Pillow==9.4.0
