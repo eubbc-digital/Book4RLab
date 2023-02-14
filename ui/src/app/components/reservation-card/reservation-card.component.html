@@ -30,17 +30,20 @@
         </mat-icon>
       </p>
     </div>
-    <div class="col-1 qr">
+    <div class="col-1">
       <qr-code
         [value]="getAccessUrl()"
-        size="160"
         errorCorrectionLevel="M"
+        qrc-class="qr"
+        [size]="250"
       ></qr-code>
     </div>
   </div>
   <span>
     <strong>Link: </strong>
-    <a class="reservation-link" [href]="getAccessUrl()" target="_blank">{{ getAccessUrl() }}</a>
+    <a class="reservation-link" [href]="getAccessUrl()" target="_blank">{{
+      getAccessUrl()
+    }}</a>
   </span>
 
   <mat-card-actions align="end" *ngIf="showCancelButton()">

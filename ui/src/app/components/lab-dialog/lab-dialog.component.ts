@@ -5,9 +5,14 @@
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 import { LabService } from 'src/app/services/lab.service';
 
 @Component({
@@ -22,6 +27,9 @@ export class LabDialogComponent implements OnInit {
 
   labForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
+    instructor: new UntypedFormControl('', [Validators.required]),
+    university: new UntypedFormControl('', [Validators.required]),
+    course: new UntypedFormControl('', [Validators.required]),
     url: new UntypedFormControl('', [
       Validators.required,
       Validators.pattern(

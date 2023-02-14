@@ -27,10 +27,6 @@
   .col-1 {
     width: 100%;
   }
-
-  .qr {
-    margin-top: 0px;
-  }
 }
 
 @media (min-width: 800px) and (max-width: 1500px) {

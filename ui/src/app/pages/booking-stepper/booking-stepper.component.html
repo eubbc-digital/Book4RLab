@@ -22,7 +22,7 @@
       <form [formGroup]="reservationFormGroup" (ngSubmit)="followNextStep()">
         <ng-template matStepLabel>Select date and time</ng-template>
         <div class="row">
-          <div class="column">
+          <div class="calendar-column">
             <h2>Available dates</h2>
             <mat-card class="calendar-card" *ngIf="showCalendar; else spinner">
               <mat-calendar
@@ -48,7 +48,7 @@
             </div>
           </div>
 
-          <div class="column">
+          <div class="hours-column">
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Laboratories</mat-label>
               <mat-select

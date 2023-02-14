@@ -51,31 +51,65 @@ form {
 }
 
 ::ng-deep.green-date {
-  background: rgb(57, 165, 45) !important;;
+  background: rgb(57, 165, 45) !important;
   border-radius: 100%;
 }
 
 ::ng-deep.yellow-date {
-  background: rgb(222, 203, 31) !important;;
+  background: rgb(222, 203, 31) !important;
   border-radius: 100%;
 }
 
-@media (max-width: 600px) {
+.calendar-column {
+  float: left;
+  width: 40%;
+}
+
+.hours-column {
+  float: left;
+  width: 60%;
+}
+
+@media (max-width: 700px) {
   .calendar-card {
     margin-left: -20px;
     margin-top: 10px;
     width: 120%;
   }
+
+  .calendar-column {
+    width: 100%;
+  }
+
+  .hours-column {
+    width: 100%;
+  }
 }
 
-@media (min-width: 800px) and (max-width: 1500px) {
+@media (min-width: 700px) and (max-width: 1500px) {
   .card-booking-stepper {
     width: 65%;
+  }
+
+  .calendar-column {
+    width: 45%;
+  }
+
+  .hours-column {
+    width: 55%;
   }
 }
 
 @media (min-width: 1500px) {
   .card-booking-stepper {
     width: 55%;
+  }
+
+  .calendar-column {
+    width: 40%;
+  }
+
+  .hours-column {
+    width: 60%;
   }
 }
