@@ -36,7 +36,7 @@ export class LabDialogComponent implements OnInit {
         '(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]'
       ),
     ]),
-    description: new UntypedFormControl(''),
+    description: new UntypedFormControl('', [Validators.required]),
   });
 
   constructor(
@@ -64,6 +64,9 @@ export class LabDialogComponent implements OnInit {
 
       this.selectedLabId = lab.id;
       this.labForm.controls['name'].setValue(lab.name!);
+      this.labForm.controls['instructor'].setValue(lab.instructor!);
+      this.labForm.controls['university'].setValue(lab.university!);
+      this.labForm.controls['course'].setValue(lab.course!);
       this.labForm.controls['url'].setValue(lab.url!);
       this.labForm.controls['description'].setValue(lab.description);
 

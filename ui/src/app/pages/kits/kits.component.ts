@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -99,10 +99,8 @@ export class KitsComponent implements OnInit {
     const dialogRef = this.dialog.open(KitDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((response) => {
-      if (response) {
-        this.getKitsByLabId();
-        this.selectedKit = undefined;
-      }
+      if (response) this.getKitsByLabId();
+      this.selectedKit = undefined;
     });
   }
 
