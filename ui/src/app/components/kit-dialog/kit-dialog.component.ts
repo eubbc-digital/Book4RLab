@@ -24,7 +24,7 @@ export class KitDialogComponent implements OnInit {
 
   kitForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
-    description: new UntypedFormControl(''),
+    description: new UntypedFormControl('', [Validators.required]),
   });
 
   constructor(

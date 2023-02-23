@@ -85,10 +85,8 @@ export class LabsComponent implements OnInit {
     const dialogRef = this.dialog.open(LabDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((response) => {
-      if (response) {
-        this.getLabs(this.userId);
-        this.selectedLab = undefined;
-      }
+      if (response) this.getLabs(this.userId);
+      this.selectedLab = undefined;
     });
   }
 
