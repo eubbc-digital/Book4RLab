@@ -30,21 +30,49 @@
         </mat-icon>
       </p>
     </div>
+
     <div class="col-1">
       <qr-code
-        [value]="getAccessUrl()"
+        [value]="privateList ? getPrivateAccessUrl() : getPublicAccessUrl()"
         errorCorrectionLevel="M"
         qrc-class="qr"
-        [size]="250"
+        [size]="170"
       ></qr-code>
     </div>
   </div>
-  <span>
-    <strong>Link: </strong>
-    <a class="reservation-link" [href]="getAccessUrl()" target="_blank">{{
-      getAccessUrl()
-    }}</a>
-  </span>
+
+  <div *ngIf="privateList; else publiclink">
+    <p>
+      <strong>Private link: </strong>
+      <a
+        class="reservation-link"
+        [href]="getPrivateAccessUrl()"
+        target="_blank"
+        >{{ getPrivateAccessUrl() }}</a
+      >
+    </p>
+    <p *ngIf="reservation.public">
+      <strong>Public link: </strong>
+      <a
+        class="reservation-link"
+        [href]="getPublicAccessUrl()"
+        target="_blank"
+        >{{ getPublicAccessUrl() }}</a
+      >
+    </p>
+  </div>
+
+  <ng-template #publiclink>
+    <span>
+      <strong>Link: </strong>
+      <a
+        class="reservation-link"
+        [href]="getPublicAccessUrl()"
+        target="_blank"
+        >{{ getPublicAccessUrl() }}</a
+      >
+    </span>
+  </ng-template>
 
   <mat-card-actions align="end" *ngIf="showCancelButton()">
     <button mat-button color="primary" (click)="openConfirmationDialog()">

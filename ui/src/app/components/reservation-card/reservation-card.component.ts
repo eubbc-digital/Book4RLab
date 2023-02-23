@@ -50,8 +50,12 @@ export class ReservationCardComponent implements OnInit {
     if (this.reservation !== null) this.getKit();
   }
 
-  getAccessUrl(): string {
+  getPrivateAccessUrl(): string {
     return `${this.lab.url}?${config.urlParams.accessKey}=${this.reservation.access_key}&${config.urlParams.password}=${this.reservation.password}`;
+  }
+
+  getPublicAccessUrl(): string {
+    return `${this.lab.url}?${config.urlParams.accessKey}=${this.reservation.access_key}`;
   }
 
   getKit(): void {

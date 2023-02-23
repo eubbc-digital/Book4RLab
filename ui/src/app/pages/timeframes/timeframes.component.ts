@@ -145,7 +145,9 @@ export class TimeframesComponent implements OnInit {
   convertUTCHourToLocalTime(hour: string): string {
     const date = new Date();
     const timezoneOffset = date.getTimezoneOffset() * 60000;
-    const localTime = new Date(date.toLocaleDateString() + ' ' + hour);
+    const localTime = new Date(
+      date.toLocaleDateString('en-US', { hour12: false }) + ' ' + hour
+    );
     const utcTime = new Date(localTime.getTime() - timezoneOffset);
     return utcTime.toString().substring(16, 21);
   }

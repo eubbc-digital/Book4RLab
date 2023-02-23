@@ -1,10 +1,10 @@
 .reservation-card {
-  margin: 10px 25px;
+  margin: 5px 10px;
   padding-top: 0px;
 }
 
 .extra-padding {
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 
 .reservation-link {
@@ -18,18 +18,18 @@
 
 .col-1 {
   float: left;
-  width: 33%;
+  width: 30%;
   text-align: center;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 850px) {
   .cols-2,
   .col-1 {
     width: 100%;
   }
 }
 
-@media (min-width: 800px) and (max-width: 1500px) {
+@media (min-width: 850px) and (max-width: 1500px) {
   .cols-2 {
     float: left;
     width: 55%;
