@@ -27,6 +27,11 @@ body {
   width: 25%;
 }
 
+.cols-5 {
+  float: left;
+  width: 20%;
+}
+
 .row:after {
   content: "";
   display: table;
@@ -147,7 +152,7 @@ tr.no-data-row {
 
 .page-content {
   padding: 15px 40px 0px 40px;
-  background: #f1f5f9;
+  background: #fdfdfd;
   min-height: calc(100vh - 190px);
   margin-top: 20px;
 }
@@ -156,6 +161,7 @@ tr.no-data-row {
   width: 40%;
 }
 
+/* Responsive */
 @media (max-width: 600px) {
   .reservation-list {
     width: 100%;
@@ -167,7 +173,8 @@ tr.no-data-row {
 
   .column,
   .cols-3,
-  .cols-4 {
+  .cols-4,
+  .cols-5 {
     width: 100%;
   }
 
@@ -207,6 +214,10 @@ tr.no-data-row {
   .reservation-list {
     width: 100%;
   }
+
+  .cols-5 {
+    width: 50%;
+  }
 }
 
 @media (min-width: 1000px) and (max-width: 1200px) {
@@ -216,5 +227,15 @@ tr.no-data-row {
 
   .cols-4 {
     width: 50%;
+  }
+
+  .cols-5 {
+    width: 33%;
+  }
+}
+
+@media (min-width: 1200) {
+  .cols-5 {
+    width: 25%;
   }
 }

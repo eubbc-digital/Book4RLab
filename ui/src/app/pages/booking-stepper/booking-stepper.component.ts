@@ -9,10 +9,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import config from '../../config.json';
 
 import { ComponentCanDeactivate } from '../../pending-changes.guard';
 
@@ -26,6 +26,8 @@ import { Lab } from 'src/app/interfaces/lab';
 import { Kit } from 'src/app/interfaces/kit';
 import { Booking } from 'src/app/interfaces/booking';
 import { AvailableDate } from 'src/app/interfaces/available-date';
+
+import config from '../../config.json';
 
 @Component({
   selector: 'app-booking-stepper',
@@ -63,7 +65,6 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   stepperOrientation: Observable<StepperOrientation>;
 
-  labs: Lab[] = [];
   kits: Kit[] = [];
   availableHoursBySelectedDate: AvailableDate[] = [];
   availableDates: AvailableDate[] = [];
@@ -87,6 +88,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     format: 'mm:ss',
   };
 
+  private subscription: any;
+
   dateClass!: (cellDate: Date, view: any) => any;
 
   canDeactivate(): Observable<boolean> | boolean {
@@ -109,7 +112,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     private bookingService: BookingService,
     private toastService: ToastrService,
     private userService: UserService,
-    breakpointObserver: BreakpointObserver
+    breakpointObserver: BreakpointObserver,
+    private route: ActivatedRoute
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
 
@@ -121,16 +125,22 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   ngOnInit() {
     this.setFormValidation();
 
-    this.labService.getLabs().subscribe((labs) => {
-      this.labs = labs;
+    this.subscription = this.route.params.subscribe((params) => {
+      const id = +params['id'];
 
-      if (this.labs.length > 0) this.selectFirstAvailableLab();
-      else this.showCalendar = true;
+      this.labService.getLabById(id).subscribe((lab) => {
+        this.reservationFormGroup.controls['selectedLab'].setValue(lab);
+        this.getKitsByLabId(lab.id!);
+      });
     });
   }
 
   ngAfterViewInit() {
     this.initializeCountdown();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   setupCalendarClass() {
@@ -170,7 +180,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   setFormValidation(): void {
     this.reservationFormGroup = this.formBuilder.group({
-      selectedLab: ['', Validators.required],
+      selectedLab: [<Lab>{}, Validators.required],
       selectedKit: ['', Validators.required],
       selectedHour: ['', Validators.required],
       selectedDate: [new Date(), Validators.required],
@@ -187,14 +197,6 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   get selectedDate(): Date {
     return this.reservationFormGroup.controls['selectedDate'].value;
-  }
-
-  selectFirstAvailableLab(): void {
-    const selectedLab = this.labs[0];
-
-    this.reservationFormGroup.controls['selectedLab'].setValue(selectedLab);
-
-    this.getKitsByLabId(selectedLab.id!);
   }
 
   getKitsByLabId(labId: number): void {
@@ -409,7 +411,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       this.resetBookingId();
     }
 
-    if (this.labs.length > 0) this.selectFirstAvailableLab();
+    this.getKitsByLabId(this.selectedLab.id!);
   }
 
   onStepChange(event: any) {

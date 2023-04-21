@@ -50,18 +50,14 @@
 
           <div class="hours-column">
             <mat-form-field appearance="fill" class="selector">
-              <mat-label>Laboratories</mat-label>
-              <mat-select
-                (selectionChange)="getKitsByLabId($event.value.id)"
+              <mat-label>Selected lab</mat-label>
+              <input
+                matInput
                 formControlName="selectedLab"
-                required
-              >
-                <mat-option *ngFor="let lab of labs" [value]="lab">{{
-                  lab.name
-                }}</mat-option>
-              </mat-select>
+                [value]="selectedLab.name"
+                readonly
+              />
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="selector">
               <mat-label>Materials</mat-label>
               <mat-select

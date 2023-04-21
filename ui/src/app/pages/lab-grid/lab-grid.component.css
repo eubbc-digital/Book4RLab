@@ -1,0 +1,49 @@
+.lab-container {
+  margin-bottom: 90px;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.searched-lab-field {
+  width: 30vw;
+}
+
+.card-container {
+  padding: 10px;
+}
+
+.card {
+  width: 100%;
+  padding-top: 30px;
+  overflow: auto;
+  pointer-events: auto;
+  transform: scale(1);
+  transition: all 0.4s;
+}
+
+img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card:hover {
+  transform: scale(1.04);
+}
+
+.card:not(:hover) {
+  transform: scale(1);
+}
+
+@media (max-width: 600px) {
+  .searched-lab-field {
+    width: 80vw;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 991.98px) {
+  .searched-lab-field {
+    width: 50vw;
+  }
+}

@@ -15,10 +15,15 @@ import { LabsComponent } from './pages/labs/labs.component';
 import { KitsComponent } from './pages/kits/kits.component';
 import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 
 const routes: Routes = [
   {
-    path: 'booking',
+    path: 'lab-grid',
+    component: LabGridComponent,
+  },
+  {
+    path: 'booking/:id',
     component: BookingStepperComponent,
     canDeactivate: [PendingChangesGuard],
   },
@@ -26,7 +31,7 @@ const routes: Routes = [
     path: 'access',
     component: AccessComponent,
   },
-  { path: '', redirectTo: '/booking', pathMatch: 'full' },
+  { path: '', redirectTo: '/lab-grid', pathMatch: 'full' },
   {
     path: 'my-reservations',
     component: PrivateReservationsComponent,

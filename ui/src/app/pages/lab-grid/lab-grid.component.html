@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+
+<div class="page-content lab-container">
+  <div class="header">
+    <h1 class="title">Welcome</h1>
+    <div class="text-center">
+      <h4>
+        Search for a lab by name and select an available time slot to make a
+        reservation:
+      </h4>
+
+      <mat-form-field class="searched-lab-field" appearance="fill">
+        <mat-label>Laboratory</mat-label>
+        <input matInput type="text" [(ngModel)]="searchedLab" />
+        <button
+          *ngIf="searchedLab"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="searchedLab = ''"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div
+      *ngFor="let lab of labs | filter : searchedLab"
+      class="cols-5 card-container"
+    >
+      <mat-card class="card card-hghlght">
+        <mat-card-header>
+          <mat-card-title>{{ lab.name }}</mat-card-title>
+          <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <img
+          mat-card-image
+          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+          alt="Remote lab"
+          class="remote-lab-img"
+        />
+
+        <mat-card-content class="card-content">
+          <p>
+            <strong>Course: </strong> {{ lab.course }}
+            <br />
+            <strong>Instructor: </strong> {{ lab.instructor }}
+            <br />
+            <strong>Description:</strong>
+            {{ lab.description }}
+          </p>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button color="primary" (click)="selectLab(lab)">
+            RESERVATE
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

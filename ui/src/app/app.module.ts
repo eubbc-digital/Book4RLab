@@ -49,6 +49,10 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
 import { PendingChangesGuard } from './pending-changes.guard';
+import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
+
+// Pipes
+import { FilterPipe } from './pipes/lab-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -76,6 +80,8 @@ import { PendingChangesGuard } from './pending-changes.guard';
     TimeframesComponent,
     TimeframeDialogComponent,
     NotFoundComponent,
+    LabGridComponent,
+    FilterPipe,
   ],
   imports: [
     BrowserModule,

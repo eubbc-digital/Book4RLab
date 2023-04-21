@@ -1,8 +1,8 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import {
   BreakpointObserver,
@@ -43,8 +43,8 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  goToBooking(): void {
-    location.href = '';
+  goToLabGrid(): void {
+    this.router.navigateByUrl('/lab-grid');
   }
 
   goToMyReservations(): void {
