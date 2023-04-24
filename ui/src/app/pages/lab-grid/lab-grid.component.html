@@ -38,7 +38,7 @@
 
         <img
           mat-card-image
-          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+          [src]="lab.image ? getImagePath(lab.image) : '/assets/remote-lab.png'"
           alt="Remote lab"
           class="remote-lab-img"
         />
@@ -55,7 +55,7 @@
         </mat-card-content>
         <mat-card-actions align="end">
           <button mat-button color="primary" (click)="selectLab(lab)">
-            RESERVATE
+            BOOK
           </button>
         </mat-card-actions>
       </mat-card>

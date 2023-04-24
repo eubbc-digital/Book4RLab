@@ -22,6 +22,16 @@
       <input matInput formControlName="course" />
     </mat-form-field>
 
+    <div class="input-field">
+      <p class="file-label">Choose an image for the laboratory:</p>
+      <input
+        class="file"
+        type="file"
+        name="Image"
+        (change)="onFileChange($event)"
+      />
+    </div>
+
     <mat-form-field appearance="fill" class="input-field">
       <mat-label>URL</mat-label>
       <input matInput formControlName="url" />

@@ -10,7 +10,7 @@ export interface Lab {
   instructor?: string;
   university?: string;
   course?: string;
-  image?: string;
+  image?: any;
   description?: string;
   url?: string;
   enabled?: boolean;

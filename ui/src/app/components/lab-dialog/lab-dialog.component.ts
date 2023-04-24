@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, Inject, OnInit } from '@angular/core';
 import {
@@ -30,6 +30,7 @@ export class LabDialogComponent implements OnInit {
     instructor: new UntypedFormControl('', [Validators.required]),
     university: new UntypedFormControl('', [Validators.required]),
     course: new UntypedFormControl('', [Validators.required]),
+    image: new UntypedFormControl(null, [Validators.required]),
     url: new UntypedFormControl('', [
       Validators.required,
       Validators.pattern(
@@ -48,6 +49,10 @@ export class LabDialogComponent implements OnInit {
 
   get urlControl() {
     return this.labForm.controls['url'];
+  }
+
+  get imageControl() {
+    return this.labForm.controls['image'];
   }
 
   getUrlErrorMessage() {
@@ -117,5 +122,12 @@ export class LabDialogComponent implements OnInit {
     if (msg) this.toastr.success(msg);
     this.labForm.reset();
     this.dialogRef.close(msg);
+  }
+
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0] as File;
+      this.imageControl.setValue(file);
+    }
   }
 }

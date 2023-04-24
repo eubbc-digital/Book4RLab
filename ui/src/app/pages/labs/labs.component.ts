@@ -118,7 +118,7 @@ export class LabsComponent implements OnInit {
 
   deleteLab(lab: Lab): void {
     lab.enabled = false;
-    this.labService.updateLab(lab, lab.id!).subscribe({
+    this.labService.deleteLab(lab).subscribe({
       next: (_) => {
         this.toastr.success('The lab has been deleted successfully.');
         this.getLabs(this.userId);

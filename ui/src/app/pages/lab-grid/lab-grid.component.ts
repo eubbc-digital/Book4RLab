@@ -1,13 +1,14 @@
 /*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Lab } from 'src/app/interfaces/lab';
 import { LabService } from 'src/app/services/lab.service';
+import config from '../../config.json';
 
 @Component({
   selector: 'app-lab-grid',
@@ -17,6 +18,8 @@ import { LabService } from 'src/app/services/lab.service';
 export class LabGridComponent implements OnInit {
   labs: Lab[] = [];
   searchedLab = '';
+
+  defaultLabImg = '/assets/remote-lab.png';
 
   constructor(private labService: LabService, private router: Router) {}
 
@@ -29,5 +32,12 @@ export class LabGridComponent implements OnInit {
   selectLab(lab: Lab): void {
     console.log(lab);
     this.router.navigate(['/booking', lab.id]);
+  }
+
+  getImagePath(image: string): string {
+    if (image) {
+      const imageName = image.split('/').slice(-1)[0];
+      return `${config.api.baseUrl}${config.api.media}${imageName}`;
+    } else return this.defaultLabImg;
   }
 }
