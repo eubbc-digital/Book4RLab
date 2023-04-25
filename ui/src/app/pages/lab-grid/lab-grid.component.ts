@@ -19,7 +19,7 @@ export class LabGridComponent implements OnInit {
   labs: Lab[] = [];
   searchedLab = '';
 
-  defaultLabImg = '/assets/remote-lab.png';
+  defaultLabImg = './assets/remote-lab.png';
 
   constructor(private labService: LabService, private router: Router) {}
 
