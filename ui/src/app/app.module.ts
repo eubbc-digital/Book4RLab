@@ -48,7 +48,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 // Guards
-import { PendingChangesGuard } from './pending-changes.guard';
+import { PendingChangesGuard } from './services/guards/pending-changes.guard';
 import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 
 // Pipes

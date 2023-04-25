@@ -6,7 +6,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PendingChangesGuard } from './pending-changes.guard';
+import { PendingChangesGuard } from './services/guards/pending-changes.guard';
 import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
 import { AccessComponent } from './pages/access/access.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
@@ -16,6 +16,7 @@ import { KitsComponent } from './pages/kits/kits.component';
 import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
+import { LabsGuard } from './services/guards/labs.guard';
 
 const routes: Routes = [
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
   {
     path: 'labs',
     component: LabsComponent,
+    canActivate: [LabsGuard]
   },
   {
     path: 'kits',

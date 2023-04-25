@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { ComponentCanDeactivate } from '../../pending-changes.guard';
+import { ComponentCanDeactivate } from '../../services/guards/pending-changes.guard';
 
 import { LabService } from 'src/app/services/lab.service';
 import { KitService } from 'src/app/services/kit.service';
