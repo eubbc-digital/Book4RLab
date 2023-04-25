@@ -72,6 +72,7 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['instructor'].setValue(lab.instructor!);
       this.labForm.controls['university'].setValue(lab.university!);
       this.labForm.controls['course'].setValue(lab.course!);
+      this.labForm.controls['image'].setValue(lab.image);
       this.labForm.controls['url'].setValue(lab.url!);
       this.labForm.controls['description'].setValue(lab.description);
 

@@ -23,12 +23,13 @@
     </mat-form-field>
 
     <div class="input-field">
-      <p class="file-label">Choose an image for the laboratory:</p>
+      <p class="file-label">* Choose an image for the laboratory:</p>
       <input
         class="file"
         type="file"
         name="Image"
         (change)="onFileChange($event)"
+        required
       />
     </div>
 

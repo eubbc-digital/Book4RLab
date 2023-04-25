@@ -47,7 +47,10 @@ export class LabService {
     if (newLab.instructor) formData.append('instructor', newLab.instructor!);
     if (newLab.university) formData.append('university', newLab.university!);
     if (newLab.course) formData.append('course', newLab.course!);
-    if (newLab.image) formData.append('image', newLab.image!);
+
+    if (newLab.image && typeof newLab.image !== 'string')
+      formData.append('image', newLab.image!);
+
     if (newLab.url) formData.append('url', newLab.url!);
     if (newLab.description) formData.append('description', newLab.description!);
     formData.append('enabled', '1');

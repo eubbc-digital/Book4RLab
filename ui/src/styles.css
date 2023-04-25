@@ -220,7 +220,7 @@ tr.no-data-row {
   }
 }
 
-@media (min-width: 1000px) and (max-width: 1200px) {
+@media (min-width: 1000px) and (max-width: 1300px) {
   .reservation-list {
     width: 85%;
   }
@@ -234,8 +234,14 @@ tr.no-data-row {
   }
 }
 
-@media (min-width: 1200) {
+@media (min-width: 1300px) and (max-width: 1480px) {
   .cols-5 {
     width: 25%;
+  }
+}
+
+@media (min-width: 1480) {
+  .cols-5 {
+    width: 20%;
   }
 }

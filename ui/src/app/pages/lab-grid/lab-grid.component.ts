@@ -30,7 +30,6 @@ export class LabGridComponent implements OnInit {
   }
 
   selectLab(lab: Lab): void {
-    console.log(lab);
     this.router.navigate(['/booking', lab.id]);
   }
 
