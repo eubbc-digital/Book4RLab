@@ -36,7 +36,6 @@
           <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
         </mat-card-header>
 
-        
         <img
           mat-card-image
           [src]="lab.image ? getImagePath(lab.image) : defaultLabImg"
@@ -63,3 +62,5 @@
     </div>
   </div>
 </div>
+
+<app-scroll-to-top></app-scroll-to-top>
