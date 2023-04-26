@@ -36,9 +36,10 @@
           <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
         </mat-card-header>
 
+        
         <img
           mat-card-image
-          [src]="lab.image ? getImagePath(lab.image) : '/assets/remote-lab.png'"
+          [src]="lab.image ? getImagePath(lab.image) : defaultLabImg"
           alt="Remote lab"
           class="remote-lab-img"
         />
