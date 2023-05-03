@@ -50,6 +50,7 @@ class Laboratory(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     enabled = models.BooleanField(default=True)
+    visible = models.BooleanField(default=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='laboratory_owner', on_delete=models.CASCADE)
 
 

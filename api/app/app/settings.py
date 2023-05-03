@@ -36,8 +36,8 @@ DEBUG = int(os.environ.get('DEBUG', default=0))
 CORS_ORIGIN_ALLOW_ALL = True
 ALLOWED_HOSTS = ['*']
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = 'media/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/media/'
 
 # Application definition
 
