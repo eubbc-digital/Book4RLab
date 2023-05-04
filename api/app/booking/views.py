@@ -205,12 +205,19 @@ class LaboratoryList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Laboratory.objects.filter(enabled=True)
         owner = self.request.query_params.get('owner')
+        visible = self.request.query_params.get('visible')
 
         if owner is not None:
             if not owner.isdigit():
                 raise SuspiciousOperation('Owner id must be a number')
 
             return queryset.filter(owner_id=int(owner))
+        
+        if visible is not None:
+            if visible == 'true':
+                return queryset.filter(visible=True)
+            elif visible == 'false':
+                return queryset.filter(visible=False)
 
         return queryset
 
