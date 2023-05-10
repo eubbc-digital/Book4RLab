@@ -14,4 +14,5 @@ export interface Lab {
   description?: string;
   url?: string;
   enabled?: boolean;
+  visible?: boolean;
 }

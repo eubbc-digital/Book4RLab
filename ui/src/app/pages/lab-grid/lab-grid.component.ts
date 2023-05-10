@@ -24,7 +24,7 @@ export class LabGridComponent implements OnInit {
   constructor(private labService: LabService, private router: Router) {}
 
   ngOnInit(): void {
-    this.labService.getLabs().subscribe((labs) => {
+    this.labService.getVisibleLabs().subscribe((labs) => {
       this.labs = labs;
     });
   }

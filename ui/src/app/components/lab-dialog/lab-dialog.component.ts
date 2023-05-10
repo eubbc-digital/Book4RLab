@@ -1,8 +1,8 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, Inject, OnInit } from '@angular/core';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { LabService } from 'src/app/services/lab.service';
 
 @Component({
@@ -31,6 +30,7 @@ export class LabDialogComponent implements OnInit {
     university: new UntypedFormControl('', [Validators.required]),
     course: new UntypedFormControl('', [Validators.required]),
     image: new UntypedFormControl(null, [Validators.required]),
+    visible: new UntypedFormControl(false, [Validators.required]),
     url: new UntypedFormControl('', [
       Validators.required,
       Validators.pattern(
@@ -75,6 +75,7 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['image'].setValue(lab.image);
       this.labForm.controls['url'].setValue(lab.url!);
       this.labForm.controls['description'].setValue(lab.description);
+      this.labForm.controls['visible'].setValue(lab.visible);
 
       this.title = 'Update laboratory';
     } else {

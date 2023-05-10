@@ -23,6 +23,11 @@ export class LabService {
     return this.http.get<Lab[]>(labsUrl);
   }
 
+  getVisibleLabs(): Observable<Lab[]> {
+    const labsUrl = `${this.url}?visible=true`;
+    return this.http.get<Lab[]>(labsUrl);
+  }
+
   getLabById(labId: number): Observable<Lab> {
     return this.http.get<Lab>(`${this.url}${labId}/`);
   }
@@ -36,6 +41,7 @@ export class LabService {
     formData.append('image', lab.image!);
     formData.append('url', lab.url!);
     formData.append('description', lab.description!);
+    formData.append('visible', String(lab.visible!));
     formData.append('enabled', '1');
 
     return this.http.post<Lab>(this.url, formData);
@@ -53,6 +59,7 @@ export class LabService {
 
     if (newLab.url) formData.append('url', newLab.url!);
     if (newLab.description) formData.append('description', newLab.description!);
+    formData.append('visible', String(newLab.visible!));
     formData.append('enabled', '1');
 
     return this.http.patch<Lab>(`${this.url}${id}/`, formData);
