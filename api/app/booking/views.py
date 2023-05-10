@@ -220,6 +220,16 @@ class LaboratoryList(generics.ListCreateAPIView):
                 return queryset.filter(visible=False)
 
         return queryset
+    
+
+class PublicLaboratoryList(generics.ListAPIView):
+
+    serializer_class = LaboratorySerializer
+
+    def get_queryset(self):
+        queryset = Laboratory.objects.filter(enabled=True)
+
+        return queryset.filter(visible=True)
 
 
 class LaboratoryDetail(generics.RetrieveUpdateAPIView):
