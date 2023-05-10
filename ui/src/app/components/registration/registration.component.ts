@@ -1,8 +1,8 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, OnInit } from '@angular/core';
 import {
@@ -134,7 +134,7 @@ export class RegistrationComponent implements OnInit {
 
           this.authService.login(newUser).subscribe((response) => {
             localStorage.setItem('token', response.body.token);
-            this.router.navigateByUrl('');
+            this.checkReturnUrl();
           });
         }
       });
@@ -177,5 +177,15 @@ export class RegistrationComponent implements OnInit {
       this.countryControl.errors != null &&
       this.countryControl.errors['requireMatch']
     );
+  }
+
+  checkReturnUrl() {
+    let params = new URLSearchParams(document.location.search);
+    let returnUrl = params.get('return-url');
+
+    if (returnUrl) this.router.navigateByUrl(returnUrl);
+    else {
+      this.router.navigateByUrl('');
+    }
   }
 }

@@ -1,14 +1,14 @@
 /*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Lab } from 'src/app/interfaces/lab';
-import { LabService } from 'src/app/services/lab.service';
 import config from '../../config.json';
+import { PublicLabsService } from 'src/app/services/public-labs.service';
 
 @Component({
   selector: 'app-lab-grid',
@@ -21,10 +21,13 @@ export class LabGridComponent implements OnInit {
 
   defaultLabImg = './assets/remote-lab.png';
 
-  constructor(private labService: LabService, private router: Router) {}
+  constructor(
+    private publicLabsService: PublicLabsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.labService.getVisibleLabs().subscribe((labs) => {
+    this.publicLabsService.getPublicLabs().subscribe((labs) => {
       this.labs = labs;
     });
   }

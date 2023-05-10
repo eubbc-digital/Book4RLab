@@ -13,7 +13,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, first } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -44,9 +44,12 @@ export class AuthInterceptorService implements HttpInterceptor {
           err.status === 401 ||
           (err.status === 0 && this.router.url != '/access')
         ) {
-          console.log(err);
+          const pathname = window.location.pathname;
+
           localStorage.removeItem('token');
-          this.router.navigate(['access']);
+
+          if (pathname.match('/booking/[0-9]+'))
+            this.router.navigateByUrl(`access?return-url=${pathname}`);
         }
 
         return throwError(err);

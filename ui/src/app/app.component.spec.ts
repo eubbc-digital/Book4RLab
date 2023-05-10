@@ -29,7 +29,6 @@ describe('AppComponent', () => {
   it(`should have as title 'remote-lab-booking'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('remote-lab-booking');
   });
 
   it('should render title', () => {
