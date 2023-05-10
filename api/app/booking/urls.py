@@ -18,6 +18,7 @@ urlpatterns = [
     path('kits/', views.KitList.as_view(), name='kitlist'),
     path('kits/<int:pk>/', views.KitDetail.as_view(), name='kitdetail'),
     path('laboratories/', views.LaboratoryList.as_view(), name='laboratorylist'),
+    path('public-laboratories/', views.PublicLaboratoryList.as_view(), name='publiclaboratorylist'),
     path('laboratories/<int:pk>/', views.LaboratoryDetail.as_view(), name='laboratorydetail'),
     path('timeframes/', views.TimeFrameList.as_view(), name='timeframelist'),
     path('timeframes/<int:pk>/', views.TimeFrameDetail.as_view(), name='timeframedetail'),
