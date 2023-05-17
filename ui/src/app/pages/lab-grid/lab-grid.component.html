@@ -12,6 +12,7 @@
       <mat-form-field class="searched-lab-field" appearance="fill">
         <mat-label>Laboratory</mat-label>
         <input matInput type="text" [(ngModel)]="searchedLab" />
+        <mat-icon matPrefix id="search-icon">search</mat-icon>
         <button
           *ngIf="searchedLab"
           matSuffix
@@ -54,7 +55,12 @@
           </p>
         </mat-card-content>
         <mat-card-actions align="end">
-          <button mat-button color="primary" (click)="selectLab(lab)">
+          <button
+            mat-button
+            color="primary"
+            class="card-button"
+            (click)="selectLab(lab)"
+          >
             BOOK
           </button>
         </mat-card-actions>

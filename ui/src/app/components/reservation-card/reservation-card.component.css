@@ -1,47 +1,107 @@
 .reservation-card {
   margin: 5px 10px;
-  padding-top: 0px;
+  padding: 20px 30px;
+  position: relative;
+}
+
+.private-card {
+  height: 500px;
+}
+
+.public-card {
+  height: 310px;
 }
 
 .extra-padding {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.cancel-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 
 .reservation-link {
   word-break: break-all;
 }
 
+.qr-container {
+  text-align: right;
+}
+
 .cols-2 {
   float: left;
-  width: 67%;
+  width: 50%;
 }
 
-.col-1 {
-  float: left;
-  width: 30%;
-  text-align: center;
-}
-
-@media (max-width: 850px) {
-  .cols-2,
-  .col-1 {
+@media (max-width: 350px) {
+  .cols-2 {
     width: 100%;
   }
-}
 
-@media (min-width: 850px) and (max-width: 1500px) {
-  .cols-2 {
-    float: left;
-    width: 55%;
+  .qr-container {
+    text-align: center;
   }
 
-  .col-1 {
+  .private-card {
+    height: 700px;
+  }
+
+  .public-card {
+    height: 610px;
+  }
+}
+
+@media (min-width: 350px) and (max-width: 800px) {
+  .cols-2 {
+    width: 100%;
+  }
+
+  .qr-container {
+    text-align: center;
+  }
+
+  .reservation-card {
+    height: 650px;
+  }
+
+  .public-card {
+    height: 510px;
+  }
+}
+
+@media (min-width: 800px) and (max-width: 1500px) {
+  .cols-2 {
     float: left;
-    width: 45%;
+    width: 50%;
+  }
+
+  .extra-padding {
+    padding-bottom: 30px;
+  }
+
+  .private-card {
+    height: 460px;
+  }
+
+  .public-card {
+    height: 380px;
+  }
+}
+
+@media (min-width: 1500px) {
+  .cols-2 {
+    float: left;
+    width: 50%;
   }
 
   .extra-padding {
     padding-bottom: 50px;
+  }
+
+  .private-card {
+    height: 400px;
   }
 }
 

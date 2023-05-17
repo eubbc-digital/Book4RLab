@@ -1,7 +1,7 @@
 <mat-card
   appCardElevation
   class="reservation-card"
-  [ngClass]="{ 'extra-padding': !showCancelButton() }"
+  [ngClass]="{ 'extra-padding': !showCancelButton() , 'private-card': privateList, 'public-card': !privateList }"
   *ngIf="dataReady"
 >
   <p class="title">Reservation N° {{ reservation.id }}</p>
@@ -31,7 +31,7 @@
       </p>
     </div>
 
-    <div class="col-1">
+    <div class="col-2 qr-container">
       <qr-code
         [value]="privateList ? getPrivateAccessUrl() : getPublicAccessUrl()"
         errorCorrectionLevel="M"
@@ -75,7 +75,12 @@
   </ng-template>
 
   <mat-card-actions align="end" *ngIf="showCancelButton()">
-    <button mat-button color="primary" (click)="openConfirmationDialog()">
+    <button
+      class="cancel-button"
+      mat-raised-button
+      color="primary"
+      (click)="openConfirmationDialog()"
+    >
       CANCEL
     </button>
   </mat-card-actions>

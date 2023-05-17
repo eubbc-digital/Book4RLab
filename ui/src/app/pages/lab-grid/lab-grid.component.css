@@ -6,13 +6,17 @@
   margin-bottom: 40px;
 }
 
+#search-icon {
+  margin-right: 10px;
+  color: gray;
+}
+
 .searched-lab-field {
   width: 30vw;
 }
 
 .card-container {
   padding: 10px;
-  height: 500px;
 }
 
 .card {
@@ -22,6 +26,8 @@
   pointer-events: auto;
   transform: scale(1);
   transition: all 0.2s;
+  height: 460px;
+  position: relative;
 }
 
 img {
@@ -35,6 +41,12 @@ img {
 
 .card:not(:hover) {
   transform: scale(1);
+}
+
+.card-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 
 @media (max-width: 600px) {
