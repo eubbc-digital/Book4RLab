@@ -128,13 +128,15 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         instance = self.get_object()
 
         register = self.request.query_params.get('register')
+        confirmed = self.request.query_params.get('confirmed')
 
         if register is not None and register == 'true':
             if instance.reserved_by is None: 
                 instance.reserved_by = self.request.user
 
-        recipient = [self.request.user.email]
-        self.send_confirmation_email(instance, recipient)
+        if confirmed is not None and confirmed == 'true':
+            recipient = [self.request.user.email]
+            self.send_confirmation_email(instance, recipient)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -157,9 +159,11 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         body = ' Booking confirmed! \n'
         body += f' Your booking for kit {instance.kit.name} has been confirmed\n'
         body += f' Laboratory: {laboratory.name}\n'
-        body += ' Details available at https://eubbc-digital.upb.edu/booking/my-reservations'
+        body += ' Start date: ' + instance.start_date.strftime('%d/%m/%Y %H:%M') + ' UTC \n'
+        body += ' End date: ' + instance.end_date.strftime('%d/%m/%Y %H:%M') + ' UTC \n'
+        body += ' Details available at https://eubbc-digital.upb.edu/booking/my-reservations \n'
         body += '\n - UPB Team -'
-        
+
         sender = settings.EMAIL_HOST_USER
 
         try:
