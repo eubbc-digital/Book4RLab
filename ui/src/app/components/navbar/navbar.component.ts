@@ -27,6 +27,7 @@ export class NavbarComponent implements OnInit {
     Breakpoints.Handset
   );
 
+  shownMenu = false;
   showLabsButton = false;
 
   constructor(
@@ -36,15 +37,23 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.getUserData().subscribe((user) => {
-      user.groups!.forEach((group) => {
-        if (group.name === Group.Professors) this.showLabsButton = true;
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      this.userService.getUserData().subscribe((user) => {
+        user.groups!.forEach((group) => {
+          if (group.name === Group.Professors) this.showLabsButton = true;
+        });
       });
-    });
+      this.shownMenu = true;
+    } else {
+      this.shownMenu = false;
+      this.showLabsButton = false;
+    }
   }
 
   goToLabGrid(): void {
-    this.router.navigateByUrl('/lab-grid');
+    this.router.navigateByUrl('/labs');
   }
 
   goToMyReservations(): void {
@@ -61,10 +70,12 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.goToLogin();
+    this.goToLabGrid();
+    this.shownMenu = false;
+    this.showLabsButton = false;
   }
 
   goToLabManager(): void {
-    this.router.navigateByUrl('/labs');
+    this.router.navigateByUrl('/my-labs');
   }
 }

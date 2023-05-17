@@ -58,7 +58,9 @@ export class LoginComponent implements OnInit {
       this.authService.login(user).subscribe((response) => {
         if (response != undefined) {
           localStorage.setItem('token', response.body.token);
-          this.router.navigateByUrl('');
+
+          this.checkReturnUrl();
+
           this.toastr.success(`Welcome ${user.email}`);
         }
       });
@@ -85,5 +87,15 @@ export class LoginComponent implements OnInit {
     return this.passwordControl.hasError('minlength')
       ? 'Password must have at least 8 characters.'
       : '';
+  }
+
+  checkReturnUrl() {
+    let params = new URLSearchParams(document.location.search);
+    let returnUrl = params.get('return-url');
+
+    if (returnUrl) this.router.navigateByUrl(returnUrl);
+    else {
+      this.router.navigateByUrl('');
+    }
   }
 }

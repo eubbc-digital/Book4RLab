@@ -20,7 +20,7 @@ import { LabsGuard } from './services/guards/labs.guard';
 
 const routes: Routes = [
   {
-    path: 'lab-grid',
+    path: 'labs',
     component: LabGridComponent,
   },
   {
@@ -32,7 +32,7 @@ const routes: Routes = [
     path: 'access',
     component: AccessComponent,
   },
-  { path: '', redirectTo: '/lab-grid', pathMatch: 'full' },
+  { path: '', redirectTo: '/labs', pathMatch: 'full' },
   {
     path: 'my-reservations',
     component: PrivateReservationsComponent,
@@ -42,7 +42,7 @@ const routes: Routes = [
     component: PublicReservationsComponent,
   },
   {
-    path: 'labs',
+    path: 'my-labs',
     component: LabsComponent,
     canActivate: [LabsGuard],
   },

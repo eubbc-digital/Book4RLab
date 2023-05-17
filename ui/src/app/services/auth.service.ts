@@ -20,12 +20,20 @@ import config from '../config.json';
   providedIn: 'root',
 })
 export class AuthService {
-  private httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-    observe: 'response' as 'response',
-  };
+  private httpOptions = <any>{};
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {}
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService,
+    
+  ) {
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      observe: 'response' as 'response',
+    };
+  }
 
   signUp(user: User): Observable<any> {
     const URL = `${config.api.baseUrl}${config.api.users.signup}`;

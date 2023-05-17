@@ -4,33 +4,16 @@
 * MIT License - See LICENSE file in the root directory
 */
 
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { Spinkit } from 'ng-http-loader';
-
-import { UserService } from './services/user.service';
-
-import { Group } from './enums/group';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
-  title = 'remote-lab-booking';
+export class AppComponent {
+  public spinkit = Spinkit;
 
-  showSidenav = false;
-
-  public spinkit = Spinkit; 
-
-  constructor(public router: Router, private userService: UserService) {}
-
-  ngOnInit(): void {
-    this.userService.getUserData().subscribe((user) => {
-      user.groups!.forEach((group) => {
-        if (group.name === Group.Professors) this.showSidenav = true;
-      });
-    });
-  }
+  constructor() {}
 }
