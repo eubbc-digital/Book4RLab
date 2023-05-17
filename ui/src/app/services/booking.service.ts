@@ -35,6 +35,13 @@ export class BookingService {
     );
   }
 
+  confirmBooking(booking: Booking): Observable<Booking> {
+    return this.http.patch<Booking>(
+      `${this.url}${booking.id}/?confirmed=true`,
+      booking
+    );
+  }
+
   updateBooking(booking: Booking): Observable<Booking> {
     return this.http.patch<Booking>(`${this.url}${booking.id}/`, booking);
   }

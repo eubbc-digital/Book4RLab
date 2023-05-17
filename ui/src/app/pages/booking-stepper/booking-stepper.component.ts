@@ -327,31 +327,50 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       public: this.publicReservation,
     };
 
-    if (!this.confirmedReservation) this.countdown.restart();
+    if (!this.confirmedReservation) {
+      this.countdown.restart();
 
-    this.bookingService.registerBooking(booking).subscribe((updatedBooking) => {
-      this.userService.getUserData().subscribe((response) => {
-        if (response && response.id == updatedBooking.reserved_by) {
-          this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}&${config.urlParams.password}=${updatedBooking.password}`;
+      this.bookingService
+        .registerBooking(booking)
+        .subscribe((updatedBooking) => {
+          this.userService.getUserData().subscribe((response) => {
+            if (response && response.id == updatedBooking.reserved_by) {
+              this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}&${config.urlParams.password}=${updatedBooking.password}`;
+              this.publicAccessUrl = this.publicReservation
+                ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}`
+                : '';
+              this.reservationDate = moment(updatedBooking.start_date).format(
+                this.dateTimeFormat
+              );
+
+              this.stepper.next();
+            } else {
+              this.toastService.error(
+                'This booking is not available. Please choose another.'
+              );
+
+              this.getHoursByKitIdAndDate(
+                this.selectedKit.id!,
+                this.selectedDate
+              );
+
+              this.bookingId = 0;
+            }
+          });
+        });
+    } else {
+      this.bookingService
+        .confirmBooking(booking)
+        .subscribe((confirmedBooking) => {
+          this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${confirmedBooking.access_key}&${config.urlParams.password}=${confirmedBooking.password}`;
           this.publicAccessUrl = this.publicReservation
-            ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}`
+            ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${confirmedBooking.access_key}`
             : '';
-          this.reservationDate = moment(updatedBooking.start_date).format(
+          this.reservationDate = moment(confirmedBooking.start_date).format(
             this.dateTimeFormat
           );
-
-          if (!this.confirmedReservation) this.stepper.next();
-        } else {
-          this.toastService.error(
-            'This booking is not available. Please choose another.'
-          );
-
-          this.getHoursByKitIdAndDate(this.selectedKit.id!, this.selectedDate);
-
-          this.bookingId = 0;
-        }
-      });
-    });
+        });
+    }
   }
 
   undoReservation(): void {
