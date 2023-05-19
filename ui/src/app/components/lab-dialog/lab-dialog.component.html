@@ -23,14 +23,34 @@
     </mat-form-field>
 
     <div class="input-field">
-      <p class="file-label">* Choose an image for the laboratory:</p>
+      <div *ngIf="imageName != ''; else showImageLabel">
+        <p>
+          <strong>Current image: </strong>
+          {{ imageName }}
+        </p>
+
+        <p>
+          <strong>If you want to change, choose another:</strong>
+        </p>
+      </div>
+
+      <ng-template #showImageLabel>
+        <p class="file-label">Choose an image for the laboratory:</p>
+      </ng-template>
+
       <input
         class="file"
         type="file"
         name="Image"
+        accept="image/*"
         (change)="onFileChange($event)"
-        required
       />
+      <div
+        *ngIf="imageControl.errors && (imageControl.dirty || submitted)"
+        class="text-danger"
+      >
+        <div *ngIf="imageControl.errors['required']">Image is required</div>
+      </div>
     </div>
 
     <mat-form-field appearance="fill" class="input-field">

@@ -25,12 +25,12 @@
         (click)="goToLabManager()"
         *ngIf="showLabsButton"
       >
-        <mat-icon>science</mat-icon>
+        <mat-icon class="icon">science</mat-icon>
         <span>My labs</span>
       </button>
 
       <button mat-menu-item aria-label="Booking button" (click)="goToLabGrid()">
-        <mat-icon>book_online</mat-icon>
+        <mat-icon class="icon">book_online</mat-icon>
         <span>New booking</span>
       </button>
 
@@ -39,7 +39,7 @@
         aria-label="Public reservation list button"
         (click)="goToPublicReservations()"
       >
-        <mat-icon>list</mat-icon>
+        <mat-icon class="icon">list</mat-icon>
         <span>Public rooms</span>
       </button>
 
@@ -48,19 +48,19 @@
         aria-label="Personal reservation list button"
         (click)="goToMyReservations()"
       >
-        <mat-icon>list</mat-icon>
+        <mat-icon class="icon">list</mat-icon>
         <span> My reservations</span>
       </button>
 
       <button mat-menu-item aria-label="Logout icon" (click)="logout()">
-        <mat-icon>login</mat-icon>
+        <mat-icon class="icon">logout</mat-icon>
         <span>Logout </span>
       </button>
     </div>
 
     <ng-template #showLoginButton>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
-        <mat-icon>login</mat-icon>
+        <mat-icon class="icon">login</mat-icon>
         Login
       </button>
     </ng-template>
@@ -79,7 +79,7 @@
       </button>
 
       <button mat-button aria-label="Booking button" (click)="goToLabGrid()">
-        <mat-icon>book_online</mat-icon>
+        <mat-icon class="icon">book_online</mat-icon>
         New booking
       </button>
 
@@ -100,15 +100,15 @@
       </button>
 
       <button mat-button aria-label="Logout icon" (click)="logout()">
-        <mat-icon>login</mat-icon>
+        <mat-icon class="icon">logout</mat-icon>
         Logout
       </button>
     </div>
 
     <ng-template #showLoginButton>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
-        <mat-icon>login</mat-icon>
-        Login
+        <mat-icon class="icon">login</mat-icon>
+        Login / Sign Up
       </button>
     </ng-template>
   </ng-template>

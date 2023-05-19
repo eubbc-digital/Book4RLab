@@ -47,7 +47,10 @@ export class AuthInterceptorService implements HttpInterceptor {
           err.status === 401 ||
           (err.status === 0 && this.router.url != '/access')
         ) {
-          const pathname = window.location.pathname;
+          let pathname = window.location.pathname;
+
+          if (pathname.split('/').length > 3)
+            pathname = pathname.substring('/booking'.length);
 
           localStorage.removeItem('token');
 

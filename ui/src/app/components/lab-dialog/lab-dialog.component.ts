@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, Inject, OnInit } from '@angular/core';
 import {
@@ -21,15 +21,18 @@ import { LabService } from 'src/app/services/lab.service';
 })
 export class LabDialogComponent implements OnInit {
   title = 'Register laboratory';
+  imageName = '';
 
   selectedLabId = 0;
+
+  submitted = false;
 
   labForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
     instructor: new UntypedFormControl('', [Validators.required]),
     university: new UntypedFormControl('', [Validators.required]),
     course: new UntypedFormControl('', [Validators.required]),
-    image: new UntypedFormControl(null, [Validators.required]),
+    image: new UntypedFormControl(null),
     visible: new UntypedFormControl(false, [Validators.required]),
     url: new UntypedFormControl('', [
       Validators.required,
@@ -72,7 +75,7 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['instructor'].setValue(lab.instructor!);
       this.labForm.controls['university'].setValue(lab.university!);
       this.labForm.controls['course'].setValue(lab.course!);
-      this.labForm.controls['image'].setValue(lab.image);
+      this.imageName = this.getImageName(lab.image);
       this.labForm.controls['url'].setValue(lab.url!);
       this.labForm.controls['description'].setValue(lab.description);
       this.labForm.controls['visible'].setValue(lab.visible);
@@ -117,19 +120,35 @@ export class LabDialogComponent implements OnInit {
       else this.updateLab();
     } else {
       this.toastr.error('Please fill in correctly the data.');
+      this.displayFormErrors();
     }
   }
 
-  resetDialog(msg?: string) {
+  resetDialog(msg?: string): void {
     if (msg) this.toastr.success(msg);
     this.labForm.reset();
     this.dialogRef.close(msg);
   }
 
-  onFileChange(event: any) {
+  onFileChange(event: any): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
+      this.imageName = file.name;
       this.imageControl.setValue(file);
     }
+  }
+
+  getImageName(imageName: string | null): string {
+    const defaultImage = 'default.jpeg';
+    return imageName
+      ? imageName.split('/').pop() ?? defaultImage
+      : defaultImage;
+  }
+
+  displayFormErrors(): void {
+    Object.keys(this.labForm.controls).forEach((controlName) => {
+      const control = this.labForm.controls[controlName];
+      control.markAsTouched();
+    });
   }
 }

@@ -77,7 +77,7 @@ export class PublicReservationsComponent implements OnInit {
   }
 
   getLaboratories(): void {
-    this.labService.getLabs().subscribe((labs) => {
+    this.labService.getVisibleLabs().subscribe((labs) => {
       this.labs = labs;
       if (this.labs.length > 0) this.selectFirstAvailableLab();
     });

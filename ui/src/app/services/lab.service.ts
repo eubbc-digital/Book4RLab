@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -38,7 +38,7 @@ export class LabService {
     formData.append('instructor', lab.instructor!);
     formData.append('university', lab.university!);
     formData.append('course', lab.course!);
-    formData.append('image', lab.image!);
+    if (lab.image) formData.append('image', lab.image);
     formData.append('url', lab.url!);
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
