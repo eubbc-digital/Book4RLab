@@ -40,11 +40,15 @@ export class NavbarComponent implements OnInit {
     const token = localStorage.getItem('token');
 
     if (token) {
-      this.userService.getUserData().subscribe((user) => {
-        user.groups!.forEach((group) => {
-          if (group.name === Group.Professors) this.showLabsButton = true;
-        });
-      });
+      this.userService.getUserData().subscribe(
+        (user) => {
+          user.groups!.forEach((group) => {
+            if (group.name === Group.Professors) this.showLabsButton = true;
+          });
+        },
+        (err) => (this.shownMenu = false)
+      );
+
       this.shownMenu = true;
     } else {
       this.shownMenu = false;
