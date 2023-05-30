@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -17,6 +17,7 @@ import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 import { LabsGuard } from './services/guards/labs.guard';
+import { AuthGuard } from './services/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
   {
     path: 'access',
     component: AccessComponent,
+    canActivate: [AuthGuard],
   },
   { path: '', redirectTo: '/labs', pathMatch: 'full' },
   {

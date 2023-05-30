@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Injectable } from '@angular/core';
 import {
@@ -22,11 +22,7 @@ import config from '../config.json';
 export class AuthService {
   private httpOptions = <any>{};
 
-  constructor(
-    private http: HttpClient,
-    private toastr: ToastrService,
-    
-  ) {
+  constructor(private http: HttpClient, private toastr: ToastrService) {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -47,6 +43,10 @@ export class AuthService {
     return this.http
       .post(URL, user, this.httpOptions)
       .pipe(catchError(this.handleError<User>('login')));
+  }
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem('token') ? true : false;
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
