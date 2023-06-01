@@ -30,7 +30,7 @@ class Booking(models.Model):
 class Kit(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=100, default='')
     laboratory = models.ForeignKey('Laboratory', related_name='reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
@@ -45,7 +45,7 @@ class Laboratory(models.Model):
     university = models.CharField(max_length=255, blank=False, default='')
     course = models.CharField(max_length=255, blank=False, default='')
     image = models.ImageField(upload_to='media', blank=True, null=True, default=None)
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=1000, default='')
     url = models.CharField(max_length=255, blank=True, null=True, default='')
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
