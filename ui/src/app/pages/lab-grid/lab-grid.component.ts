@@ -35,11 +35,4 @@ export class LabGridComponent implements OnInit {
   selectLab(lab: Lab): void {
     this.router.navigate(['/booking', lab.id]);
   }
-
-  getImagePath(image: string): string {
-    if (image) {
-      const imageName = image.split('/').slice(-1)[0];
-      return `${config.api.baseUrl}${config.api.media}${imageName}`;
-    } else return this.defaultLabImg;
-  }
 }

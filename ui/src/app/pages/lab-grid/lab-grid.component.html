@@ -39,7 +39,7 @@
 
         <img
           mat-card-image
-          [src]="lab.image ? getImagePath(lab.image) : defaultLabImg"
+          [src]="lab.image ?? defaultLabImg"
           alt="Remote lab"
           class="remote-lab-img"
         />

@@ -16,8 +16,7 @@
       "url": "bookings/",
       "myList": "me/",
       "publicReservations": "public/"
-    },
-    "media": "media/media/"
+    }
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",
