@@ -44,7 +44,7 @@ class Laboratory(models.Model):
     instructor = models.CharField(max_length=255, blank=False, default='')
     university = models.CharField(max_length=255, blank=False, default='')
     course = models.CharField(max_length=255, blank=False, default='')
-    image = models.ImageField(upload_to='media', blank=True, null=True, default=None)
+    image = models.ImageField(upload_to='labs/', blank=True, null=True, default=None)
     description = models.CharField(max_length=1000, default='')
     url = models.CharField(max_length=255, blank=True, null=True, default='')
     registration_date = models.DateTimeField(auto_now_add=True)
