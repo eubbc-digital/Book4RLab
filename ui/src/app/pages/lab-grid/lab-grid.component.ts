@@ -7,7 +7,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Lab } from 'src/app/interfaces/lab';
-import config from '../../config.json';
 import { PublicLabsService } from 'src/app/services/public-labs.service';
 
 @Component({
