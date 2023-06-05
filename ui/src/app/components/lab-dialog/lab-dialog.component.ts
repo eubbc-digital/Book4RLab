@@ -1,8 +1,8 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, Inject, OnInit } from '@angular/core';
 import {
@@ -56,6 +56,10 @@ export class LabDialogComponent implements OnInit {
 
   get imageControl() {
     return this.labForm.controls['image'];
+  }
+
+  get descriptionControl() {
+    return this.labForm.controls['description'];
   }
 
   getUrlErrorMessage() {
@@ -115,6 +119,8 @@ export class LabDialogComponent implements OnInit {
   }
 
   save(): void {
+    this.cleanDescription();
+
     if (this.labForm.valid) {
       if (!this.dialogData) this.addLab();
       else this.updateLab();
@@ -122,6 +128,11 @@ export class LabDialogComponent implements OnInit {
       this.toastr.error('Please fill in correctly the data.');
       this.displayFormErrors();
     }
+  }
+
+  cleanDescription(): void {
+    let description = this.descriptionControl.value.replace(/\r\n/g, '\n');
+    this.descriptionControl.setValue(description);
   }
 
   resetDialog(msg?: string): void {
