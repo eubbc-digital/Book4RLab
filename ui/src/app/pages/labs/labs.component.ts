@@ -1,8 +1,8 @@
 ﻿/*
- * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
- * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
- * MIT License - See LICENSE file in the root directory
- */
+* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+* MIT License - See LICENSE file in the root directory
+*/
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -28,8 +28,6 @@ import { UserService } from 'src/app/services/user.service';
 export class LabsComponent implements OnInit {
   tableTitle = 'Labs';
 
-  isLoading = false;
-
   userId!: number;
 
   selectedLab?: Lab;
@@ -52,7 +50,6 @@ export class LabsComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUserData().subscribe((user) => {
       this.userId = user.id!;
-
       this.getLabs(this.userId);
     });
   }
@@ -66,12 +63,15 @@ export class LabsComponent implements OnInit {
   }
 
   getLabs(owner: number): void {
-    this.isLoading = true;
     this.labService.getLabs(owner).subscribe((response) => {
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.isLoading = false;
+
+      // Set the initial sort configuration
+      this.sort.active = 'id';
+      this.sort.direction = 'asc';
+      this.sort.sortChange.emit({ active: 'id', direction: 'asc' });
     });
   }
 

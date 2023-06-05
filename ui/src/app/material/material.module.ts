@@ -28,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSortModule } from '@angular/material/sort';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -53,6 +54,7 @@ const MaterialComponents = [
   MatListModule,
   MatTableModule,
   MatSidenavModule,
+  MatSortModule,
 ];
 
 @NgModule({
