@@ -6,6 +6,8 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import {
+  AbstractControl,
+  FormControl,
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
@@ -36,9 +38,7 @@ export class LabDialogComponent implements OnInit {
     visible: new UntypedFormControl(false, [Validators.required]),
     url: new UntypedFormControl('', [
       Validators.required,
-      Validators.pattern(
-        '(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]'
-      ),
+      this.trimAndValidateUrl,
     ]),
     description: new UntypedFormControl('', [Validators.required]),
   });
@@ -49,6 +49,20 @@ export class LabDialogComponent implements OnInit {
     private toastr: ToastrService,
     private labService: LabService
   ) {}
+
+  trimAndValidateUrl(control: AbstractControl) {
+    const value = control.value;
+
+    if (typeof value === 'string') {
+      const trimmedValue = value.trim();
+
+      return Validators.pattern(
+        '(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]'
+      )(new FormControl(trimmedValue));
+    }
+
+    return null;
+  }
 
   get urlControl() {
     return this.labForm.controls['url'];
