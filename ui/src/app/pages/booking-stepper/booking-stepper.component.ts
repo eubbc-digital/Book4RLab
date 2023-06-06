@@ -294,7 +294,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.dateChanged = true;
     this.reservationFormGroup.controls['selectedDate'].setValue(event);
     let kit = this.reservationFormGroup.controls['selectedKit'].value;
-    this.getHoursByKitIdAndDate(kit.id, event);
+    if (kit) this.getHoursByKitIdAndDate(kit.id, event);
   }
 
   followNextStep() {
@@ -444,5 +444,9 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   resetSelectedHour(): void {
     this.reservationFormGroup.controls['selectedHour'].reset();
+  }
+
+  hasEmptyKits(): boolean {
+    return this.kits.length === 0;
   }
 }

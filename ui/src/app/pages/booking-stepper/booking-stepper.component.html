@@ -58,19 +58,29 @@
                 readonly
               />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="selector">
-              <mat-label>Materials</mat-label>
-              <mat-select
-                formControlName="selectedKit"
-                (selectionChange)="
-                  getHoursByKitIdAndDate($event.value.id, selectedDate)
-                "
-              >
-                <mat-option *ngFor="let kit of kits" [value]="kit">
-                  {{ kit.name }}
-                </mat-option>
-              </mat-select>
+
+            <mat-form-field
+              appearance="fill"
+              class="selector"
+              *ngIf="hasEmptyKits(); else kitsSelector"
+            >
+              <mat-label>No kits available</mat-label>
+              <input matInput disabled />
             </mat-form-field>
+
+            <ng-template #kitsSelector>
+              <mat-form-field appearance="fill" class="selector">
+                <mat-label>Kits</mat-label>
+                <mat-select
+                  formControlName="selectedKit"
+                  (selectionChange)="getHoursByKitIdAndDate($event.value.id, selectedDate)"
+                >
+                  <mat-option *ngFor="let kit of kits" [value]="kit">
+                    {{ kit.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
 
             <app-available-hours
               [showSpinner]="showSpinner"
