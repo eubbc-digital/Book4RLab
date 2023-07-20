@@ -43,6 +43,23 @@
   </mat-form-field>
 
   <mat-form-field class="input-field">
+    <mat-label>Timezone</mat-label>
+    <mat-select [(value)]="timezoneChosen">
+      <mat-optgroup label="Default timezone">
+        <mat-option value="timezoneDefault">
+          {{this.timezoneDefault.timezone +"  ("+ this.timezoneDefault.group + ")"}}
+        </mat-option>
+      </mat-optgroup>
+      <mat-optgroup label="Other timezones">
+        <mat-option *ngFor="let timezone of timezones" [value]="timezone">
+          {{timezone.timezone +"  ("+ timezone.group + ")"}}
+        </mat-option>
+      </mat-optgroup>
+    </mat-select>
+  </mat-form-field>
+
+  
+  <mat-form-field class="input-field">
     <mat-label>Password</mat-label>
     <input
       matInput

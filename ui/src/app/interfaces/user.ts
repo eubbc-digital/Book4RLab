@@ -13,4 +13,6 @@ export interface User {
   last_name?: string;
   token?: string;
   country?: string;
+  time_zone?:string;
+
 }
