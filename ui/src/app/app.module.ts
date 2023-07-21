@@ -54,7 +54,10 @@ import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 
 // Pipes
 import { FilterPipe } from './pipes/lab-filter.pipe';
+import { ProfileComponent } from './pages/profile/profile.component';
 
+// Timezones
+// import { NgxTimezonesComponent, NgxTimezonesModule } from 'ngx-timezones';
 @NgModule({
   declarations: [
     AppComponent,
@@ -83,6 +86,8 @@ import { FilterPipe } from './pipes/lab-filter.pipe';
     NotFoundComponent,
     LabGridComponent,
     FilterPipe,
+    ProfileComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -99,6 +104,8 @@ import { FilterPipe } from './pipes/lab-filter.pipe';
       preventDuplicates: true,
       progressBar: true,
     }),
+    // NgxTimezonesModule,
+    // NgxTimezonesModule.forRoot(),
     HttpClientModule,
     NgHttpLoaderModule.forRoot(),
   ],
