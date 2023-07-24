@@ -1,4 +1,4 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
@@ -8,6 +8,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
 from booking.models import Booking, Kit, Laboratory, TimeFrame
+from core.models import User
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import SuspiciousOperation
@@ -18,6 +19,8 @@ from django.http import HttpResponse
 from django.conf import settings
 from booking.permissions import IsOwnerOrReadOnly
 
+from dateutil.parser import parse
+import pytz
 import datetime
 
 class BookingList(generics.ListCreateAPIView):
@@ -74,7 +77,7 @@ class BookingAccess(generics.ListAPIView):
 
         if access_key is not None:
             queryset = queryset.filter(access_key=access_key)
-        
+
             if queryset.count() == 1:
                 if not queryset[0].public:
                     queryset = queryset.filter(password=password)
@@ -99,7 +102,7 @@ class BookingPublicList(generics.ListAPIView):
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         kit = self.request.query_params.get('kit')
-        
+
         if start_date is not None and end_date is not None:
             start_date_datetime = datetime.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%SZ')
             end_date_datetime = datetime.datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%SZ')
@@ -131,12 +134,12 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         confirmed = self.request.query_params.get('confirmed')
 
         if register is not None and register == 'true':
-            if instance.reserved_by is None: 
+            if instance.reserved_by is None:
                 instance.reserved_by = self.request.user
 
         if confirmed is not None and confirmed == 'true':
             recipient = [self.request.user.email]
-            self.send_confirmation_email(instance, recipient)
+            self.send_confirmation_email(instance, self.request.data, recipient)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -148,19 +151,25 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
         return Response(serializer.data)
 
-    def send_confirmation_email(self, instance, recipient):
+    def send_confirmation_email(self, instance, data, recipient):
+        date_format = '%d/%m/%Y %I:%M %p'
+        user_tz = User.objects.get(email=instance.reserved_by).time_zone
         subject = 'Booking confirmed!'
 
         print('Send confirmation email to: ' + str(recipient))
 
         kit = Kit.objects.get(id=instance.kit_id)
         laboratory = Laboratory.objects.get(id=kit.laboratory_id)
+        base_url= f'{laboratory.url}?access_key={instance.access_key}'
 
-        body = ' Booking confirmed! \n'
+        body = ' Booking confirmed! \n\n'
         body += f' Your booking for kit {instance.kit.name} has been confirmed\n'
         body += f' Laboratory: {laboratory.name}\n'
-        body += ' Start date: ' + instance.start_date.strftime('%d/%m/%Y %H:%M') + ' UTC \n'
-        body += ' End date: ' + instance.end_date.strftime('%d/%m/%Y %H:%M') + ' UTC \n'
+        body += f' Start date: {self.get_correct_datetime(instance.start_date, user_tz).strftime(date_format)}\n'
+        body += f' End date: {self.get_correct_datetime(instance.end_date, user_tz).strftime(date_format)}\n'
+        body += f' Private URL: {base_url}&pwd={instance.password}\n'
+        if data['public']:
+          body += f' Public URL: {base_url}\n'
         body += ' Details available at https://eubbc-digital.upb.edu/booking/my-reservations \n'
         body += '\n - UPB Team -'
 
@@ -171,6 +180,10 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         except BadHeaderError:
             return HttpResponse("Invalid header found.")
 
+    def get_correct_datetime(self, input_date, target_time_zone):
+        target_time_zone = pytz.timezone(target_time_zone)
+        target_date = input_date.astimezone(target_time_zone)
+        return target_time_zone.normalize(target_date)
 
 class KitList(generics.ListCreateAPIView):
 
@@ -216,7 +229,7 @@ class LaboratoryList(generics.ListCreateAPIView):
                 raise SuspiciousOperation('Owner id must be a number')
 
             return queryset.filter(owner_id=int(owner))
-        
+
         if visible is not None:
             if visible == 'true':
                 return queryset.filter(visible=True)
@@ -224,7 +237,7 @@ class LaboratoryList(generics.ListCreateAPIView):
                 return queryset.filter(visible=False)
 
         return queryset
-    
+
 
 class PublicLaboratoryList(generics.ListAPIView):
 
@@ -270,4 +283,4 @@ class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    
+
