@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -110,7 +110,7 @@ export class ReservationCardComponent implements OnInit {
     this.reservation.public = false;
 
     this.bookingService
-      .updateBooking(this.reservation)
+      .cancelBooking(this.reservation)
       .subscribe((response) => {
         if (response) {
           this.getReservations();
@@ -129,3 +129,4 @@ export class ReservationCardComponent implements OnInit {
     this.cancelReservationEvent.emit();
   }
 }
+

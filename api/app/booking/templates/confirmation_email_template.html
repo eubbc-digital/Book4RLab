@@ -1,0 +1,16 @@
+{% extends 'base_email_template.html' %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block content %}
+  <h2>Booking Confirmed</h2>
+  <p>Your booking for Kit <strong>{{kit_name}}</strong> has been confirmed</p>
+  <p>Laboratory: <strong>{{ lab_name }}</strong></p>
+  <p>Start Date: <strong>{{start_date}}</strong><p>
+  <p>End Date: <strong>{{end_date}}</strong><p>
+  <p>
+  Details available at: <a href="https://eubbc-digital.upb.edu/booking/my-reservations"><strong>https://eubbc-digital.upb.edu/booking/my-reservations</strong></a>
+  </p>
+  <br>
+{% endblock %}
+

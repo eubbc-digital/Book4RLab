@@ -1,0 +1,12 @@
+{% extends 'base_email_template.html' %}
+
+{% block title %}Booking Cancellation{% endblock %}
+
+{% block content %}
+  <h2>Booking Cancelled</h2>
+  <p>Your booking for Kit <strong>{{kit_name}}</strong> has been cancelled</p>
+  <p>Laboratory: <strong>{{lab_name}}</strong></p>
+  <p>If you want to make another booking go to: <a href="https://eubbc-digital.upb.edu/booking/labs"><strong>https://eubbc-digital.upb.edu/booking/labs</strong></a></p>
+  <br>
+{% endblock %}
+
