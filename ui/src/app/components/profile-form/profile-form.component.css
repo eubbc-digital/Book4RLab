@@ -1,0 +1,24 @@
+
+.exteriorContainer{
+    width: 65%;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-bottom: 30px;
+    margin: auto;
+    
+}
+
+@media only screen and (max-width: 680px) {
+    
+    .exteriorContainer {
+       width: 100%;
+       padding-right: 15px;
+       padding-left: 15px;
+       padding-bottom: 15px;
+       margin: auto;
+       
+    }
+ }
+div{
+   border: 1px black;  
+}

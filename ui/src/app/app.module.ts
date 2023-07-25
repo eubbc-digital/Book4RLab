@@ -55,6 +55,7 @@ import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 // Pipes
 import { FilterPipe } from './pipes/lab-filter.pipe';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 
 // Timezones
 // import { NgxTimezonesComponent, NgxTimezonesModule } from 'ngx-timezones';
@@ -87,6 +88,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     LabGridComponent,
     FilterPipe,
     ProfileComponent,
+    ProfileFormComponent,
     
   ],
   imports: [

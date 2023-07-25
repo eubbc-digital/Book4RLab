@@ -1,7 +1,11 @@
-<form
-  [formGroup]="registrationForm"
+
+<div class="exteriorContainer">
+  <form
+  class="formContainer"
+  [formGroup]="editionForm"
   #formDirective="ngForm"
-  (ngSubmit)="saveUser(formDirective)"
+  (ngSubmit)="updateUser(formDirective)"
+  
 >
   <mat-form-field class="input-field">
     <mat-label>Name</mat-label>
@@ -20,6 +24,7 @@
       type="text"
       matInput
       formControlName="country"
+      
       [matAutocomplete]="auto"
     />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="getCountryName">
@@ -45,6 +50,11 @@
   <mat-form-field class="input-field">
     <mat-label>Timezone</mat-label>
     <mat-select formControlName="timeZone" [compareWith]="compareTimeZoneObjects">
+      <mat-optgroup label="Registered timezone" *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone">
+        <mat-option [value]="timeZoneRegistered" *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone">
+          {{this.timeZoneRegistered.timezone +"  ("+ this.timeZoneRegistered.group + ")"}}
+        </mat-option>
+      </mat-optgroup>
       <mat-optgroup label="Default timezone">
         <mat-option [value]="timeZoneDefault">
           {{this.timeZoneDefault.timezone +"  ("+ this.timeZoneDefault.group + ")"}}
@@ -57,9 +67,38 @@
       </mat-optgroup>
     </mat-select>
   </mat-form-field>
-
   
-  <mat-form-field class="input-field">
+  <!-- <mat-label>To change password you must enter your actual password.</mat-label> -->
+  
+  <!-- <mat-form-field *ngIf="!changePwd" class="input-field">
+    <mat-label>Actual Password</mat-label>
+    <input
+      matInput
+      [type]="hideActualPassword ? 'password' : 'text'"
+      formControlName="actualPassword"
+      autocomplete="on"
+    />
+    <mat-error *ngIf="getPasswordControlError()">
+      Password must have at least 8 characters.
+    </mat-error> 
+    <button 
+      mat-icon-button
+      matSuffix
+      type="button"
+      (click)="hideActualPassword = !hideActualPassword"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hidePassword"
+      tabindex="-1"
+    >
+      <mat-icon>{{ hideActualPassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+  </mat-form-field>
+  
+  <button type="submit" mat-raised-button color="primary" (click)="changePasswordRequest()">
+    OK
+  </button> -->
+
+  <!-- <mat-form-field *ngIf="changePwd" class="input-field">
     <mat-label>Password</mat-label>
     <input
       matInput
@@ -83,7 +122,7 @@
     </button>
   </mat-form-field>
 
-  <mat-form-field class="input-field">
+  <mat-form-field *ngIf="changePwd" class="input-field">
     <mat-label>Password confirmation</mat-label>
     <input
       matInput
@@ -107,11 +146,15 @@
         hidePasswordConfirmation ? "visibility_off" : "visibility"
       }}</mat-icon>
     </button>
-  </mat-form-field>
+  </mat-form-field> -->
 
   <p class="mat-caption">Required fields are marked with *</p>
 
   <button class="access-button" type="submit" mat-raised-button color="primary">
-    Sign Up
+    Update Data
   </button>
+
+
 </form>
+</div>
+

@@ -25,6 +25,7 @@ import { iana_timezones } from 'src/app/store/timezone-data-shortened-store';
 import { map, Observable, startWith } from 'rxjs';
 import moment from 'moment-timezone';
 
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -34,10 +35,9 @@ export class RegistrationComponent implements OnInit {
   
   countries: Country[] = countries;
   
-  timezones: IanaTimezone[] = [];
-  // timezones : any[] = []
-  timezoneChosen : IanaTimezone = {group: '', timezone: '', label: ''};
-  timezoneDefault : IanaTimezone = {group: '', timezone: '', label: ''};
+  timeZones: IanaTimezone[] = [];
+  timeZoneChosen : IanaTimezone = {group: '', timezone: '', label: ''};
+  timeZoneDefault : IanaTimezone = {group: '', timezone: '', label: ''};
 
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
@@ -50,6 +50,7 @@ export class RegistrationComponent implements OnInit {
       Validators.required,
       this.requireMatch.bind(this),
     ]),
+    timeZone: new UntypedFormControl({}, [Validators.required]),
     password: new UntypedFormControl('', [
       Validators.minLength(8),
       Validators.required,
@@ -75,12 +76,13 @@ export class RegistrationComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => (name ? this.filterCountry(name) : this.countries.slice()))
     );
-    // this.getTimezones();
     
-    this.timezoneDefault = this.getDefaultTimezone();
-    this.timezones = this.sortTimezones(iana_timezones);
-    this.timezoneChosen = this.timezoneDefault;
-    console.log(this.timezoneChosen);
+    this.timeZoneDefault = this.getDefaultTimezone();
+    this.timeZones = this.sortTimezones(iana_timezones);
+    // this.timeZones = [this.timeZoneDefault].concat(this.timeZones);
+    this.registrationForm.controls['timeZone'].setValue({timezone: this.timeZoneDefault.timezone,
+      group: this.timeZoneDefault.group, label: this.timeZoneDefault.label});
+    
   }
 
   matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
@@ -124,6 +126,9 @@ export class RegistrationComponent implements OnInit {
   get countryControl() {
     return this.registrationForm.controls['country'];
   }
+  get timeZoneControl() {
+    return this.registrationForm.controls['timeZone'];
+  }
 
   saveUser(formDirective: FormGroupDirective): void {
     if (this.registrationForm.valid) {
@@ -133,8 +138,9 @@ export class RegistrationComponent implements OnInit {
         email: this.registrationForm.controls['email'].value,
         password: this.passwordControl.value,
         country: this.countryControl.value.code,
-        time_zone: this.timezoneChosen.timezone,
+        time_zone: this.timeZoneControl.value.timezone,
       };
+      
 
       this.authService.signUp(user).subscribe((response) => {
         if (response.status !== null && response.status === 201) {
@@ -162,6 +168,13 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
+  compareTimeZoneObjects(object1: any, object2: any) {
+    return object1 && object2 
+    && object1.timezone == object2.timezone 
+    && object1.group == object2.group;
+  }
+
+
   isPasswordConfirmationValid(): boolean {
     return (
       this.passwordConfirmationControl.errors !== null &&
@@ -178,11 +191,15 @@ export class RegistrationComponent implements OnInit {
   }
   getDefaultTimezone() {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var utc = this.getUTCWithTimezone(tz);
+    return { timezone:tz, group:utc, label:"" };
+  }
+  getUTCWithTimezone(timeZone:string){
     var utc;
-    var hour = moment().tz(tz).utcOffset()/60;
+    var hour = moment().tz(timeZone).utcOffset()/60;
     if (hour > -1) { utc = "UTC+" + hour.toString() + ":00" }
     else { utc = "UTC" + hour.toString() + ":00" }
-    return { timezone:tz, group:utc,label:"" };
+    return utc;
   }
   getTimezones(){
     
@@ -196,11 +213,9 @@ export class RegistrationComponent implements OnInit {
       var hour = moment().tz(tz).utcOffset()/60;
       if (hour > -1) { utc = "UTC+" + hour.toString(); }
       else { utc = "UTC" + hour.toString(); }
-      console.log(tz);
-      console.log(utc);
       timezonesWithUTC.push({name:tz,UTC:utc})
     });
-    this.timezones = timezonesWithUTC;
+    this.timeZones = timezonesWithUTC;
 
   }
   sortTimezones(timezones:any[]){
