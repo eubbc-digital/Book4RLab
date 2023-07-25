@@ -36,7 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     country = models.CharField(max_length=10)
-    time_zone = models.CharField(max_length=255, default="Etc/UCT")
+    time_zone = models.CharField(max_length=25, default="Etc/UTC")
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
