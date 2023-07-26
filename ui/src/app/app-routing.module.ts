@@ -18,6 +18,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 import { LabsGuard } from './services/guards/labs.guard';
 import { AuthGuard } from './services/guards/auth.guard';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,10 @@ const routes: Routes = [
   {
     path: 'my-reservations',
     component: PrivateReservationsComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
   },
   {
     path: 'public-reservations',

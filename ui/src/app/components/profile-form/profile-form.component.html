@@ -1,0 +1,97 @@
+<div class="exterior-container">
+  <form
+    [formGroup]="editionForm"
+    #formDirective="ngForm"
+    (ngSubmit)="updateUser(formDirective)"
+  >
+    <mat-form-field class="input-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="lastName" />
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Country</mat-label>
+      <mat-icon matSuffix>travel_explore</mat-icon>
+      <input
+        type="text"
+        matInput
+        formControlName="country"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getCountryName">
+        <mat-option
+          *ngFor="let country of filteredOptions | async"
+          [value]="country"
+        >
+          {{ country.name }}
+        </mat-option>
+      </mat-autocomplete>
+
+      <mat-error *ngIf="getCountryControlError()">
+        Country value need match available options.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="user@gmail.com" formControlName="email" />
+      <mat-icon matSuffix>email</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Timezone</mat-label>
+      <mat-select
+        formControlName="timeZone"
+        [compareWith]="compareTimeZoneObjects"
+      >
+        <mat-optgroup
+          label="Registered timezone"
+          *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone"
+        >
+          <mat-option
+            [value]="timeZoneRegistered"
+            *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone"
+          >
+            {{
+              this.timeZoneRegistered.timezone +
+                "  (" +
+                this.timeZoneRegistered.group +
+                ")"
+            }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Default timezone">
+          <mat-option [value]="timeZoneDefault">
+            {{
+              this.timeZoneDefault.timezone +
+                "  (" +
+                this.timeZoneDefault.group +
+                ")"
+            }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Other timezones">
+          <mat-option *ngFor="let timeZone of timeZones" [value]="timeZone">
+            {{ timeZone.timezone + "  (" + timeZone.group + ")" }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+
+    <p class="mat-caption">Required fields are marked with *</p>
+
+    <button
+      class="access-button"
+      type="submit"
+      mat-raised-button
+      color="primary"
+    >
+      Update Data
+    </button>
+  </form>
+</div>

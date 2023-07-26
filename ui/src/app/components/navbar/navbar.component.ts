@@ -68,6 +68,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl('/public-reservations');
   }
 
+  goToMyProfile(): void {
+    this.router.navigateByUrl('/profile');
+  }
+
   goToLogin(): void {
     this.router.navigateByUrl('/access');
   }
