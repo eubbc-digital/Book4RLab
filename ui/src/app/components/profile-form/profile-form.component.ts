@@ -23,23 +23,22 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-profile-form',
   templateUrl: './profile-form.component.html',
-  styleUrls: ['./profile-form.component.css']
+  styleUrls: ['./profile-form.component.css'],
 })
 export class ProfileFormComponent implements OnInit {
-
   countries: Country[] = countries;
   timeZones: IanaTimezone[] = [];
-  timeZoneChosen : IanaTimezone = {group: '', timezone: '', label: ''};
-  timeZoneDefault : IanaTimezone = {group: '', timezone: '', label: ''};
-  timeZoneRegistered : IanaTimezone = {group: '', timezone: '', label: ''};
+  timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
+  timeZoneDefault: IanaTimezone = { group: '', timezone: '', label: '' };
+  timeZoneRegistered: IanaTimezone = { group: '', timezone: '', label: '' };
 
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
 
-  hideActualPassword:boolean = true;
-  changePwd:boolean = false;
+  hideActualPassword: boolean = true;
+  changePwd: boolean = false;
 
-  registeredPassword:string | undefined= "";
+  registeredPassword: string | undefined = '';
 
   editionForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
@@ -50,16 +49,14 @@ export class ProfileFormComponent implements OnInit {
       this.requireMatch.bind(this),
     ]),
     timeZone: new UntypedFormControl({}, [Validators.required]),
-
   });
 
   filteredOptions!: Observable<Country[]>;
   constructor(
-    private authService: AuthService,
-    private userService : UserService,
+    private userService: UserService,
     private toastr: ToastrService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getUserData();
@@ -68,10 +65,6 @@ export class ProfileFormComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => (name ? this.filterCountry(name) : this.countries.slice()))
     );
-    
-    
-   
-    
   }
   matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -118,33 +111,29 @@ export class ProfileFormComponent implements OnInit {
     return this.editionForm.controls['timeZone'];
   }
 
-  getUserData(){
-    
+  getUserData() {
     this.userService.getUserData().subscribe((response) => {
-      
       this.editionForm.controls['name'].setValue(response.name);
       this.editionForm.controls['lastName'].setValue(response.last_name);
       this.editionForm.controls['email'].setValue(response.email);
-      
+
       var country = this.getCountryInfoComplete(response.country);
       this.editionForm.controls['country'].setValue(country);
 
-      if(response.time_zone){
+      if (response.time_zone) {
         this.timeZoneRegistered = this.getTimezoneUser(response.time_zone);
         this.timeZoneDefault = this.getDefaultTimezone();
         this.timeZones = this.sortTimezones(iana_timezones);
-        this.editionForm.controls['timeZone'].setValue({timezone: this.timeZoneRegistered.timezone,
-          group: this.timeZoneRegistered.group, label: this.timeZoneRegistered.label});
-          
-        }
-      
-      
-    })
-
+        this.editionForm.controls['timeZone'].setValue({
+          timezone: this.timeZoneRegistered.timezone,
+          group: this.timeZoneRegistered.group,
+          label: this.timeZoneRegistered.label,
+        });
+      }
+    });
   }
   updateUser(formDirective: FormGroupDirective): void {
     if (this.editionForm.valid) {
-      
       const user: User = {
         name: this.editionForm.controls['name'].value,
         last_name: this.editionForm.controls['lastName'].value,
@@ -152,49 +141,43 @@ export class ProfileFormComponent implements OnInit {
         country: this.countryControl.value.code,
         time_zone: this.timeZoneControl.value.timezone,
       };
-  
+
       this.userService.updateUserData(user).subscribe((response) => {
         if (response.status !== null && response.status === 200) {
           this.toastr.success(
             `Welcome ${user.name}`,
             'Successful update of user data'
           );
-  
-          
-      }
+        }
       });
     } else {
       this.toastr.error(
         'Please, complete correctly the information.',
         'Invalid action'
       );
-    } 
+    }
   }
 
-  
   compareTimeZoneObjects(object1: any, object2: any) {
-    return object1 
-    && object2 
-    && object1.timezone == object2.timezone 
-  
+    return object1 && object2 && object1.timezone == object2.timezone;
   }
 
   compareCountryObjects(object1: any, object2: any) {
     return object1 && object2 && object1.code == object2.code;
   }
-  getCountryInfoComplete(code:string|undefined){
-    if(code){
-      var country:any={};
-      countries.forEach(element => {
-        if(element.code == code){
+  getCountryInfoComplete(code: string | undefined) {
+    if (code) {
+      var country: any = {};
+      countries.forEach((element) => {
+        if (element.code == code) {
           country = element;
         }
       });
       return country;
+    } else {
+      return undefined;
     }
-    else{return undefined;}
   }
-
 
   isPasswordConfirmationValid(): boolean {
     return (
@@ -210,62 +193,73 @@ export class ProfileFormComponent implements OnInit {
       country.name.toLowerCase().includes(filterValue)
     );
   }
-  getTimezoneUser(timezone:string|undefined){
-    if(timezone){
-      return {timezone: timezone , group: this.getUTCWithTimezone(timezone),label:""}
+  getTimezoneUser(timezone: string | undefined) {
+    if (timezone) {
+      return {
+        timezone: timezone,
+        group: this.getUTCWithTimezone(timezone),
+        label: '',
+      };
     }
     return this.getDefaultTimezone();
-
   }
   getDefaultTimezone() {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var utc;
-    var hour = moment().tz(tz).utcOffset()/60;
-    if (hour > -1) { utc = "UTC+" + hour.toString() + ":00" }
-    else { utc = "UTC" + hour.toString() + ":00" }
-    return { timezone:tz, group:utc,label:"" };
+    var hour = moment().tz(tz).utcOffset() / 60;
+    if (hour > -1) {
+      utc = 'UTC+' + hour.toString() + ':00';
+    } else {
+      utc = 'UTC' + hour.toString() + ':00';
+    }
+    return { timezone: tz, group: utc, label: '' };
   }
-  getUTCWithTimezone(timeZone:string){
+  getUTCWithTimezone(timeZone: string) {
     var utc;
-    var hour = moment().tz(timeZone).utcOffset()/60;
-    
-    if (hour > -1) { utc = "UTC+" + hour.toString() + ":00" }
-    else { utc = "UTC" + hour.toString() + ":00" }
+    var hour = moment().tz(timeZone).utcOffset() / 60;
+
+    if (hour > -1) {
+      utc = 'UTC+' + hour.toString() + ':00';
+    } else {
+      utc = 'UTC' + hour.toString() + ':00';
+    }
     return utc;
   }
-  getTimezones(){
-    
+  getTimezones() {
     const timezonesNames = moment.tz.names();
     const timezonesC = moment.tz.countries();
-    
-    var timezonesWithUTC:any[] = []
-    
-    timezonesNames.forEach(tz => {
+
+    var timezonesWithUTC: any[] = [];
+
+    timezonesNames.forEach((tz) => {
       var utc;
-      var hour = moment().tz(tz).utcOffset()/60;
-      if (hour > -1) { utc = "UTC+" + hour.toString(); }
-      else { utc = "UTC" + hour.toString(); }
-      
-      timezonesWithUTC.push({name:tz,UTC:utc})
+      var hour = moment().tz(tz).utcOffset() / 60;
+      if (hour > -1) {
+        utc = 'UTC+' + hour.toString();
+      } else {
+        utc = 'UTC' + hour.toString();
+      }
+
+      timezonesWithUTC.push({ name: tz, UTC: utc });
     });
     this.timeZones = timezonesWithUTC;
-
   }
-  sortTimezones(timezones:any[]){
-      timezones.sort( function( a:any, b:any ) {
-        a = a.timezone.toLowerCase();
-        b = b.timezone.toLowerCase();
-    
-        return a < b ? -1 : a > b ? 1 : 0;
+  sortTimezones(timezones: any[]) {
+    timezones.sort(function (a: any, b: any) {
+      a = a.timezone.toLowerCase();
+      b = b.timezone.toLowerCase();
+
+      return a < b ? -1 : a > b ? 1 : 0;
     });
     return timezones;
-
   }
-  changePasswordRequest(){
-    if (this.editionForm.controls['actualPassword'].value == this.registeredPassword){
+  changePasswordRequest() {
+    if (
+      this.editionForm.controls['actualPassword'].value ==
+      this.registeredPassword
+    ) {
       this.changePwd = true;
-    }
-    else{ 
+    } else {
       this.toastr.error(
         'Please, enter your actual password.',
         'Invalid password.'
@@ -298,6 +292,4 @@ export class ProfileFormComponent implements OnInit {
       this.router.navigateByUrl('');
     }
   }
-  
 }
-

@@ -1,160 +1,97 @@
-
-<div class="exteriorContainer">
+<div class="exterior-container">
   <form
-  class="formContainer"
-  [formGroup]="editionForm"
-  #formDirective="ngForm"
-  (ngSubmit)="updateUser(formDirective)"
-  
->
-  <mat-form-field class="input-field">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" />
-  </mat-form-field>
+    [formGroup]="editionForm"
+    #formDirective="ngForm"
+    (ngSubmit)="updateUser(formDirective)"
+  >
+    <mat-form-field class="input-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
 
-  <mat-form-field class="input-field">
-    <mat-label>Last name</mat-label>
-    <input matInput formControlName="lastName" />
-  </mat-form-field>
+    <mat-form-field class="input-field">
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="lastName" />
+    </mat-form-field>
 
-  <mat-form-field class="input-field">
-    <mat-label>Country</mat-label>
-    <mat-icon matSuffix>travel_explore</mat-icon>
-    <input
-      type="text"
-      matInput
-      formControlName="country"
-      
-      [matAutocomplete]="auto"
-    />
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="getCountryName">
-      <mat-option
-        *ngFor="let country of filteredOptions | async"
-        [value]="country"
+    <mat-form-field class="input-field">
+      <mat-label>Country</mat-label>
+      <mat-icon matSuffix>travel_explore</mat-icon>
+      <input
+        type="text"
+        matInput
+        formControlName="country"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getCountryName">
+        <mat-option
+          *ngFor="let country of filteredOptions | async"
+          [value]="country"
+        >
+          {{ country.name }}
+        </mat-option>
+      </mat-autocomplete>
+
+      <mat-error *ngIf="getCountryControlError()">
+        Country value need match available options.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="user@gmail.com" formControlName="email" />
+      <mat-icon matSuffix>email</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Timezone</mat-label>
+      <mat-select
+        formControlName="timeZone"
+        [compareWith]="compareTimeZoneObjects"
       >
-        {{ country.name }}
-      </mat-option>
-    </mat-autocomplete>
+        <mat-optgroup
+          label="Registered timezone"
+          *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone"
+        >
+          <mat-option
+            [value]="timeZoneRegistered"
+            *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone"
+          >
+            {{
+              this.timeZoneRegistered.timezone +
+                "  (" +
+                this.timeZoneRegistered.group +
+                ")"
+            }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Default timezone">
+          <mat-option [value]="timeZoneDefault">
+            {{
+              this.timeZoneDefault.timezone +
+                "  (" +
+                this.timeZoneDefault.group +
+                ")"
+            }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Other timezones">
+          <mat-option *ngFor="let timeZone of timeZones" [value]="timeZone">
+            {{ timeZone.timezone + "  (" + timeZone.group + ")" }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
 
-    <mat-error *ngIf="getCountryControlError()">
-      Country value need match available options.
-    </mat-error>
-  </mat-form-field>
+    <p class="mat-caption">Required fields are marked with *</p>
 
-  <mat-form-field class="input-field">
-    <mat-label>Email</mat-label>
-    <input matInput placeholder="user@gmail.com" formControlName="email" />
-    <mat-icon matSuffix>email</mat-icon>
-  </mat-form-field>
-
-  <mat-form-field class="input-field">
-    <mat-label>Timezone</mat-label>
-    <mat-select formControlName="timeZone" [compareWith]="compareTimeZoneObjects">
-      <mat-optgroup label="Registered timezone" *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone">
-        <mat-option [value]="timeZoneRegistered" *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone">
-          {{this.timeZoneRegistered.timezone +"  ("+ this.timeZoneRegistered.group + ")"}}
-        </mat-option>
-      </mat-optgroup>
-      <mat-optgroup label="Default timezone">
-        <mat-option [value]="timeZoneDefault">
-          {{this.timeZoneDefault.timezone +"  ("+ this.timeZoneDefault.group + ")"}}
-        </mat-option>
-      </mat-optgroup>
-      <mat-optgroup label="Other timezones">
-        <mat-option *ngFor="let timeZone of timeZones" [value]="timeZone">
-          {{timeZone.timezone +"  ("+ timeZone.group + ")"}}
-        </mat-option>
-      </mat-optgroup>
-    </mat-select>
-  </mat-form-field>
-  
-  <!-- <mat-label>To change password you must enter your actual password.</mat-label> -->
-  
-  <!-- <mat-form-field *ngIf="!changePwd" class="input-field">
-    <mat-label>Actual Password</mat-label>
-    <input
-      matInput
-      [type]="hideActualPassword ? 'password' : 'text'"
-      formControlName="actualPassword"
-      autocomplete="on"
-    />
-    <mat-error *ngIf="getPasswordControlError()">
-      Password must have at least 8 characters.
-    </mat-error> 
-    <button 
-      mat-icon-button
-      matSuffix
-      type="button"
-      (click)="hideActualPassword = !hideActualPassword"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hidePassword"
-      tabindex="-1"
-    >
-      <mat-icon>{{ hideActualPassword ? "visibility_off" : "visibility" }}</mat-icon>
-    </button>
-  </mat-form-field>
-  
-  <button type="submit" mat-raised-button color="primary" (click)="changePasswordRequest()">
-    OK
-  </button> -->
-
-  <!-- <mat-form-field *ngIf="changePwd" class="input-field">
-    <mat-label>Password</mat-label>
-    <input
-      matInput
-      [type]="hidePassword ? 'password' : 'text'"
-      formControlName="password"
-      autocomplete="on"
-    />
-    <mat-error *ngIf="getPasswordControlError()">
-      Password must have at least 8 characters.
-    </mat-error>
     <button
-      mat-icon-button
-      matSuffix
-      type="button"
-      (click)="hidePassword = !hidePassword"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hidePassword"
-      tabindex="-1"
+      class="access-button"
+      type="submit"
+      mat-raised-button
+      color="primary"
     >
-      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+      Update Data
     </button>
-  </mat-form-field>
-
-  <mat-form-field *ngIf="changePwd" class="input-field">
-    <mat-label>Password confirmation</mat-label>
-    <input
-      matInput
-      [type]="hidePasswordConfirmation ? 'password' : 'text'"
-      formControlName="passwordConfirmation"
-      autocomplete="on"
-    />
-    <mat-error *ngIf="isPasswordConfirmationValid()">
-      Password and confirmation password does not match.
-    </mat-error>
-    <button
-      mat-icon-button
-      matSuffix
-      type="button"
-      (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
-      [attr.aria-label]="'Hide password confirmation'"
-      [attr.aria-pressed]="hidePasswordConfirmation"
-      tabindex="-1"
-    >
-      <mat-icon>{{
-        hidePasswordConfirmation ? "visibility_off" : "visibility"
-      }}</mat-icon>
-    </button>
-  </mat-form-field> -->
-
-  <p class="mat-caption">Required fields are marked with *</p>
-
-  <button class="access-button" type="submit" mat-raised-button color="primary">
-    Update Data
-  </button>
-
-
-</form>
+  </form>
 </div>
-

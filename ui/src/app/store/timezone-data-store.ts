@@ -287,7 +287,7 @@ export const iana_timezones = [
     { group: 'UTC', timezone: 'Atlantic/Azores', label: 'Atlantic/Azores (+00)' },
     { group: 'UTC', timezone: 'Atlantic/Reykjavik', label: 'Atlantic/Reykjavik (GMT)' },
     { group: 'UTC', timezone: 'Atlantic/St_Helena', label: 'Atlantic/St_Helena (GMT)' },
-    { group: 'UTC', timezone: 'UTC', label: 'UTC (UTC)' },
+    { group: 'UTC', timezone: 'Etc/UTC', label: 'UTC (UTC)' },
     // UTC-01:00
     { group: 'UTC-01:00', timezone: 'Atlantic/Cape_Verde', label: 'Atlantic/Cape Verde (-01)' },
     // UTC-02:00

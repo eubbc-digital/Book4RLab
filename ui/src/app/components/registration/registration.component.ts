@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit } from '@angular/core';
 import {
@@ -25,19 +25,17 @@ import { iana_timezones } from 'src/app/store/timezone-data-shortened-store';
 import { map, Observable, startWith } from 'rxjs';
 import moment from 'moment-timezone';
 
-
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit {
-  
   countries: Country[] = countries;
-  
+
   timeZones: IanaTimezone[] = [];
-  timeZoneChosen : IanaTimezone = {group: '', timezone: '', label: ''};
-  timeZoneDefault : IanaTimezone = {group: '', timezone: '', label: ''};
+  timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
+  timeZoneDefault: IanaTimezone = { group: '', timezone: '', label: '' };
 
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
@@ -76,13 +74,15 @@ export class RegistrationComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => (name ? this.filterCountry(name) : this.countries.slice()))
     );
-    
+
     this.timeZoneDefault = this.getDefaultTimezone();
     this.timeZones = this.sortTimezones(iana_timezones);
     // this.timeZones = [this.timeZoneDefault].concat(this.timeZones);
-    this.registrationForm.controls['timeZone'].setValue({timezone: this.timeZoneDefault.timezone,
-      group: this.timeZoneDefault.group, label: this.timeZoneDefault.label});
-    
+    this.registrationForm.controls['timeZone'].setValue({
+      timezone: this.timeZoneDefault.timezone,
+      group: this.timeZoneDefault.group,
+      label: this.timeZoneDefault.label,
+    });
   }
 
   matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
@@ -140,7 +140,6 @@ export class RegistrationComponent implements OnInit {
         country: this.countryControl.value.code,
         time_zone: this.timeZoneControl.value.timezone,
       };
-      
 
       this.authService.signUp(user).subscribe((response) => {
         if (response.status !== null && response.status === 201) {
@@ -169,11 +168,13 @@ export class RegistrationComponent implements OnInit {
   }
 
   compareTimeZoneObjects(object1: any, object2: any) {
-    return object1 && object2 
-    && object1.timezone == object2.timezone 
-    && object1.group == object2.group;
+    return (
+      object1 &&
+      object2 &&
+      object1.timezone == object2.timezone &&
+      object1.group == object2.group
+    );
   }
-
 
   isPasswordConfirmationValid(): boolean {
     return (
@@ -192,41 +193,44 @@ export class RegistrationComponent implements OnInit {
   getDefaultTimezone() {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var utc = this.getUTCWithTimezone(tz);
-    return { timezone:tz, group:utc, label:"" };
+    return { timezone: tz, group: utc, label: '' };
   }
-  getUTCWithTimezone(timeZone:string){
+  getUTCWithTimezone(timeZone: string) {
     var utc;
-    var hour = moment().tz(timeZone).utcOffset()/60;
-    if (hour > -1) { utc = "UTC+" + hour.toString() + ":00" }
-    else { utc = "UTC" + hour.toString() + ":00" }
+    var hour = moment().tz(timeZone).utcOffset() / 60;
+    if (hour > -1) {
+      utc = 'UTC+' + hour.toString() + ':00';
+    } else {
+      utc = 'UTC' + hour.toString() + ':00';
+    }
     return utc;
   }
-  getTimezones(){
-    
+  getTimezones() {
     const timezonesNames = moment.tz.names();
     const timezonesC = moment.tz.countries();
-    
-    var timezonesWithUTC:any[] = []
-    
-    timezonesNames.forEach(tz => {
+
+    var timezonesWithUTC: any[] = [];
+
+    timezonesNames.forEach((tz) => {
       var utc;
-      var hour = moment().tz(tz).utcOffset()/60;
-      if (hour > -1) { utc = "UTC+" + hour.toString(); }
-      else { utc = "UTC" + hour.toString(); }
-      timezonesWithUTC.push({name:tz,UTC:utc})
+      var hour = moment().tz(tz).utcOffset() / 60;
+      if (hour > -1) {
+        utc = 'UTC+' + hour.toString();
+      } else {
+        utc = 'UTC' + hour.toString();
+      }
+      timezonesWithUTC.push({ name: tz, UTC: utc });
     });
     this.timeZones = timezonesWithUTC;
-
   }
-  sortTimezones(timezones:any[]){
-      timezones.sort( function( a:any, b:any ) {
-        a = a.timezone.toLowerCase();
-        b = b.timezone.toLowerCase();
-    
-        return a < b ? -1 : a > b ? 1 : 0;
+  sortTimezones(timezones: any[]) {
+    timezones.sort(function (a: any, b: any) {
+      a = a.timezone.toLowerCase();
+      b = b.timezone.toLowerCase();
+
+      return a < b ? -1 : a > b ? 1 : 0;
     });
     return timezones;
-
   }
   getCountryName(country: any) {
     return country ? country.name : null;

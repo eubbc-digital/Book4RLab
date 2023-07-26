@@ -57,8 +57,6 @@ import { FilterPipe } from './pipes/lab-filter.pipe';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 
-// Timezones
-// import { NgxTimezonesComponent, NgxTimezonesModule } from 'ngx-timezones';
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,7 +87,6 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
     FilterPipe,
     ProfileComponent,
     ProfileFormComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -106,8 +103,6 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
       preventDuplicates: true,
       progressBar: true,
     }),
-    // NgxTimezonesModule,
-    // NgxTimezonesModule.forRoot(),
     HttpClientModule,
     NgHttpLoaderModule.forRoot(),
   ],
