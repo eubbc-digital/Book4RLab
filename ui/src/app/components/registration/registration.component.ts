@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit } from '@angular/core';
 import {
@@ -20,7 +20,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/interfaces/user';
 import { Country } from 'src/app/interfaces/country';
 import { countries } from 'src/app/store/country-data-store';
+import { IanaTimezone } from 'src/app/interfaces/timezone';
+import { iana_timezones } from 'src/app/store/timezone-data-shortened-store';
 import { map, Observable, startWith } from 'rxjs';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-registration',
@@ -29,6 +32,10 @@ import { map, Observable, startWith } from 'rxjs';
 })
 export class RegistrationComponent implements OnInit {
   countries: Country[] = countries;
+
+  timeZones: IanaTimezone[] = [];
+  timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
+  timeZoneDefault: IanaTimezone = { group: '', timezone: '', label: '' };
 
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
@@ -41,6 +48,7 @@ export class RegistrationComponent implements OnInit {
       Validators.required,
       this.requireMatch.bind(this),
     ]),
+    timeZone: new UntypedFormControl({}, [Validators.required]),
     password: new UntypedFormControl('', [
       Validators.minLength(8),
       Validators.required,
@@ -66,6 +74,15 @@ export class RegistrationComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => (name ? this.filterCountry(name) : this.countries.slice()))
     );
+
+    this.timeZoneDefault = this.getDefaultTimezone();
+    this.timeZones = this.sortTimezones(iana_timezones);
+    // this.timeZones = [this.timeZoneDefault].concat(this.timeZones);
+    this.registrationForm.controls['timeZone'].setValue({
+      timezone: this.timeZoneDefault.timezone,
+      group: this.timeZoneDefault.group,
+      label: this.timeZoneDefault.label,
+    });
   }
 
   matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
@@ -109,6 +126,9 @@ export class RegistrationComponent implements OnInit {
   get countryControl() {
     return this.registrationForm.controls['country'];
   }
+  get timeZoneControl() {
+    return this.registrationForm.controls['timeZone'];
+  }
 
   saveUser(formDirective: FormGroupDirective): void {
     if (this.registrationForm.valid) {
@@ -118,6 +138,7 @@ export class RegistrationComponent implements OnInit {
         email: this.registrationForm.controls['email'].value,
         password: this.passwordControl.value,
         country: this.countryControl.value.code,
+        time_zone: this.timeZoneControl.value.timezone,
       };
 
       this.authService.signUp(user).subscribe((response) => {
@@ -146,6 +167,15 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
+  compareTimeZoneObjects(object1: any, object2: any) {
+    return (
+      object1 &&
+      object2 &&
+      object1.timezone == object2.timezone &&
+      object1.group == object2.group
+    );
+  }
+
   isPasswordConfirmationValid(): boolean {
     return (
       this.passwordConfirmationControl.errors !== null &&
@@ -160,7 +190,48 @@ export class RegistrationComponent implements OnInit {
       country.name.toLowerCase().includes(filterValue)
     );
   }
+  getDefaultTimezone() {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var utc = this.getUTCWithTimezone(tz);
+    return { timezone: tz, group: utc, label: '' };
+  }
+  getUTCWithTimezone(timeZone: string) {
+    var utc;
+    var hour = moment().tz(timeZone).utcOffset() / 60;
+    if (hour > -1) {
+      utc = 'UTC+' + hour.toString() + ':00';
+    } else {
+      utc = 'UTC' + hour.toString() + ':00';
+    }
+    return utc;
+  }
+  getTimezones() {
+    const timezonesNames = moment.tz.names();
+    const timezonesC = moment.tz.countries();
 
+    var timezonesWithUTC: any[] = [];
+
+    timezonesNames.forEach((tz) => {
+      var utc;
+      var hour = moment().tz(tz).utcOffset() / 60;
+      if (hour > -1) {
+        utc = 'UTC+' + hour.toString();
+      } else {
+        utc = 'UTC' + hour.toString();
+      }
+      timezonesWithUTC.push({ name: tz, UTC: utc });
+    });
+    this.timeZones = timezonesWithUTC;
+  }
+  sortTimezones(timezones: any[]) {
+    timezones.sort(function (a: any, b: any) {
+      a = a.timezone.toLowerCase();
+      b = b.timezone.toLowerCase();
+
+      return a < b ? -1 : a > b ? 1 : 0;
+    });
+    return timezones;
+  }
   getCountryName(country: any) {
     return country ? country.name : null;
   }

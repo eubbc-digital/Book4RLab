@@ -54,6 +54,8 @@ import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 
 // Pipes
 import { FilterPipe } from './pipes/lab-filter.pipe';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +85,8 @@ import { FilterPipe } from './pipes/lab-filter.pipe';
     NotFoundComponent,
     LabGridComponent,
     FilterPipe,
+    ProfileComponent,
+    ProfileFormComponent,
   ],
   imports: [
     BrowserModule,

@@ -49,7 +49,16 @@
         (click)="goToMyReservations()"
       >
         <mat-icon class="icon">list</mat-icon>
-        <span> My reservations</span>
+        <span> My reservations </span>
+      </button>
+
+      <button
+        mat-menu-item
+        aria-label="Profile list button"
+        (click)="goToMyProfile()"
+      >
+        <mat-icon class="icon">person</mat-icon>
+        <span> Profile </span>
       </button>
 
       <button mat-menu-item aria-label="Logout icon" (click)="logout()">
@@ -97,6 +106,15 @@
         (click)="goToMyReservations()"
       >
         My reservations
+      </button>
+
+      <button
+        mat-button
+        aria-label="Profile list button"
+        (click)="goToMyProfile()"
+      >
+        <mat-icon class="icon">person</mat-icon>
+        <span> Profile </span>
       </button>
 
       <button mat-button aria-label="Logout icon" (click)="logout()">

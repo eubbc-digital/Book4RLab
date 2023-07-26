@@ -1,4 +1,4 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
@@ -19,10 +19,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for the user profile object"""
 
     groups = GroupSerializer(many=True)
-    
+
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'name', 'last_name', 'country', 'groups')
+        fields = ('id', 'email', 'name', 'last_name', 'country', 'time_zone', 'groups')
         read_only_fields = ('id', 'email')
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('id', 'email', 'password', 'name', 'last_name',
-                  'country')
+                  'country', 'time_zone')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
 
     def create(self, validated_data):
