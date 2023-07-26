@@ -77,7 +77,6 @@ export class RegistrationComponent implements OnInit {
 
     this.timeZoneDefault = this.getDefaultTimezone();
     this.timeZones = this.sortTimezones(iana_timezones);
-    // this.timeZones = [this.timeZoneDefault].concat(this.timeZones);
     this.registrationForm.controls['timeZone'].setValue({
       timezone: this.timeZoneDefault.timezone,
       group: this.timeZoneDefault.group,

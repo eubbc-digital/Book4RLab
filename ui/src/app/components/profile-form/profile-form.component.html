@@ -53,10 +53,7 @@
           label="Registered timezone"
           *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone"
         >
-          <mat-option
-            [value]="timeZoneRegistered"
-            *ngIf="timeZoneRegistered.timezone != timeZoneDefault.timezone"
-          >
+          <mat-option [value]="timeZoneRegistered">
             {{
               this.timeZoneRegistered.timezone +
                 "  (" +
@@ -85,13 +82,15 @@
 
     <p class="mat-caption">Required fields are marked with *</p>
 
-    <button
-      class="access-button"
-      type="submit"
-      mat-raised-button
-      color="primary"
-    >
-      Update Data
-    </button>
+    <div class="button-container">
+      <button
+        class="access-button"
+        type="submit"
+        mat-raised-button
+        color="primary"
+      >
+        Update data
+      </button>
+    </div>
   </form>
 </div>

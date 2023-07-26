@@ -6,6 +6,15 @@
   margin: auto;
 }
 
+.access-button {
+  width: 50%;
+}
+
+.button-container {
+  text-align: center;
+  width: 100%;
+}
+
 @media only screen and (max-width: 680px) {
   .exterior-container {
     width: 100%;
@@ -14,7 +23,8 @@
     padding-bottom: 15px;
     margin: auto;
   }
+  .access-button {
+    width: 100%;
+  }
 }
-div {
-  border: 1px black;
-}
+

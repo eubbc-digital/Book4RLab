@@ -118,7 +118,9 @@ export class ProfileFormComponent implements OnInit {
       this.editionForm.controls['email'].setValue(response.email);
 
       var country = this.getCountryInfoComplete(response.country);
-      this.editionForm.controls['country'].setValue(country);
+      if (country) {
+        this.editionForm.controls['country'].setValue(country);
+      }
 
       if (response.time_zone) {
         this.timeZoneRegistered = this.getTimezoneUser(response.time_zone);
@@ -144,10 +146,7 @@ export class ProfileFormComponent implements OnInit {
 
       this.userService.updateUserData(user).subscribe((response) => {
         if (response.status !== null && response.status === 200) {
-          this.toastr.success(
-            `Welcome ${user.name}`,
-            'Successful update of user data'
-          );
+          this.toastr.success('Successful update of user data');
         }
       });
     } else {
