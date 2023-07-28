@@ -5,7 +5,11 @@
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Kit } from 'src/app/interfaces/kit';
@@ -17,7 +21,7 @@ import { KitService } from 'src/app/services/kit.service';
   styleUrls: ['./kit-dialog.component.css'],
 })
 export class KitDialogComponent implements OnInit {
-  title = 'Register kit';
+  title = 'Register equipment';
 
   selectedKitId = 0;
   labId = 0;
@@ -44,9 +48,9 @@ export class KitDialogComponent implements OnInit {
       this.kitForm.controls['name'].setValue(kit.name!);
       this.kitForm.controls['description'].setValue(kit.description);
 
-      this.title = 'Update kit';
+      this.title = 'Update equipment';
     } else {
-      this.title = 'Register kit';
+      this.title = 'Register equipment';
     }
   }
 
@@ -55,11 +59,11 @@ export class KitDialogComponent implements OnInit {
 
     this.kitService.addKit(kit).subscribe({
       next: (_) => {
-        this.resetDialog('The kit has been created successfully.');
+        this.resetDialog('The equipment has been created successfully.');
       },
       error: (e) => {
         this.toastr.error(
-          'There was an error creating the kit. Please try later.'
+          'There was an error creating the equipment. Please try later.'
         );
       },
     });
@@ -70,11 +74,11 @@ export class KitDialogComponent implements OnInit {
 
     this.kitService.updateKit(kit, this.selectedKitId).subscribe({
       next: (_) => {
-        this.resetDialog('The kit has been updated successfully.');
+        this.resetDialog('The equipment has been updated successfully.');
       },
       error: (e) => {
         this.toastr.error(
-          'There was an error updating the kit. Please try later.'
+          'There was an error updating the equipment. Please try later.'
         );
       },
     });

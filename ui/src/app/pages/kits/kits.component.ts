@@ -28,7 +28,7 @@ import { Lab } from 'src/app/interfaces/lab';
   styleUrls: ['./kits.component.css'],
 })
 export class KitsComponent implements OnInit {
-  tableTitle = 'Kits assignment';
+  tableTitle = 'Equipment assignment';
 
   isLoading = false;
 
@@ -110,7 +110,7 @@ export class KitsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'dialog-responsive';
     dialogConfig.data = {
-      message: 'Are you sure you want to delete this kit?',
+      message: 'Are you sure you want to delete this equipment?',
     };
 
     const dialogRef = this.dialog.open(
@@ -134,12 +134,12 @@ export class KitsComponent implements OnInit {
     kit.enabled = false;
     this.kitService.updateKit(kit, kit.id!).subscribe({
       next: (_) => {
-        this.toastr.success('The kit has been deleted successfully.');
+        this.toastr.success('The equipment has been deleted successfully.');
         this.getKitsByLabId();
       },
       error: (e) => {
         this.toastr.error(
-          'There was an error deleting the kit. Please try later.'
+          'There was an error deleting the equipment. Please try later.'
         );
       },
     });
