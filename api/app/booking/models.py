@@ -1,4 +1,4 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
@@ -22,7 +22,7 @@ class Booking(models.Model):
     timeframe = models.ForeignKey('TimeFrame', related_name='tf_reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         ordering = ['start_date']
 
@@ -30,13 +30,13 @@ class Booking(models.Model):
 class Kit(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
-    description = models.CharField(max_length=100, default='')
+    description = models.CharField(max_length=500, default='')
     laboratory = models.ForeignKey('Laboratory', related_name='reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     enabled = models.BooleanField(default=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='kit_owner', on_delete=models.CASCADE)
-    
+
 
 class Laboratory(models.Model):
 
@@ -66,4 +66,4 @@ class TimeFrame(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='timeframe_owner', on_delete=models.CASCADE)
-    
+
