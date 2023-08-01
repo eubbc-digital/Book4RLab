@@ -1,0 +1,15 @@
+{% extends 'base_email_template.html' %}
+
+{% block title %}Account activation{% endblock %}
+
+{% block content %}
+  <h2>Account activation</h2>
+  <p>Hello {{ user_name }}</p>
+  <p>Please click on the link to confirm your registration:</p>
+  <p>
+    <a href="{{scheme}}://{{ server_base_url }}{% url 'users:activate' uid=uid token=token %}">
+      {{scheme}}://{{ server_base_url }}{% url 'users:activate' uid=uid token=token %}
+    </a>
+  </p>
+  <br>
+{% endblock %}
