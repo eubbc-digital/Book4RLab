@@ -79,7 +79,7 @@ class BookingAccess(generics.ListAPIView):
 
         if access_key is not None:
             queryset = queryset.filter(access_key=access_key)
-        
+
             if queryset.count() == 1:
                 if not queryset[0].public:
                     queryset = queryset.filter(password=password)
@@ -179,9 +179,9 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         if(email_type == 'confirmation'):
             context['private_url'] = f'{base_url}&pwd={instance.password}'
             context['public_url'] = base_url
-            email_body = render_to_string('confirmation_email_template.html', context)
+            email_body = render_to_string('booking_confirmation_email_template.html', context)
         elif(email_type == 'cancellation'):
-            email_body = render_to_string('cancellation_email_template.html', context)
+            email_body = render_to_string('booking_cancellation_email_template.html', context)
 
         email_body_plain = strip_tags(email_body)
         sender = settings.EMAIL_HOST_USER
