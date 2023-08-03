@@ -64,16 +64,18 @@
               class="selector"
               *ngIf="hasEmptyKits(); else kitsSelector"
             >
-              <mat-label>No kits available</mat-label>
+              <mat-label>No equipment available</mat-label>
               <input matInput disabled />
             </mat-form-field>
 
             <ng-template #kitsSelector>
               <mat-form-field appearance="fill" class="selector">
-                <mat-label>Kits</mat-label>
+                <mat-label>Equipment</mat-label>
                 <mat-select
                   formControlName="selectedKit"
-                  (selectionChange)="getHoursByKitIdAndDate($event.value.id, selectedDate)"
+                  (selectionChange)="
+                    getHoursByKitIdAndDate($event.value.id, selectedDate)
+                  "
                 >
                   <mat-option *ngFor="let kit of kits" [value]="kit">
                     {{ kit.name }}

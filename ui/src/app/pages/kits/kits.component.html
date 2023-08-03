@@ -12,7 +12,7 @@
           <button
             mat-fab
             id="kits-header-btn"
-            aria-label="Add kit button"
+            aria-label="Add equipment button"
             (click)="openKitDialog()"
           >
             <mat-icon>add</mat-icon>
@@ -85,7 +85,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
         <tr class="mat-row no-data-row" *matNoDataRow>
-          <td class="mat-cell">There are not assigned kits.</td>
+          <td class="mat-cell">No equipment assigned.</td>
         </tr>
       </mat-table>
     </div>
