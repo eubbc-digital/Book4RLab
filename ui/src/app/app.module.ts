@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
  * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
  * MIT License - See LICENSE file in the root directory
@@ -40,6 +40,7 @@ import { TimeframeDialogComponent } from './components/timeframe-dialog/timefram
 
 // Pages
 import { AccessComponent } from './pages/access/access.component';
+import { ActivationComponent } from './pages/activation/activation.component';
 import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
@@ -69,6 +70,7 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
     LoginComponent,
     RegistrationComponent,
     AccessComponent,
+    ActivationComponent,
     ReservationCardComponent,
     PrivateReservationsComponent,
     PublicReservationsComponent,

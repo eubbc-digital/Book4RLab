@@ -38,7 +38,13 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
 
 class ActivateAccountView(generics.GenericAPIView):
-    def get(self, request, uid, token):
+    def post(self, request):
+        uid = request.data.get('uid', None)
+        token = request.data.get('token', None)
+
+        if not uid or not token:
+            return Response({'message': 'uid and token are required in the request body.'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             uid = force_str(urlsafe_base64_decode(uid))
             user = User.objects.get(pk=uid)
@@ -51,3 +57,4 @@ class ActivateAccountView(generics.GenericAPIView):
             return Response({'message': 'Thank you for your email confirmation. Now you can log in to your account.'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Activation link is invalid!'}, status=status.HTTP_400_BAD_REQUEST)
+

@@ -17,6 +17,8 @@ from rest_framework import serializers
 
 from users.tokens import account_activation_token
 
+import os
+
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
@@ -67,8 +69,7 @@ class UserSerializer(serializers.ModelSerializer):
         subject = 'Account activation'
         context = {
           'user_name': user.name,
-          'scheme': request.scheme,
-          'server_base_url': request.get_host(),
+          'ui_base_url': os.environ.get('UI_BASE_URL'),
           'uid': urlsafe_base64_encode(force_bytes(user.pk)),
           'token': account_activation_token.make_token(user),
         }

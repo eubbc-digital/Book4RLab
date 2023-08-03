@@ -7,8 +7,8 @@
   <p>Hello {{ user_name }}</p>
   <p>Please click on the link to confirm your registration:</p>
   <p>
-    <a href="{{scheme}}://{{ server_base_url }}{% url 'users:activate' uid=uid token=token %}">
-      {{scheme}}://{{ server_base_url }}{% url 'users:activate' uid=uid token=token %}
+    <a href="{{ui_base_url}}activate?token={{token}}&uid={{uid}}">
+      {{ui_base_url}}activate?token={{token}}&uid={{uid}}
     </a>
   </p>
   <br>
