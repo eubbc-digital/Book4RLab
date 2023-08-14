@@ -1,4 +1,4 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
@@ -15,8 +15,8 @@ urlpatterns = [
     path('public/', views.BookingPublicList.as_view(), name='bookingpublic'),
     path('reservation/', views.BookingAccess.as_view(), name='bookingreserve'),
     path('me/', views.BookingUserList.as_view(), name='bookinguser'),
-    path('kits/', views.KitList.as_view(), name='kitlist'),
-    path('kits/<int:pk>/', views.KitDetail.as_view(), name='kitdetail'),
+    path('equipments/', views.EquipmentList.as_view(), name='equipmentlist'),
+    path('equipments/<int:pk>/', views.EquipmentDetail.as_view(), name='equipmentdetail'),
     path('laboratories/', views.LaboratoryList.as_view(), name='laboratorylist'),
     path('public-laboratories/', views.PublicLaboratoryList.as_view(), name='publiclaboratorylist'),
     path('laboratories/<int:pk>/', views.LaboratoryDetail.as_view(), name='laboratorydetail'),

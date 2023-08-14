@@ -1,11 +1,11 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
 from rest_framework import serializers
-from booking.models import Booking, Kit, Laboratory, TimeFrame
+from booking.models import Booking, Equipment, Laboratory, TimeFrame
 from django.utils.crypto import get_random_string
 from datetime import datetime, date, timedelta
 
@@ -15,7 +15,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'kit', 'timeframe']
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'equipment', 'timeframe']
         extra_kwargs = {
             'start_date': {'required': True},
             'end_date': {'required': True},
@@ -23,7 +23,7 @@ class BookingSerializer(serializers.ModelSerializer):
             'public': {'required': True},
             'access_key': {'required': True},
             'user': {'required': True},
-            'kit': {'required': True},
+            'equipment': {'required': True},
             'owner': {'required': False}
         }
 
@@ -39,13 +39,13 @@ class PublicBookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'kit']
-        
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'equipment']
 
-class KitSerializer(serializers.ModelSerializer):
+
+class EquipmentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Kit
+        model = Equipment
         fields = ['id', 'name', 'description', 'laboratory', 'enabled', 'owner']
         extra_kwargs = {
             'name': {'required': True},
@@ -56,7 +56,7 @@ class KitSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['owner'] = self.context['request'].user
-        return Kit.objects.create(**validated_data)
+        return Equipment.objects.create(**validated_data)
 
 
 class LaboratorySerializer(serializers.ModelSerializer):
@@ -80,14 +80,14 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimeFrame
-        fields = ['id', 'start_date', 'end_date', 'start_hour', 'end_hour', 'slot_duration', 'kit', 'enabled', 'owner']
+        fields = ['id', 'start_date', 'end_date', 'start_hour', 'end_hour', 'slot_duration', 'equipment', 'enabled', 'owner']
         extra_kwargs = {
             'start_date': {'required': True},
             'end_date': {'required': True},
             'start_hour': {'required': True},
             'end_hour': {'required': True},
             'slot_duration': {'required': True},
-            'kit': {'required': True},
+            'equipment': {'required': True},
             'owner': {'required': False}
         }
 
@@ -99,21 +99,21 @@ class TimeFrameSerializer(serializers.ModelSerializer):
         start_hour = validated_data['start_hour']
         end_hour = validated_data['end_hour']
 
-        kit = validated_data['kit']
+        equipment = validated_data['equipment']
         slot_duration = validated_data['slot_duration']
 
         if start_date > end_date:
             raise serializers.ValidationError("Start date must be before end date")
 
         time_delta = end_date - start_date
-        number_of_days = time_delta.days   
+        number_of_days = time_delta.days
 
         if start_hour > end_hour:
             yesterday = datetime.now() - timedelta(1)
             number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(yesterday, start_hour)).total_seconds() / 60) / slot_duration)
         else:
             number_of_slots = int(((datetime.combine(date.today(), end_hour) - datetime.combine(date.today(), start_hour)).total_seconds() / 60) / slot_duration)
-            
+
         validated_data['owner'] = self.context['request'].user
         timeframe = TimeFrame.objects.create(**validated_data)
 
@@ -134,12 +134,12 @@ class TimeFrameSerializer(serializers.ModelSerializer):
                     password=get_random_string(15),
                     owner=self.context['request'].user,
                     timeframe=timeframe,
-                    kit=kit
+                    equipment=equipment
                 )
                 bookings.append(booking)
 
                 accumulated_date = end_date
-            
+
             start_date = start_date + timedelta(days=1)
 
         Booking.objects.bulk_create(bookings)
