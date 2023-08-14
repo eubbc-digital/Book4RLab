@@ -13,7 +13,7 @@ from rest_framework.settings import api_settings
 
 from core.models import User
 from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
-from users.tokens import account_activation_token
+from utils import account_activation_token
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user"""
