@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
  * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
  * MIT License - See LICENSE file in the root directory
@@ -144,18 +144,11 @@ export class RegistrationComponent implements OnInit {
         if (response.status !== null && response.status === 201) {
           this.toastr.success(
             `Welcome ${user.name}`,
-            'Successful registration'
+            'Successful registration',
           );
-
-          let newUser: User = {
-            email: response.body.email,
-            password: this.registrationForm.controls['password'].value,
-          };
-
-          this.authService.login(newUser).subscribe((response) => {
-            localStorage.setItem('token', response.body.token);
-            this.checkReturnUrl();
-          });
+          setTimeout(() => {
+            this.router.navigate(['/activate']);
+          }, 2000);
         }
       });
     } else {

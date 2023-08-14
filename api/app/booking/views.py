@@ -4,23 +4,16 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
-from django.shortcuts import render
-from rest_framework import generics
-from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
 from booking.models import Booking, Kit, Laboratory, TimeFrame
+from booking.permissions import IsOwnerOrReadOnly
+from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
 from core.models import User
+from django.core.exceptions import SuspiciousOperation
+from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from django.core.exceptions import SuspiciousOperation
 from rest_framework.response import Response
-from rest_framework import status
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
-from django.conf import settings
-from booking.permissions import IsOwnerOrReadOnly
-
-from dateutil.parser import parse
-import pytz
+from utils import send_custom_email, get_correct_datetime
 import datetime
 
 class BookingList(generics.ListCreateAPIView):
@@ -132,6 +125,17 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
         register = self.request.query_params.get('register')
         confirmed = self.request.query_params.get('confirmed')
+        cancelled = self.request.query_params.get('cancelled')
+
+        kit = Kit.objects.get(id=instance.kit_id)
+        laboratory = Laboratory.objects.get(id=kit.laboratory_id)
+        base_url= f'{laboratory.url}?access_key={instance.access_key}'
+        date_format = '%d/%m/%Y %I:%M %p'
+        context = {
+            'kit_name': instance.kit.name,
+            'lab_name': laboratory.name,
+            'is_public': self.request.data['public']
+        }
 
         if register is not None and register == 'true':
             if instance.reserved_by is None:
@@ -139,7 +143,27 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
         if confirmed is not None and confirmed == 'true':
             recipient = [self.request.user.email]
-            self.send_confirmation_email(instance, self.request.data, recipient)
+            subject = 'Booking Confirmation'
+            user_tz = User.objects.get(email=instance.reserved_by).time_zone
+            template = 'booking_confirmation_email_template.html'
+
+            context['private_url'] = f'{base_url}&pwd={instance.password}'
+            context['public_url'] = base_url
+            context['start_date'] = get_correct_datetime(instance.start_date, user_tz).strftime(date_format)
+            context['end_date'] = get_correct_datetime(instance.end_date, user_tz).strftime(date_format)
+
+            send_custom_email(subject, template, context, recipient)
+
+        if cancelled is not None and cancelled== 'true':
+            recipient = [self.request.user.email]
+            subject = 'Booking Cancellation'
+            user_tz = User.objects.get(email=instance.reserved_by).time_zone
+            template = 'booking_cancellation_email_template.html'
+
+            context['start_date'] = get_correct_datetime(instance.start_date, user_tz).strftime(date_format)
+            context['end_date'] = get_correct_datetime(instance.end_date, user_tz).strftime(date_format)
+
+            send_custom_email(subject, template, context, recipient)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -150,40 +174,6 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
             serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
-
-    def send_confirmation_email(self, instance, data, recipient):
-        date_format = '%d/%m/%Y %I:%M %p'
-        user_tz = User.objects.get(email=instance.reserved_by).time_zone
-        subject = 'Booking confirmed!'
-
-        print('Send confirmation email to: ' + str(recipient))
-
-        kit = Kit.objects.get(id=instance.kit_id)
-        laboratory = Laboratory.objects.get(id=kit.laboratory_id)
-        base_url= f'{laboratory.url}?access_key={instance.access_key}'
-
-        body = ' Booking confirmed! \n\n'
-        body += f' Your booking for kit {instance.kit.name} has been confirmed\n'
-        body += f' Laboratory: {laboratory.name}\n'
-        body += f' Start date: {self.get_correct_datetime(instance.start_date, user_tz).strftime(date_format)}\n'
-        body += f' End date: {self.get_correct_datetime(instance.end_date, user_tz).strftime(date_format)}\n'
-        body += f' Private URL: {base_url}&pwd={instance.password}\n'
-        if data['public']:
-          body += f' Public URL: {base_url}\n'
-        body += ' Details available at https://eubbc-digital.upb.edu/booking/my-reservations \n'
-        body += '\n - UPB Team -'
-
-        sender = settings.EMAIL_HOST_USER
-
-        try:
-            send_mail(subject, body, sender, recipient, fail_silently=True)
-        except BadHeaderError:
-            return HttpResponse("Invalid header found.")
-
-    def get_correct_datetime(self, input_date, target_time_zone):
-        target_time_zone = pytz.timezone(target_time_zone)
-        target_date = input_date.astimezone(target_time_zone)
-        return target_time_zone.normalize(target_date)
 
 class KitList(generics.ListCreateAPIView):
 
@@ -283,4 +273,3 @@ class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-

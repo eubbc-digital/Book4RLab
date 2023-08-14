@@ -4,8 +4,8 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
 
 class UserManager(BaseUserManager):
 
@@ -16,6 +16,7 @@ class UserManager(BaseUserManager):
 
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
+        user.is_active = False
         user.save(using=self._db)
 
         return user
@@ -25,6 +26,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
+        user.is_active = True
         user.save(using=self._db)
 
         return user

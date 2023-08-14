@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>
+      {% block title %}{% endblock %}
+    </title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #e1e1e1;
+      }
+      h2 {
+        color: #000000;
+        margin-bottom: 20px;
+      }
+      p {
+        margin-bottom: 10px;
+      }
+      .footer-image {
+        max-width: 100%;
+        margin-top: 20px;
+        text-align: center;
+      }
+      .footer-image img {
+        width: 300px;
+        height: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      {% block content %}{% endblock %}
+      <div class="footer-image">
+        <img src="https://www.magazinemanagement.gm-bolivia.com/wp-content/uploads/2021/04/Logo-UPB.png" alt="UPB Team">
+      </div>
+    </div>
+  </body>
+</html>
+

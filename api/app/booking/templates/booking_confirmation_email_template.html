@@ -1,0 +1,18 @@
+{% extends 'base_email_template.html' %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block content %}
+  <h2>Booking confirmed</h2>
+  <p>Laboratory: {{ lab_name }}</p>
+  <p>Kit: {{ kit_name }}</p>
+  <p>Start date confirmed: {{start_date}}<p>
+  <p>End date confirmed: {{end_date}} <p>
+  <p>Private link: <a href="{{private_url}}">{{private_url}}</a></p>
+  {% if is_public == True %}
+    <p>Public link: <a href="{{public_url}}">{{public_url}}</a></p>
+  {% endif %}
+  <p>Details available at: <a href="https://eubbc-digital.upb.edu/booking/my-reservations">https://eubbc-digital.upb.edu/booking/my-reservations</a></p>
+  <br>
+{% endblock %}
+

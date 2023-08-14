@@ -1,11 +1,12 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "api": {
     "baseUrl": "https://eubbc-digital.upb.edu/booking/api/",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
       "signup": "users/signup/",
+      "activate": "users/activate/",
       "passwordReset": "accounts/password_reset/"
     },
     "labs": "laboratories/",

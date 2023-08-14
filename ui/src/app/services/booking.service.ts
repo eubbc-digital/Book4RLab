@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -42,6 +42,13 @@ export class BookingService {
     );
   }
 
+  cancelBooking(booking: Booking): Observable<Booking> {
+    return this.http.patch<Booking>(
+      `${this.url}${booking.id}/?cancelled=true`,
+      booking
+    );
+  }
+
   updateBooking(booking: Booking): Observable<Booking> {
     return this.http.patch<Booking>(`${this.url}${booking.id}/`, booking);
   }
@@ -67,3 +74,4 @@ export class BookingService {
     return this.http.get<Booking[]>(url, { params });
   }
 }
+

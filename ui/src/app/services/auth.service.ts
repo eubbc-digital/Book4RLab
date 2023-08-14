@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
  * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
  * MIT License - See LICENSE file in the root directory
@@ -13,6 +13,7 @@ import {
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { User } from '../interfaces/user';
+import { ActivationData } from '../interfaces/activation-data';
 import { ToastrService } from 'ngx-toastr';
 import config from '../config.json';
 
@@ -38,6 +39,13 @@ export class AuthService {
       .pipe(catchError(this.handleError<User>('signUp')));
   }
 
+  activate(activationData: ActivationData): Observable<any> {
+    const URL = `${config.api.baseUrl}${config.api.users.activate}`;
+    return this.http
+      .post(URL, activationData, this.httpOptions)
+      .pipe(catchError(this.handleActivationError<ActivationData>('activate')));
+  }
+
   login(user: User): Observable<any> {
     const URL = `${config.api.baseUrl}${config.api.users.login}`;
     return this.http
@@ -55,6 +63,15 @@ export class AuthService {
         this.toastr.error(this.getServerErrorMessage(error), 'Error');
 
       return of(result as T);
+    };
+  }
+
+  private handleActivationError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      if (error && error.error)
+        this.toastr.error(this.getServerErrorMessage(error), 'Error');
+
+      throw error;
     };
   }
 
