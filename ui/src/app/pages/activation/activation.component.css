@@ -11,19 +11,19 @@
   width: 40%;
 }
 
-.custom_header {
+.custom-header {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100px;
   background-color: #3f51b5;
 }
-.custom_title {
+.custom-title {
   font-weight: bold;
   color: #ffffff;
 }
 
-.text{
+.text {
   font-size: 16px;
   text-align: center;
   padding: 10px;

@@ -4,19 +4,12 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
-from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Group
-from django.core.mail import EmailMultiAlternatives, BadHeaderError
-from django.http import HttpResponse
-from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.utils.html import strip_tags
 from rest_framework import serializers
-
-from users.tokens import account_activation_token
-
+from utils import send_custom_email, account_activation_token
 import os
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -50,7 +43,17 @@ class UserSerializer(serializers.ModelSerializer):
         group = Group.objects.get(name='students')
         user.groups.add(group)
 
-        self.account_activation_procedure(user, self.context.get('request'))
+        subject = "Account activation"
+        context = {
+          'user_name': user.name,
+          'ui_base_url': os.environ.get('UI_BASE_URL'),
+          'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+          'token': account_activation_token.make_token(user),
+        }
+        template_name = 'account_activation_email_template.html'
+        recipient = [user.email]
+
+        send_custom_email(subject, template_name, context, recipient)
 
         return user
 
@@ -64,29 +67,6 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
-
-    def account_activation_procedure(self, user, request):
-        subject = 'Account activation'
-        context = {
-          'user_name': user.name,
-          'ui_base_url': os.environ.get('UI_BASE_URL'),
-          'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-          'token': account_activation_token.make_token(user),
-        }
-        email_body = render_to_string('account_activation_email_template.html', context)
-        email_body_plain = strip_tags(email_body)
-        sender = settings.EMAIL_HOST_USER
-        recipient = [user.email]
-
-        try:
-            print(f'Sending activation email to {recipient}')
-            msg = EmailMultiAlternatives(subject, email_body_plain, sender, recipient)
-            msg.attach_alternative(email_body, 'text/html')
-            msg.send()
-        except BadHeaderError:
-            return HttpResponse('Invalid header found.')
-        except Exception as e:
-            print(f'An unexpected error occurred: {e}')
 
 
 class AuthTokenSerializer(serializers.Serializer):
