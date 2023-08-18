@@ -12,27 +12,27 @@ import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
 
-import { KitService } from 'src/app/services/equipment.service';
+import { EquipmentService } from 'src/app/services/equipment.service';
 import { LabService } from 'src/app/services/lab.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
-import { KitDialogComponent } from 'src/app/components/equipment-dialog/equipment-dialog.component';
+import { EquipmentDialogComponent } from 'src/app/components/equipment-dialog/equipment-dialog.component';
 
-import { Kit } from 'src/app/interfaces/equipment';
+import { Equipment } from 'src/app/interfaces/equipment';
 import { Lab } from 'src/app/interfaces/lab';
 
 @Component({
-  selector: 'app-kits',
-  templateUrl: './kits.component.html',
-  styleUrls: ['./kits.component.css'],
+  selector: 'app-equipments',
+  templateUrl: './equipments.component.html',
+  styleUrls: ['./equipments.component.css'],
 })
-export class KitsComponent implements OnInit {
+export class EquipmentsComponent implements OnInit {
   tableTitle = 'Equipment assignment';
 
   isLoading = false;
 
-  selectedKit?: Kit;
+  selecedEquipment?: Equipment;
   selectedLab: Lab = {};
 
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
@@ -46,7 +46,7 @@ export class KitsComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private kitService: KitService,
+    private kitService: EquipmentService,
     private labService: LabService,
     private toastr: ToastrService
   ) {}
