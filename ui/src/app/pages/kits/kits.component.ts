@@ -12,14 +12,14 @@ import { Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
 
-import { KitService } from 'src/app/services/kit.service';
+import { KitService } from 'src/app/services/equipment.service';
 import { LabService } from 'src/app/services/lab.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
-import { KitDialogComponent } from 'src/app/components/kit-dialog/kit-dialog.component';
+import { KitDialogComponent } from 'src/app/components/equipment-dialog/equipment-dialog.component';
 
-import { Kit } from 'src/app/interfaces/kit';
+import { Kit } from 'src/app/interfaces/equipment';
 import { Lab } from 'src/app/interfaces/lab';
 
 @Component({

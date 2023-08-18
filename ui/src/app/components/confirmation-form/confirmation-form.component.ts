@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/interfaces/user';
-import { Kit } from 'src/app/interfaces/kit';
+import { Equipment } from 'src/app/interfaces/equipment';
 import { Lab } from 'src/app/interfaces/lab';
 import { Booking } from 'src/app/interfaces/booking';
 import { BookingService } from 'src/app/services/booking.service';
@@ -27,7 +27,7 @@ import * as moment from 'moment';
 })
 export class ConfirmationFormComponent implements OnInit {
   @Input() bookingId!: number;
-  @Input() selectedKit: Kit = { id: 0, name: '' };
+  @Input() selectedEquipment: Equipment = { id: 0, name: '' };
   @Input() selectedLab: Lab = { id: 0, name: '' };
 
   @Output() reservationTypeEvent = new EventEmitter<boolean>();

@@ -17,8 +17,8 @@ import { TimeframeService } from 'src/app/services/timeframe.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { Timeframe } from 'src/app/interfaces/timeframe';
-import { Kit } from 'src/app/interfaces/kit';
-import { KitService } from 'src/app/services/kit.service';
+import { Kit } from 'src/app/interfaces/equipment';
+import { KitService } from 'src/app/services/equipment.service';
 
 @Component({
   selector: 'app-timeframes',

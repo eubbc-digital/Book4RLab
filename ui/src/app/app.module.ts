@@ -34,7 +34,7 @@ import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.c
 import { LabsComponent } from './pages/labs/labs.component';
 import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
 import { KitsComponent } from './pages/kits/kits.component';
-import { KitDialogComponent } from './components/kit-dialog/kit-dialog.component';
+import { KitDialogComponent } from './components/equipment-dialog/equipment-dialog.component';
 import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 import { TimeframeDialogComponent } from './components/timeframe-dialog/timeframe-dialog.component';
 

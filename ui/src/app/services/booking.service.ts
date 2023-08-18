@@ -18,8 +18,8 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  getBookingListByKitId(kitId: number): Observable<Booking[]> {
-    let params = new HttpParams().set('kit', kitId);
+  getBookingListByEquipmentId(equipmentId: number): Observable<Booking[]> {
+    let params = new HttpParams().set('equipment', equipmentId);
 
     return this.http.get<Booking[]>(this.url, { params });
   }
@@ -59,14 +59,14 @@ export class BookingService {
   }
 
   getPublicReservations(
-    kitId: number,
+    equipmentId: number,
     startDate: string,
     endDate: string
   ): Observable<Booking[]> {
     let url = `${config.api.baseUrl}${config.api.booking.publicReservations}`;
     let params = new HttpParams();
 
-    if (kitId != 0) params = params.append('kit', kitId);
+    if (equipmentId != 0) params = params.append('equipment', equipmentId);
 
     params = params.append('start_date', startDate);
     params = params.append('end_date', endDate);

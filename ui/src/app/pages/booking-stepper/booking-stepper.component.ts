@@ -17,13 +17,13 @@ import * as moment from 'moment';
 import { ComponentCanDeactivate } from '../../services/guards/pending-changes.guard';
 
 import { LabService } from 'src/app/services/lab.service';
-import { KitService } from 'src/app/services/kit.service';
+import { KitService } from 'src/app/services/equipment.service';
 import { ToastrService } from 'ngx-toastr';
 import { BookingService } from 'src/app/services/booking.service';
 import { UserService } from 'src/app/services/user.service';
 
 import { Lab } from 'src/app/interfaces/lab';
-import { Kit } from 'src/app/interfaces/kit';
+import { Kit } from 'src/app/interfaces/equipment';
 import { Booking } from 'src/app/interfaces/booking';
 import { AvailableDate } from 'src/app/interfaces/available-date';
 
