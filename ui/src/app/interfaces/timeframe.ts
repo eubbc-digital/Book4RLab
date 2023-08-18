@@ -11,6 +11,6 @@ export interface Timeframe {
   start_hour?: string;
   end_hour?: string;
   slot_duration?: string;
-  kit?: number;
+  equipment?: number;
   enabled?: boolean;
 }

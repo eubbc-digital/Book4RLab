@@ -11,7 +11,7 @@
     },
     "labs": "laboratories/",
     "public-labs": "public-laboratories/",
-    "kits": "kits/",
+    "equipments": "equipments/",
     "timeframes": "timeframes/",
     "booking": {
       "url": "bookings/",

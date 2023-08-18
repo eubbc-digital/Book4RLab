@@ -22,8 +22,8 @@ export class TimeframeService {
     return this.http.get<Timeframe[]>(this.url);
   }
 
-  getTimeframeByKitId(id: number): Observable<Timeframe[]> {
-    const params = new HttpParams().set('kit', id);
+  getTimeframeByEquipmentId(id: number): Observable<Timeframe[]> {
+    const params = new HttpParams().set('equipment', id);
     return this.http.get<Timeframe[]>(this.url, { params });
   }
 

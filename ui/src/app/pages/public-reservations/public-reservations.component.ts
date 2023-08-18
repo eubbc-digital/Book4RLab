@@ -13,12 +13,12 @@ import {
 } from '@angular/forms';
 
 import { BookingService } from 'src/app/services/booking.service';
-import { KitService } from 'src/app/services/kit.service';
+import { KitService } from 'src/app/services/equipment.service';
 import { LabService } from 'src/app/services/lab.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { Booking } from 'src/app/interfaces/booking';
-import { Kit } from 'src/app/interfaces/kit';
+import { Kit } from 'src/app/interfaces/equipment';
 import { Lab } from 'src/app/interfaces/lab';
 import * as moment from 'moment';
 
