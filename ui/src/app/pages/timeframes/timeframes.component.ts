@@ -17,8 +17,8 @@ import { TimeframeService } from 'src/app/services/timeframe.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { Timeframe } from 'src/app/interfaces/timeframe';
-import { Kit } from 'src/app/interfaces/equipment';
-import { KitService } from 'src/app/services/equipment.service';
+import { Equipment } from 'src/app/interfaces/equipment';
+import { EquipmentService } from 'src/app/services/equipment.service';
 
 @Component({
   selector: 'app-timeframes',
@@ -31,7 +31,7 @@ export class TimeframesComponent implements OnInit {
   isLoading = false;
 
   selectedTimeFrame?: Timeframe;
-  selectedKit: Kit = {};
+  selectedEquipment: Equipment = {};
 
   displayedColumns: string[] = [
     'id',
@@ -52,28 +52,28 @@ export class TimeframesComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private timeframeService: TimeframeService,
-    private kitService: KitService,
+    private equipmentService: EquipmentService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.selectedKit.id = params['kit'];
+      this.selectedEquipment.id = params['equipment'];
 
-      this.kitService
-        .getKitById(this.selectedKit.id!)
-        .subscribe((response) => (this.selectedKit = response));
+      this.equipmentService
+        .getEquipmentById(this.selectedEquipment.id!)
+        .subscribe((response) => (this.selectedEquipment = response));
 
-      this.getTimeframesByKitId();
+      this.getTimeframesByEquipmentId();
     });
   }
 
-  getTimeframesByKitId(): void {
-    if (this.selectedKit.id) {
+  getTimeframesByEquipmentId(): void {
+    if (this.selectedEquipment.id) {
       this.isLoading = true;
 
       this.timeframeService
-        .getTimeframeByKitId(this.selectedKit.id!)
+        .getTimeframeByEquipmentId(this.selectedEquipment.id!)
         .subscribe((response) => {
           this.dataSource = new MatTableDataSource(response);
           this.dataSource.paginator = this.paginator;
@@ -85,7 +85,7 @@ export class TimeframesComponent implements OnInit {
 
   openTimeframeDialog(): void {
     if (!this.selectedTimeFrame)
-      this.selectedTimeFrame = { kit: this.selectedKit.id };
+      this.selectedTimeFrame = { equipment: this.selectedEquipment.id };
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -97,7 +97,7 @@ export class TimeframesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((response) => {
       if (response) {
-        this.getTimeframesByKitId();
+        this.getTimeframesByEquipmentId();
         this.selectedTimeFrame = undefined;
       }
     });
@@ -128,7 +128,7 @@ export class TimeframesComponent implements OnInit {
     this.timeframeService.deleteTimeframe(id).subscribe({
       next: (_) => {
         this.toastr.success('The timeframe has been deleted successfully.');
-        this.getTimeframesByKitId();
+        this.getTimeframesByEquipmentId();
       },
       error: (e) => {
         this.toastr.error(

@@ -188,7 +188,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   }
 
   get selectedEquipment(): Equipment {
-    return this.reservationFormGroup.controls['selectedKit'].value;
+    return this.reservationFormGroup.controls['selectedEquipment'].value;
   }
 
   get selectedLab(): Lab {
@@ -200,7 +200,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   }
 
   getEquipmentsByLabId(labId: number): void {
-    this.equipmentService.getKitsByLabId(labId).subscribe((equipments) => {
+    this.equipmentService.getEquipmentsByLabId(labId).subscribe((equipments) => {
       this.equipments = equipments;
 
       if (this.equipments.length > 0) this.setDataFromFirstAvailableEquipment();
@@ -226,7 +226,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.availableDates = [];
 
     this.bookingService
-      .getBookingListByKitId(equipmentId)
+      .getBookingListByEquipmentId(equipmentId)
       .subscribe((bookingList) => {
         bookingList.forEach((booking) => {
           if (

@@ -12,7 +12,7 @@ import { AccessComponent } from './pages/access/access.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
 import { LabsComponent } from './pages/labs/labs.component';
-import { KitsComponent } from './pages/equipments/equipments.component';
+import { EquipmentsComponent } from './pages/equipments/equipments.component';
 import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
@@ -58,8 +58,8 @@ const routes: Routes = [
     canActivate: [LabsGuard],
   },
   {
-    path: 'kits',
-    component: KitsComponent,
+    path: 'equipments',
+    component: EquipmentsComponent,
   },
   {
     path: 'timeframes',

@@ -81,7 +81,7 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
     LabsComponent,
     LabDialogComponent,
     EquipmentsComponent,
-    KitDialogComponent,
+    EquipmentDialogComponent,
     TimeframesComponent,
     TimeframeDialogComponent,
     NotFoundComponent,

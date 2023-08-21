@@ -13,12 +13,12 @@ import {
 } from '@angular/forms';
 
 import { BookingService } from 'src/app/services/booking.service';
-import { KitService } from 'src/app/services/equipment.service';
+import { EquipmentService } from 'src/app/services/equipment.service';
 import { LabService } from 'src/app/services/lab.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { Booking } from 'src/app/interfaces/booking';
-import { Kit } from 'src/app/interfaces/equipment';
+import { Equipment } from 'src/app/interfaces/equipment';
 import { Lab } from 'src/app/interfaces/lab';
 import * as moment from 'moment';
 
@@ -30,25 +30,25 @@ import * as moment from 'moment';
 export class PublicReservationsComponent implements OnInit {
   searcherControlGroup = new UntypedFormGroup({
     selectedLab: new UntypedFormControl('', [Validators.required]),
-    selectedKit: new UntypedFormControl('', [Validators.required]),
+    selectedEquipment: new UntypedFormControl('', [Validators.required]),
     startDate: new UntypedFormControl('', [Validators.required]),
     endDate: new UntypedFormControl('', [Validators.required]),
   });
 
   reservationList: Booking[] = [];
   labs: Lab[] = [];
-  kits: Kit[] = [];
+  equipments: Equipment[] = [];
 
-  kitsId: number[] = [];
+  equipmentsId: number[] = [];
 
-  optionAll: Kit = { id: 0, name: 'All' };
+  optionAll: Equipment = { id: 0, name: 'All' };
 
   showMessage: boolean = false;
   showSpinner: boolean = false;
 
   constructor(
     private labService: LabService,
-    private kitService: KitService,
+    private equipmentService: EquipmentService,
     private bookingService: BookingService,
     private toastService: ToastrService,
     private dateAdapter: DateAdapter<Date>
@@ -64,8 +64,8 @@ export class PublicReservationsComponent implements OnInit {
     return this.searcherControlGroup.controls['selectedLab'];
   }
 
-  get kitControl() {
-    return this.searcherControlGroup.controls['selectedKit'];
+  get equipmentControl() {
+    return this.searcherControlGroup.controls['selectedEquipment'];
   }
 
   get startDateControl() {
@@ -88,26 +88,26 @@ export class PublicReservationsComponent implements OnInit {
 
     this.labControl.setValue(selectedLab);
 
-    this.getKitsByLabId(selectedLab.id!);
+    this.getEquipmentsByLabId(selectedLab.id!);
   }
 
-  getKitsByLabId(labId: number) {
-    this.kitService.getKitsByLabId(labId).subscribe((kits) => {
-      this.kits = kits.reverse();
+  getEquipmentsByLabId(labId: number) {
+    this.equipmentService.getEquipmentsByLabId(labId).subscribe((equipments) => {
+      this.equipments = equipments.reverse();
 
-      this.kitsId = this.kits.map((kit) => {
-        return kit.id!;
+      this.equipmentsId = this.equipments.map((equipment) => {
+        return equipment.id!;
       });
 
-      this.kits.unshift(this.optionAll);
+      this.equipments.unshift(this.optionAll);
 
-      if (this.kits.length > 0) this.setDataFromFirstAvailableKit();
+      if (this.equipments.length > 0) this.setDataFromFirstAvailableEquipment();
     });
   }
 
-  setDataFromFirstAvailableKit(): void {
-    const selectedKit = this.kits[0];
-    this.searcherControlGroup.controls['selectedKit'].setValue(selectedKit);
+  setDataFromFirstAvailableEquipment(): void {
+    const selectedEquipment = this.equipments[0];
+    this.searcherControlGroup.controls['selectedEquipment'].setValue(selectedEquipment);
   }
 
   getPublicBookingList(): void {
@@ -115,15 +115,15 @@ export class PublicReservationsComponent implements OnInit {
       this.showMessage = false;
       this.showSpinner = true;
 
-      let kitId = this.kitControl.value.id;
+      let equipmentId = this.equipmentControl.value.id;
       let startDate = moment(this.startDateControl.value).utc().format();
       let endDate = moment(this.endDateControl.value).utc().format();
 
       this.bookingService
-        .getPublicReservations(kitId, startDate, endDate)
+        .getPublicReservations(equipmentId, startDate, endDate)
         .subscribe((reservations) => {
           this.reservationList = reservations.filter((reservation) =>
-            this.kitListIncludesId(reservation.kit!)
+            this.equipmentListIncludesId(reservation.equipment!)
           );
 
           this.showSpinner = false;
@@ -137,8 +137,8 @@ export class PublicReservationsComponent implements OnInit {
     }
   }
 
-  kitListIncludesId(kitId: number): boolean {
-    return this.kitsId.includes(kitId);
+  equipmentListIncludesId(equipmentId: number): boolean {
+    return this.equipmentsId.includes(equipmentId);
   }
 
   isStartDateInvalid(): boolean {

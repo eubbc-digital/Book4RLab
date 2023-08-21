@@ -32,12 +32,12 @@ export class EquipmentsComponent implements OnInit {
 
   isLoading = false;
 
-  selecedEquipment?: Equipment;
+  selectedEquipment?: Equipment;
   selectedLab: Lab = {};
 
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
 
-  dataSource = new MatTableDataSource<Kit>([]);
+  dataSource = new MatTableDataSource<Equipment>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -46,7 +46,7 @@ export class EquipmentsComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private kitService: EquipmentService,
+    private EquipmentService: EquipmentService,
     private labService: LabService,
     private toastr: ToastrService
   ) {}
@@ -59,24 +59,24 @@ export class EquipmentsComponent implements OnInit {
         .getLabById(this.selectedLab.id!)
         .subscribe((response) => (this.selectedLab = response));
 
-      this.getKitsByLabId();
+      this.getEquipmentsByLabId();
     });
   }
 
-  goToAssignments(kitId: number): void {
+  goToAssignments(equipmentId: number): void {
     this.router.navigate(['/timeframes'], {
       queryParams: {
-        kit: kitId,
+        equipment: equipmentId,
       },
     });
   }
 
-  getKitsByLabId(): void {
+  getEquipmentsByLabId(): void {
     if (this.selectedLab.id) {
       this.isLoading = true;
 
-      this.kitService
-        .getKitsByLabId(this.selectedLab.id)
+      this.EquipmentService
+        .getEquipmentsByLabId(this.selectedLab.id)
         .subscribe((response) => {
           this.dataSource = new MatTableDataSource(response);
           this.dataSource.paginator = this.paginator;
@@ -86,25 +86,25 @@ export class EquipmentsComponent implements OnInit {
     }
   }
 
-  openKitDialog(): void {
-    if (!this.selectedKit)
-      this.selectedKit = { laboratory: this.selectedLab.id };
+  openEquipmentDialog(): void {
+    if (!this.selectedEquipment)
+      this.selectedEquipment = { laboratory: this.selectedLab.id };
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'dialog-responsive';
-    dialogConfig.data = this.selectedKit;
+    dialogConfig.data = this.selectedEquipment;
 
-    const dialogRef = this.dialog.open(KitDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(EquipmentDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((response) => {
-      if (response) this.getKitsByLabId();
-      this.selectedKit = undefined;
+      if (response) this.getEquipmentsByLabId();
+      this.selectedEquipment = undefined;
     });
   }
 
-  openDeleteDialog(kit: Kit): void {
+  openDeleteDialog(equipment: Equipment): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -120,22 +120,22 @@ export class EquipmentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((response) => {
       if (response && response.answer) {
-        this.deleteKit(kit);
+        this.deleteEquipment(equipment);
       }
     });
   }
 
-  updateKit(kit: Kit): void {
-    this.selectedKit = kit;
-    this.openKitDialog();
+  updateEquipment(equipment: Equipment): void {
+    this.selectedEquipment = equipment;
+    this.openEquipmentDialog();
   }
 
-  deleteKit(kit: Kit): void {
-    kit.enabled = false;
-    this.kitService.updateKit(kit, kit.id!).subscribe({
+  deleteEquipment(equipment: Equipment): void {
+    equipment.enabled = false;
+    this.EquipmentService.updateEquipment(equipment, equipment.id!).subscribe({
       next: (_) => {
         this.toastr.success('The equipment has been deleted successfully.');
-        this.getKitsByLabId();
+        this.getEquipmentsByLabId();
       },
       error: (e) => {
         this.toastr.error(
