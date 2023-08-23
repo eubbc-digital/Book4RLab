@@ -4,9 +4,9 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
-from booking.models import Booking, Kit, Laboratory, TimeFrame
+from booking.models import Booking, Equipment, Laboratory, TimeFrame
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, KitSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
+from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from rest_framework import generics
@@ -24,7 +24,7 @@ class BookingList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = Booking.objects.all()
-        kit = self.request.query_params.get('kit')
+        equipment = self.request.query_params.get('equipment')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
 
@@ -34,11 +34,11 @@ class BookingList(generics.ListCreateAPIView):
 
             queryset = queryset.filter(start_date__gte=start_date_datetime, start_date__lt=end_date_datetime)
 
-        if kit is not None:
-            if not kit.isdigit():
-                raise SuspiciousOperation('Kit id must be a number')
+        if equipment is not None:
+            if not equipment.isdigit():
+                raise SuspiciousOperation('Equipment id must be a number')
 
-            queryset = queryset.filter(kit_id=int(kit))
+            queryset = queryset.filter(equipment_id=int(equipment))
 
         return queryset.filter(available=True)
 
@@ -94,7 +94,7 @@ class BookingPublicList(generics.ListAPIView):
 
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        kit = self.request.query_params.get('kit')
+        equipment = self.request.query_params.get('equipment')
 
         if start_date is not None and end_date is not None:
             start_date_datetime = datetime.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%SZ')
@@ -102,11 +102,11 @@ class BookingPublicList(generics.ListAPIView):
 
             queryset = queryset.filter(start_date__gte=start_date_datetime, start_date__lt=end_date_datetime)
 
-        if kit is not None:
-            if not kit.isdigit():
-                raise SuspiciousOperation('Kit id must be a number')
+        if equipment is not None:
+            if not equipment.isdigit():
+                raise SuspiciousOperation('Equipment id must be a number')
 
-            queryset = queryset.filter(kit_id=int(kit))
+            queryset = queryset.filter(equipment_id=int(equipment))
 
         return queryset.filter(available=False)
 
@@ -127,12 +127,12 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
         confirmed = self.request.query_params.get('confirmed')
         cancelled = self.request.query_params.get('cancelled')
 
-        kit = Kit.objects.get(id=instance.kit_id)
-        laboratory = Laboratory.objects.get(id=kit.laboratory_id)
+        equipment = Equipment.objects.get(id=instance.equipment_id)
+        laboratory = Laboratory.objects.get(id=equipment.laboratory_id)
         base_url= f'{laboratory.url}?access_key={instance.access_key}'
         date_format = '%d/%m/%Y %I:%M %p'
         context = {
-            'kit_name': instance.kit.name,
+            'equipment_name': instance.equipment.name,
             'lab_name': laboratory.name,
             'is_public': self.request.data['public']
         }
@@ -175,15 +175,15 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
         return Response(serializer.data)
 
-class KitList(generics.ListCreateAPIView):
+class EquipmentList(generics.ListCreateAPIView):
 
-    queryset = Kit.objects.filter(enabled=True)
-    serializer_class = KitSerializer
+    queryset = Equipment.objects.filter(enabled=True)
+    serializer_class = EquipmentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
-        queryset = Kit.objects.filter(enabled=True)
+        queryset = Equipment.objects.filter(enabled=True)
         laboratory = self.request.query_params.get('laboratory')
 
         if laboratory is not None:
@@ -195,10 +195,10 @@ class KitList(generics.ListCreateAPIView):
         return queryset
 
 
-class KitDetail(generics.RetrieveUpdateAPIView):
+class EquipmentDetail(generics.RetrieveUpdateAPIView):
 
-    queryset = Kit.objects.filter(enabled=True)
-    serializer_class = KitSerializer
+    queryset = Equipment.objects.filter(enabled=True)
+    serializer_class = EquipmentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
@@ -256,13 +256,13 @@ class TimeFrameList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = TimeFrame.objects.all()
-        kit = self.request.query_params.get('kit')
+        equipment = self.request.query_params.get('equipment')
 
-        if kit is not None:
-            if not kit.isdigit():
-                raise SuspiciousOperation('Kit id must be a number')
+        if equipment is not None:
+            if not equipment.isdigit():
+                raise SuspiciousOperation('Equipment id must be a number')
 
-            return queryset.filter(kit_id=int(kit))
+            return queryset.filter(equipment_id=int(equipment))
 
         return queryset
 

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
@@ -11,7 +11,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from booking.models import Kit, Laboratory, Booking
+from booking.models import Equipment, Laboratory, Booking
 from booking.serializers import BookingSerializer
 
 import datetime
@@ -55,14 +55,14 @@ class PrivateBookingApiTests(TestCase):
     def test_retrieve_booking_list(self):
         """Test retrieving a list of bookings"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             owner=self.user,
             reserved_by=None,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         res = self.client.get(BOOKING_URL)
 
@@ -74,7 +74,7 @@ class PrivateBookingApiTests(TestCase):
     def test_retrieve_booking_list_within_date(self):
         """Test retrieving a list of bookings within date range"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -83,7 +83,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 13, 0, tzinfo=pytz.UTC),
@@ -92,7 +92,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 13, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 15, 0, tzinfo=pytz.UTC),
@@ -101,7 +101,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 17, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -110,7 +110,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         res = self.client.get(BOOKING_URL + '?start_date=2003-5-16T00:00:00Z&end_date=2003-5-17T00:00:00Z')
 
@@ -120,7 +120,7 @@ class PrivateBookingApiTests(TestCase):
     def test_retrieve_booking_public_list(self):
         """Test retrieving a list of public bookings"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -129,7 +129,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -138,7 +138,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -147,7 +147,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit)
+            equipment=equipment)
 
         res = self.client.get(BOOKING_URL + 'public/')
 
@@ -155,10 +155,10 @@ class PrivateBookingApiTests(TestCase):
         self.assertEqual(len(res.data), 2)
 
     def test_retrieve_booking_public_list_by_date(self):
-        """Test retrieving a list of public bookings within date range and kit"""
+        """Test retrieving a list of public bookings within date range and equipment"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit1 = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
-        kit2 = Kit.objects.create(name='Kit 2', description='Spectrometry Labo', laboratory=laboratory)
+        equipment1 = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment2 = Equipment.objects.create(name='Equipment 2', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -167,7 +167,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit1)
+            equipment=equipment1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -176,7 +176,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit1)
+            equipment=equipment1)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -185,7 +185,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit1)
+            equipment=equipment1)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -194,7 +194,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit1)
+            equipment=equipment1)
 
         Booking.objects.create(start_date=datetime.datetime(2004, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2004, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -203,7 +203,7 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit2)
+            equipment=equipment2)
 
         Booking.objects.create(start_date=datetime.datetime(2008, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2008, 5, 16, 11, 0, tzinfo=pytz.UTC),
@@ -212,29 +212,29 @@ class PrivateBookingApiTests(TestCase):
             owner=self.user2,
             reserved_by=self.user,
             password='JKLNXNZUOQEJLKD',
-            kit=kit1)
+            equipment=equipment1)
 
-        res = self.client.get(BOOKING_URL + 'public/?start_date=2004-01-01T0:00:00Z&end_date=2005-01-01T0:00:00Z&kit=' + str(kit1.id))
+        res = self.client.get(BOOKING_URL + 'public/?start_date=2004-01-01T0:00:00Z&end_date=2005-01-01T0:00:00Z&equipment=' + str(equipment1.id))
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
 
     def test_create_booking_successful(self):
-        """Test create a new kit"""
+        """Test create a new equipment"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
 
         payload = {
-            'start_date': datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC), 
+            'start_date': datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             'end_date': datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             'available': False,
             'public': True,
             'access_key': uuid.uuid4(),
             'password': 'JKLNXNZUOQEJLKD',
             'owner': self.user.id,
-            'kit': str(kit.id)
+            'equipment': str(equipment.id)
         }
-        
+
         self.client.post(BOOKING_URL, payload)
 
         exists = Booking.objects.filter(
@@ -243,23 +243,23 @@ class PrivateBookingApiTests(TestCase):
             available=payload['available'],
             public=payload['public'],
             owner=payload['owner'],
-            kit=payload['kit']
+            equipment=payload['equipment']
         ).exists()
 
         self.assertTrue(exists)
 
-    def test_create_booking_without_kit(self):
-        """Test create a new booking without kit"""
+    def test_create_booking_without_equipment(self):
+        """Test create a new booking without equipment"""
         payload = {
-            'start_date': datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC), 
+            'start_date': datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             'end_date': datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             'available': False,
             'public': False,
             'owner': self.user.id,
             'reserved_by': None,
-            'kit': ''
+            'equipment': ''
         }
-        
+
         res = self.client.post(BOOKING_URL, payload=payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -268,11 +268,11 @@ class PrivateBookingApiTests(TestCase):
     def test_create_invalid_booking(self):
         """Test creating invalid booking fails"""
         payload = {
-            'start_date': '', 
+            'start_date': '',
             'end_date': '',
             'available': False,
             'user': '',
-            'kit': ''
+            'equipment': ''
         }
         res = self.client.post(BOOKING_URL, payload)
 
@@ -281,7 +281,7 @@ class PrivateBookingApiTests(TestCase):
     def test_retrieve_booking_detail(self):
         """Test retrieve a booking detail"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
         booking = Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
@@ -290,7 +290,7 @@ class PrivateBookingApiTests(TestCase):
             password='JKLNXNZUOQEJLKD',
             owner=self.user,
             reserved_by=self.user,
-            kit=kit)
+            equipment=equipment)
 
         res = self.client.get(BOOKING_URL + str(booking.id) + '/')
 
@@ -305,14 +305,14 @@ class PrivateBookingApiTests(TestCase):
             'password': booking.password,
             'owner': booking.owner.id,
             'reserved_by': booking.reserved_by.id,
-            'kit': booking.kit.id
+            'equipment': booking.equipment.id
         })
 
     def test_update_booking_detail_with_registering_user(self):
         """Test update a booking with registering user"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
-        
+        equipment = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
+
         booking = Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
@@ -321,7 +321,7 @@ class PrivateBookingApiTests(TestCase):
             password='JKLNXNZUOQEJLKD',
             owner=self.user,
             reserved_by=None,
-            kit=kit)
+            equipment=equipment)
 
         payload = {
             'available': True
@@ -340,37 +340,37 @@ class PrivateBookingApiTests(TestCase):
             'password': booking.password,
             'owner': booking.owner.id,
             'reserved_by': self.user.id,
-            'kit': booking.kit.id
+            'equipment': booking.equipment.id
         })
 
-    def test_retrieve_booking_by_kit_id(self):
-        """Test retrieve all bookings with kit id"""
+    def test_retrieve_booking_by_equipment_id(self):
+        """Test retrieve all bookings with equipment id"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit1 = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
-        kit2 = Kit.objects.create(name='Kit 2', description='Spectrometry Labo', laboratory=laboratory)
-        
-        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
-            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
-            owner=self.user,
-            reserved_by=None,
-            kit=kit1)
+        equipment1 = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment2 = Equipment.objects.create(name='Equipment 2', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             owner=self.user,
             reserved_by=None,
-            kit=kit1)
+            equipment=equipment1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             owner=self.user,
             reserved_by=None,
-            kit=kit2)
+            equipment=equipment1)
 
-        res = self.client.get(BOOKING_URL + '?kit=' + str(kit1.id))
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            owner=self.user,
+            reserved_by=None,
+            equipment=equipment2)
+
+        res = self.client.get(BOOKING_URL + '?equipment=' + str(equipment1.id))
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
@@ -378,43 +378,43 @@ class PrivateBookingApiTests(TestCase):
     def test_retrieve_booking_by_user(self):
         """Test retrieve booking by user"""
         laboratory = Laboratory.objects.create(name='Laboratory 1', description='Spectrometry')
-        kit1 = Kit.objects.create(name='Kit 1', description='Spectrometry Labo', laboratory=laboratory)
-        kit2 = Kit.objects.create(name='Kit 2', description='Spectrometry Labo', laboratory=laboratory)
-        
-        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
-            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
-            available=True,
-            owner=self.user,
-            reserved_by=self.user,
-            kit=kit1)
+        equipment1 = Equipment.objects.create(name='Equipment 1', description='Spectrometry Labo', laboratory=laboratory)
+        equipment2 = Equipment.objects.create(name='Equipment 2', description='Spectrometry Labo', laboratory=laboratory)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             owner=self.user,
             reserved_by=self.user,
-            kit=kit1)
+            equipment=equipment1)
+
+        Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
+            end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
+            available=True,
+            owner=self.user,
+            reserved_by=self.user,
+            equipment=equipment1)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             owner=self.user2,
             reserved_by=self.user2,
-            kit=kit2)
+            equipment=equipment2)
 
         Booking.objects.create(start_date=datetime.datetime(2003, 5, 16, 9, 0, tzinfo=pytz.UTC),
             end_date=datetime.datetime(2003, 5, 16, 11, 0, tzinfo=pytz.UTC),
             available=True,
             owner=self.user2,
             reserved_by=self.user2,
-            kit=kit2)
+            equipment=equipment2)
 
         res = self.client.get(BOOKING_URL + 'me/')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
 
-    def test_retrieve_booking_by_kit_id_unsuccessful(self):
-        """Test retrieve all bookings with a wrong kit id"""
-        res = self.client.get(BOOKING_URL + '?kit=abc')
+    def test_retrieve_booking_by_equipment_id_unsuccessful(self):
+        """Test retrieve all bookings with a wrong equipment id"""
+        res = self.client.get(BOOKING_URL + '?equipment=abc')
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)

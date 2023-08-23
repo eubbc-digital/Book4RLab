@@ -12,41 +12,41 @@ import {
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Kit } from 'src/app/interfaces/kit';
-import { KitService } from 'src/app/services/kit.service';
+import { Equipment } from 'src/app/interfaces/equipment';
+import { EquipmentService } from 'src/app/services/equipment.service';
 
 @Component({
-  selector: 'app-kit-dialog',
-  templateUrl: './kit-dialog.component.html',
-  styleUrls: ['./kit-dialog.component.css'],
+  selector: 'app-equipment-dialog',
+  templateUrl: './equipment-dialog.component.html',
+  styleUrls: ['./equipment-dialog.component.css'],
 })
-export class KitDialogComponent implements OnInit {
+export class EquipmentDialogComponent implements OnInit {
   title = 'Register equipment';
 
-  selectedKitId = 0;
+  selectedEquipmentId = 0;
   labId = 0;
 
-  kitForm = new UntypedFormGroup({
+  equipmentForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
     description: new UntypedFormControl('', [Validators.required]),
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public dialogData: Kit,
-    private dialogRef: MatDialogRef<KitDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public dialogData: Equipment,
+    private dialogRef: MatDialogRef<EquipmentDialogComponent>,
     private toastr: ToastrService,
-    private kitService: KitService
+    private equipmentService: EquipmentService
   ) {}
 
   ngOnInit(): void {
     this.labId = this.dialogData.laboratory!;
 
     if (this.dialogData.id) {
-      const kit = this.dialogData;
+      const equipment = this.dialogData;
 
-      this.selectedKitId = kit.id!;
-      this.kitForm.controls['name'].setValue(kit.name!);
-      this.kitForm.controls['description'].setValue(kit.description);
+      this.selectedEquipmentId = equipment.id!;
+      this.equipmentForm.controls['name'].setValue(equipment.name!);
+      this.equipmentForm.controls['description'].setValue(equipment.description);
 
       this.title = 'Update equipment';
     } else {
@@ -54,10 +54,10 @@ export class KitDialogComponent implements OnInit {
     }
   }
 
-  addKit(): void {
-    const kit = this.getKit();
+  addEquipment(): void {
+    const equipment = this.getEquipment();
 
-    this.kitService.addKit(kit).subscribe({
+    this.equipmentService.addEquipment(equipment).subscribe({
       next: (_) => {
         this.resetDialog('The equipment has been created successfully.');
       },
@@ -69,10 +69,10 @@ export class KitDialogComponent implements OnInit {
     });
   }
 
-  updateKit(): void {
-    const kit = this.getKit();
+  updateEquipment(): void {
+    const equipment = this.getEquipment();
 
-    this.kitService.updateKit(kit, this.selectedKitId).subscribe({
+    this.equipmentService.updateEquipment(equipment, this.selectedEquipmentId).subscribe({
       next: (_) => {
         this.resetDialog('The equipment has been updated successfully.');
       },
@@ -84,17 +84,17 @@ export class KitDialogComponent implements OnInit {
     });
   }
 
-  getKit(): Kit {
-    const kit = this.kitForm.value;
-    kit.laboratory = this.labId;
+  getEquipment(): Equipment {
+    const equipment = this.equipmentForm.value;
+    equipment.laboratory = this.labId;
 
-    return kit;
+    return equipment;
   }
 
   save(): void {
-    if (this.kitForm.valid) {
-      if (this.dialogData.id) this.updateKit();
-      else this.addKit();
+    if (this.equipmentForm.valid) {
+      if (this.dialogData.id) this.updateEquipment();
+      else this.addEquipment();
     } else {
       this.toastr.error('Please fill in correctly the data.');
     }
@@ -102,7 +102,7 @@ export class KitDialogComponent implements OnInit {
 
   resetDialog(msg?: string) {
     if (msg) this.toastr.success(msg);
-    this.kitForm.reset();
+    this.equipmentForm.reset();
     this.dialogRef.close(msg);
   }
 }

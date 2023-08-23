@@ -28,7 +28,7 @@ export class TimeframeDialogComponent implements OnInit {
   title = 'Register timeframe';
 
   selectedTimeframeId = 0;
-  kitId = 0;
+  equipmentId = 0;
 
   timeframeForm = new UntypedFormGroup({
     dates: new UntypedFormGroup({
@@ -56,7 +56,7 @@ export class TimeframeDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.kitId = this.dialogData.kit!;
+    this.equipmentId = this.dialogData.equipment!;
 
     if (this.dialogData.id) {
       const timeframe = this.dialogData;
@@ -115,7 +115,7 @@ export class TimeframeDialogComponent implements OnInit {
 
   updateTimeframe(): void {
     let newTimeframe = this.timeframeForm.value;
-    newTimeframe.kit = this.kitId;
+    newTimeframe.equipment = this.equipmentId;
 
     this.timeframeService
       .updateTimeframe(newTimeframe, this.selectedTimeframeId)
@@ -148,7 +148,7 @@ export class TimeframeDialogComponent implements OnInit {
     timeframe.start_hour = this.convertHourToUTC(this.startHourControl?.value);
     timeframe.end_hour = this.convertHourToUTC(this.endHourControl?.value);
     timeframe.slot_duration = this.timeframeForm.get('slotDuration')?.value;
-    timeframe.kit = this.kitId;
+    timeframe.equipment = this.equipmentId;
 
     return timeframe;
   }

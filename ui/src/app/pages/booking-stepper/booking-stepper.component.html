@@ -62,23 +62,23 @@
             <mat-form-field
               appearance="fill"
               class="selector"
-              *ngIf="hasEmptyKits(); else kitsSelector"
+              *ngIf="hasEmptyEquipment(); else equipmentsSelector"
             >
               <mat-label>No equipment available</mat-label>
               <input matInput disabled />
             </mat-form-field>
 
-            <ng-template #kitsSelector>
+            <ng-template #equipmentsSelector>
               <mat-form-field appearance="fill" class="selector">
                 <mat-label>Equipment</mat-label>
                 <mat-select
-                  formControlName="selectedKit"
+                  formControlName="selectedEquipment"
                   (selectionChange)="
-                    getHoursByKitIdAndDate($event.value.id, selectedDate)
+                    getHoursByEquipmentIdAndDate($event.value.id, selectedDate)
                   "
                 >
-                  <mat-option *ngFor="let kit of kits" [value]="kit">
-                    {{ kit.name }}
+                  <mat-option *ngFor="let equipment of equipments" [value]="equipment">
+                    {{ equipment.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -110,7 +110,7 @@
       <ng-template matStepLabel>Confirm reservation</ng-template>
       <app-confirmation-form
         [bookingId]="bookingId"
-        [selectedKit]="selectedKit"
+        [selectedEquipment]="selectedEquipment"
         [selectedLab]="selectedLab"
         (reservationTypeEvent)="updateReservationType($event)"
       ></app-confirmation-form>

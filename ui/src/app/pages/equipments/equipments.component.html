@@ -5,15 +5,15 @@
     <h3><strong>Laboratory:</strong> {{ selectedLab.name }}</h3>
   </div>
   <div class="mat-elevation-z2 table">
-    <mat-card class="table-header mat-elevation-z8" id="kits-header">
+    <mat-card class="table-header mat-elevation-z8" id="equipments-header">
       <mat-card-title-group>
         <mat-card-title class="table-title">{{ tableTitle }}</mat-card-title>
         <div>
           <button
             mat-fab
-            id="kits-header-btn"
+            id="equipments-header-btn"
             aria-label="Add equipment button"
-            (click)="openKitDialog()"
+            (click)="openEquipmentDialog()"
           >
             <mat-icon>add</mat-icon>
           </button>
@@ -60,7 +60,7 @@
             <button
               mat-icon-button
               class="action-button"
-              (click)="updateKit(element)"
+              (click)="updateEquipment(element)"
             >
               <mat-icon>edit</mat-icon>
             </button>

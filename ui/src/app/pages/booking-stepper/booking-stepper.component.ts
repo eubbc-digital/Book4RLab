@@ -17,13 +17,13 @@ import * as moment from 'moment';
 import { ComponentCanDeactivate } from '../../services/guards/pending-changes.guard';
 
 import { LabService } from 'src/app/services/lab.service';
-import { KitService } from 'src/app/services/kit.service';
+import { EquipmentService } from 'src/app/services/equipment.service';
 import { ToastrService } from 'ngx-toastr';
 import { BookingService } from 'src/app/services/booking.service';
 import { UserService } from 'src/app/services/user.service';
 
 import { Lab } from 'src/app/interfaces/lab';
-import { Kit } from 'src/app/interfaces/kit';
+import { Equipment } from 'src/app/interfaces/equipment';
 import { Booking } from 'src/app/interfaces/booking';
 import { AvailableDate } from 'src/app/interfaces/available-date';
 
@@ -65,7 +65,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
   stepperOrientation: Observable<StepperOrientation>;
 
-  kits: Kit[] = [];
+  equipments: Equipment[] = [];
   availableHoursBySelectedDate: AvailableDate[] = [];
   availableDates: AvailableDate[] = [];
 
@@ -108,7 +108,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   constructor(
     private formBuilder: FormBuilder,
     private labService: LabService,
-    private kitService: KitService,
+    private equipmentService: EquipmentService,
     private bookingService: BookingService,
     private toastService: ToastrService,
     private userService: UserService,
@@ -130,7 +130,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
       this.labService.getLabById(id).subscribe((lab) => {
         this.reservationFormGroup.controls['selectedLab'].setValue(lab);
-        this.getKitsByLabId(lab.id!);
+        this.getEquipmentsByLabId(lab.id!);
       });
     });
   }
@@ -181,14 +181,14 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   setFormValidation(): void {
     this.reservationFormGroup = this.formBuilder.group({
       selectedLab: [<Lab>{}, Validators.required],
-      selectedKit: ['', Validators.required],
+      selectedEquipment: ['', Validators.required],
       selectedHour: ['', Validators.required],
       selectedDate: [new Date(), Validators.required],
     });
   }
 
-  get selectedKit(): Kit {
-    return this.reservationFormGroup.controls['selectedKit'].value;
+  get selectedEquipment(): Equipment {
+    return this.reservationFormGroup.controls['selectedEquipment'].value;
   }
 
   get selectedLab(): Lab {
@@ -199,26 +199,26 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     return this.reservationFormGroup.controls['selectedDate'].value;
   }
 
-  getKitsByLabId(labId: number): void {
-    this.kitService.getKitsByLabId(labId).subscribe((kits) => {
-      this.kits = kits;
+  getEquipmentsByLabId(labId: number): void {
+    this.equipmentService.getEquipmentsByLabId(labId).subscribe((equipments) => {
+      this.equipments = equipments;
 
-      if (this.kits.length > 0) this.setDataFromFirstAvailableKit();
+      if (this.equipments.length > 0) this.setDataFromFirstAvailableEquipment();
       else this.showCalendar = true;
     });
   }
 
-  setDataFromFirstAvailableKit(): void {
-    const selectedKit = this.kits[0];
+  setDataFromFirstAvailableEquipment(): void {
+    const selectedEquipment = this.equipments[0];
 
-    this.reservationFormGroup.controls['selectedKit'].setValue(selectedKit);
+    this.reservationFormGroup.controls['selectedEquipment'].setValue(selectedEquipment);
 
     this.dateChanged = false;
 
-    this.getHoursByKitIdAndDate(selectedKit.id!, this.selectedDate);
+    this.getHoursByEquipmentIdAndDate(selectedEquipment.id!, this.selectedDate);
   }
 
-  getHoursByKitIdAndDate(kitId: number, selectedDate: Date): void {
+  getHoursByEquipmentIdAndDate(equipmentId: number, selectedDate: Date): void {
     if (!this.dateChanged) this.showCalendar = false;
 
     this.showSpinner = true;
@@ -226,7 +226,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.availableDates = [];
 
     this.bookingService
-      .getBookingListByKitId(kitId)
+      .getBookingListByEquipmentId(equipmentId)
       .subscribe((bookingList) => {
         bookingList.forEach((booking) => {
           if (
@@ -293,8 +293,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
   onSelectDate(event: any): void {
     this.dateChanged = true;
     this.reservationFormGroup.controls['selectedDate'].setValue(event);
-    let kit = this.reservationFormGroup.controls['selectedKit'].value;
-    if (kit) this.getHoursByKitIdAndDate(kit.id, event);
+    let equipment = this.reservationFormGroup.controls['selectedEquipment'].value;
+    if (equipment) this.getHoursByEquipmentIdAndDate(equipment.id, event);
   }
 
   followNextStep() {
@@ -310,7 +310,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
           'This booking is not available. Please choose another.'
         );
 
-        this.getHoursByKitIdAndDate(this.selectedKit.id!, this.selectedDate);
+        this.getHoursByEquipmentIdAndDate(this.selectedEquipment.id!, this.selectedDate);
         this.bookingId = 0;
       }
     });
@@ -349,8 +349,8 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
                 'This booking is not available. Please choose another.'
               );
 
-              this.getHoursByKitIdAndDate(
-                this.selectedKit.id!,
+              this.getHoursByEquipmentIdAndDate(
+                this.selectedEquipment.id!,
                 this.selectedDate
               );
 
@@ -430,7 +430,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
       this.resetBookingId();
     }
 
-    this.getKitsByLabId(this.selectedLab.id!);
+    this.getEquipmentsByLabId(this.selectedLab.id!);
   }
 
   onStepChange(event: any) {
@@ -446,7 +446,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.reservationFormGroup.controls['selectedHour'].reset();
   }
 
-  hasEmptyKits(): boolean {
-    return this.kits.length === 0;
+  hasEmptyEquipment(): boolean {
+    return this.equipments.length === 0;
   }
 }

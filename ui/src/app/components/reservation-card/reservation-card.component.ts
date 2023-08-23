@@ -8,9 +8,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { Booking } from 'src/app/interfaces/booking';
-import { Kit } from 'src/app/interfaces/kit';
+import { Equipment } from 'src/app/interfaces/equipment';
 import { Lab } from 'src/app/interfaces/lab';
-import { KitService } from 'src/app/services/kit.service';
+import { EquipmentService } from 'src/app/services/equipment.service';
 import { LabService } from 'src/app/services/lab.service';
 import { BookingService } from 'src/app/services/booking.service';
 import { ToastrService } from 'ngx-toastr';
@@ -28,7 +28,7 @@ export class ReservationCardComponent implements OnInit {
 
   @Output() cancelReservationEvent = new EventEmitter<boolean>();
 
-  kit!: Kit;
+  equipment!: Equipment;
   lab!: Lab;
 
   dataReady: boolean = false;
@@ -39,7 +39,7 @@ export class ReservationCardComponent implements OnInit {
     'Are you sure you want to cancel your reservation?';
 
   constructor(
-    private kitService: KitService,
+    private equipmentService: EquipmentService,
     private labService: LabService,
     private bookingService: BookingService,
     public dialog: MatDialog,
@@ -47,7 +47,7 @@ export class ReservationCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.reservation !== null) this.getKit();
+    if (this.reservation !== null) this.getEquipment();
   }
 
   getPrivateAccessUrl(): string {
@@ -58,10 +58,10 @@ export class ReservationCardComponent implements OnInit {
     return `${this.lab.url}?${config.urlParams.accessKey}=${this.reservation.access_key}`;
   }
 
-  getKit(): void {
-    this.kitService.getKitById(this.reservation.kit!).subscribe((kit) => {
-      this.kit = kit;
-      this.getLab(this.kit.laboratory!);
+  getEquipment(): void {
+    this.equipmentService.getEquipmentById(this.reservation.equipment!).subscribe((equipment) => {
+      this.equipment = equipment;
+      this.getLab(this.equipment.laboratory!);
     });
   }
 

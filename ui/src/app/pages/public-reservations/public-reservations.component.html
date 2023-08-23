@@ -10,7 +10,7 @@
           <mat-label>Laboratories</mat-label>
           <mat-select
             formControlName="selectedLab"
-            (selectionChange)="getKitsByLabId($event.value.id)"
+            (selectionChange)="getEquipmentsByLabId($event.value.id)"
             required
           >
             <mat-option *ngFor="let lab of labs" [value]="lab">
@@ -22,9 +22,9 @@
       <div class="cols-3">
         <mat-form-field class="input-field" appearance="fill">
           <mat-label>Equipment</mat-label>
-          <mat-select formControlName="selectedKit" required>
-            <mat-option *ngFor="let kit of kits" [value]="kit">
-              {{ kit.name }}
+          <mat-select formControlName="selectedEquipment" required>
+            <mat-option *ngFor="let equipment of equipments" [value]="equipment">
+              {{ equipment.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
