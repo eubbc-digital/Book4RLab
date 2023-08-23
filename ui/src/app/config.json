@@ -1,5 +1,5 @@
 {
-  "version": "1.0.8",
+  "version": "1.0.9",
   "api": {
     "baseUrl": "https://eubbc-digital.upb.edu/booking/api/",
     "users": {
