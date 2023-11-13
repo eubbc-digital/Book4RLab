@@ -26,7 +26,6 @@ class Booking(models.Model):
     class Meta:
         ordering = ['start_date']
 
-
 class Equipment(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
@@ -37,6 +36,8 @@ class Equipment(models.Model):
     enabled = models.BooleanField(default=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='equipment_owner', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.name} ({self.laboratory.name}) ({self.id})"
 
 class Laboratory(models.Model):
 
@@ -53,6 +54,8 @@ class Laboratory(models.Model):
     visible = models.BooleanField(default=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='laboratory_owner', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.name} (E={self.enabled}, V={self.visible}) ({self.id})"
 
 class TimeFrame(models.Model):
 
@@ -66,4 +69,3 @@ class TimeFrame(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='timeframe_owner', on_delete=models.CASCADE)
-

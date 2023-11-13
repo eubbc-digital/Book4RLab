@@ -12,6 +12,7 @@ from core import models
 
 
 class UserAdmin(BaseUserAdmin):
+    search_fields = ('email', 'name', 'last_name')
     ordering = ['id']
     list_display = ['id', 'email', 'name', 'last_name']
     fieldsets = (
