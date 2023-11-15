@@ -13,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LabService } from 'src/app/services/lab.service';
 
@@ -132,6 +133,10 @@ export class LabDialogComponent implements OnInit {
       });
   }
 
+  createLabDescription(){
+    this.closeDialog();
+  }
+
   save(): void {
     this.cleanDescription();
 
@@ -153,6 +158,10 @@ export class LabDialogComponent implements OnInit {
     if (msg) this.toastr.success(msg);
     this.labForm.reset();
     this.dialogRef.close(msg);
+  }
+
+  closeDialog(msg?: string): void {
+    this.dialogRef.close("lab-description");
   }
 
   onFileChange(event: any): void {

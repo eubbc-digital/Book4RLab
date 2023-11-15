@@ -1,0 +1,16 @@
+
+<mat-label>Agrege nuevo componente:</mat-label>
+
+<mat-select (change)="typeSelect($event)">
+    <mat-option *ngFor="let type of types" [value]="type.code">
+        {{type.name}}
+    </mat-option>
+</mat-select>
+
+<div *ngFor="let component of components">
+    <container-element [ngSwitch]="component.code">
+        <h1 *ngSwitchCase="'main-title'">{{component.content}}</h1>
+        <h3 *ngSwitchCase="'title-1'">{{component.content}}</h3>
+        <span *ngSwitchCase="'text'">{{component.content}}</span>
+      </container-element>
+</div>

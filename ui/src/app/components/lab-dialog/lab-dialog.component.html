@@ -88,7 +88,9 @@
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+
+<mat-dialog-actions align="end" >
+  <button mat-raised-button color="primary" (click)="createLabDescription()">More..</button>
   <button mat-raised-button color="warn" (click)="resetDialog()">Cancel</button>
   <button mat-raised-button cdkFocusInitial color="primary" (click)="save()">
     Save
