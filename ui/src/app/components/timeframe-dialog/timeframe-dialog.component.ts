@@ -170,7 +170,7 @@ export class TimeframeDialogComponent implements OnInit {
       localTime = new Date(
         date.toLocaleDateString('en-US', { hour12: false }) + ' ' + hour
       );
-    else localTime = new Date(date.toLocaleDateString() + ' ' + hour);
+    else localTime = new Date(date.toLocaleDateString('en-US', { hour12: true}) + ' ' + hour);
 
     const utcTime = new Date(localTime.getTime() + timezoneOffset);
     
