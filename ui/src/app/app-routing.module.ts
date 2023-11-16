@@ -27,7 +27,10 @@ const routes: Routes = [
     path: 'labs',
     component: LabGridComponent,
   },
-  { path: 'lab-description', component: LabDescriptionComponent },
+  { path: 'lab-description', 
+   component: LabDescriptionComponent,
+   canActivate: [LabsGuard],
+   },
   {
     path: 'booking/:id',
     component: BookingStepperComponent,

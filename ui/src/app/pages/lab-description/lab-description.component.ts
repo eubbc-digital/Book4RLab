@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LabDescriptionComponent implements OnInit {
   constructor() {}
+  
+  valueTypeChosen = ""
 
   components = [
     {
@@ -30,7 +32,17 @@ export class LabDescriptionComponent implements OnInit {
   ];
   ngOnInit(): void {}
 
-  typeSelect(event:any){
-    console.log(event);
+  addComponent(){
+    console.log(this.valueTypeChosen);
+    var value = this.valueTypeChosen;
+    this.components.push({code: value , content:""})
+
+  }
+  saveComponents(){
+    console.log(this.components);
+  }
+  deleteComponent(index:number){
+    this.components.splice(index,1);
+    
   }
 }

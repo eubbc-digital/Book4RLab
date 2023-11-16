@@ -27,11 +27,16 @@ export class LabGridComponent implements OnInit {
 
   ngOnInit(): void {
     this.publicLabsService.getPublicLabs().subscribe((labs) => {
+      console.log(labs);
       this.labs = labs;
     });
   }
 
   selectLab(lab: Lab): void {
     this.router.navigate(['/booking', lab.id]);
+  }
+
+  moreInfoLab(): void {
+    this.router.navigate(['/lab-description']);
   }
 }

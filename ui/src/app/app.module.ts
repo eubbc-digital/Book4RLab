@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QrCodeModule } from 'ng-qrcode';
-import { CountdownModule } from 'ngx-countdown';
+
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgHttpLoaderModule } from 'ng-http-loader';
@@ -58,6 +58,7 @@ import { FilterPipe } from './pipes/lab-filter.pipe';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { LabDescriptionComponent } from './pages/lab-description/lab-description.component';
+import { CountdownModule } from 'ngx-countdown';
 
 @NgModule({
   declarations: [
