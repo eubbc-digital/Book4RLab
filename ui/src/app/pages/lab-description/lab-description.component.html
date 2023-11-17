@@ -1,21 +1,6 @@
-
 <app-navbar></app-navbar>
-<div class="page-content">
-    
-    <mat-label>Agrege nuevo componente:</mat-label>
-    <mat-select [(ngModel)]="valueTypeChosen">
-        <mat-option *ngFor="let type of types" [value]="type.code">
-            {{type.name}}
-        </mat-option>
-    </mat-select>
-    <button
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="addComponent()"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
+<mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
+  <div class="page-content">
     
     <!-- FOR SEEING THE component like a student, add later -->
     <!-- <div *ngFor="let component of components;index as i">
@@ -34,34 +19,101 @@
         </button>
     </div> -->
 
-        
-    <div *ngFor="let component of components;index as i">
-        <container-element [ngSwitch]="component.code">
+    <div *ngFor="let component of components; index as i">
+      <div class="row">
+        <div class="col-8">
+          <container-element [ngSwitch]="component.code">
             
-            <input *ngSwitchCase="'main-title'" type="text" value="{{component.content}}">
-            <input *ngSwitchCase="'title-1'" type="text" value="{{component.content}}">
-            <textarea *ngSwitchCase="'text'" value="{{component.content}}"></textarea>
-            <input *ngSwitchCase="'url'" type="url" value="{{component.content}}">
-            <input *ngSwitchCase="'image'" type="file" value="{{component.content}}">
-           
+              
+              <input
+              *ngSwitchCase="'main-title'"
+              type="text"
+              [(ngModel)]="component.content"
+            />
+            
+              
+              <input
+              *ngSwitchCase="'title-1'"
+              type="text"
+              [(ngModel)]="component.content"
+            />
+            
+            
+              <input
+              *ngSwitchCase="'title-2'"
+              type="text"
+              [(ngModel)]="component.content"
+            />
+            
+              <textarea
+              *ngSwitchCase="'text'"
+              [(ngModel)]="component.content"
+            ></textarea>
+            
+              <input
+              *ngSwitchCase="'url'"
+              type="url"
+              [(ngModel)]="component.content"
+            />
+            
+            
+            <div *ngSwitchCase="'image'">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onUploadFile($event, i)"
+              />
+              <img [src]="component.content" />
+            </div>
+            <div *ngSwitchCase="'video'" class="video-container">
+              <input
+                type="file"
+                accept="video/*"
+                (change)="onUploadFile($event, i)"
+              />
+
+              <vg-player>
+                <video
+                  [vgMedia]="$any(media)"
+                  #media
+                  id="singleVideo"
+                  preload="auto"
+                  controls
+                  [src]="component.content"
+                >
+                </video>
+              </vg-player>
+            </div>
           </container-element>
+        </div>
+        <div class="col-2">
+          <div class="dropdown">
+            <button class="dropbtn"><mat-icon>add</mat-icon></button>
+            <div class="dropdown-content">
+              <a *ngFor="let type of types" (click)="addComponent(type.code,i)">{{
+                type.name
+              }}</a>
+            </div>
+          </div>
           <button
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="deleteComponent(i)"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="deleteComponent(i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
 
     <button
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="saveComponents()"
-        >
-          <mat-icon>save</mat-icon>
-        </button>
-
-</div>
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      (click)="saveComponents()"
+    >
+      Save Description <mat-icon>save</mat-icon>
+    </button>
+  </div>
+</mat-card>

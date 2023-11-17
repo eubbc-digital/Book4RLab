@@ -60,6 +60,11 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
 import { LabDescriptionComponent } from './pages/lab-description/lab-description.component';
 import { CountdownModule } from 'ngx-countdown';
 
+import {VgCoreModule} from '@videogular/ngx-videogular/core';
+import {VgControlsModule} from '@videogular/ngx-videogular/controls';
+import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
+import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -110,6 +115,10 @@ import { CountdownModule } from 'ngx-countdown';
     }),
     HttpClientModule,
     NgHttpLoaderModule.forRoot(),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   providers: [
     CookieService,
