@@ -9,6 +9,7 @@ from booking.permissions import IsOwnerOrReadOnly
 from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -237,6 +238,18 @@ class PublicLaboratoryList(generics.ListAPIView):
         queryset = Laboratory.objects.filter(enabled=True)
 
         return queryset.filter(visible=True)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        data = serializer.data
+        for lab_data in data:
+            lab_id = lab_data['id']
+            lab = Laboratory.objects.get(id=lab_id)
+            lab_data['is_timeframe_available_now'] = lab.is_timeframe_available_now()
+
+        return Response(data)
 
 
 class LaboratoryDetail(generics.RetrieveUpdateAPIView):
