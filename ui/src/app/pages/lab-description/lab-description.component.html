@@ -1,119 +1,173 @@
 <app-navbar></app-navbar>
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
   <div class="page-content">
-    
-    <!-- FOR SEEING THE component like a student, add later -->
-    <!-- <div *ngFor="let component of components;index as i">
-        <container-element [ngSwitch]="component.code">
-            <h1 *ngSwitchCase="'main-title'">{{component.content}}</h1>
-            <h3 *ngSwitchCase="'title-1'">{{component.content}}</h3>
-            <span *ngSwitchCase="'text'">{{component.content}}</span>
-          </container-element>
-          <button
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="deleteComponent()"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
+    <!-- <button
+            mat-button
+            color="primary"
+            class="card-button"
+            (click)="selectLab(lab)"
+          >
+            BOOK
+    </button>
+    <h3> <strong>Card Description</strong>
+      
+    </h3>
+    <div class="basic-info">
+      
+        <img
+        mat-card-image
+        [src]="lab.image ?? defaultLabImg"
+        alt="Remote lab"
+        class="remote-lab-img"
+      />
+        <p>
+          <strong>Name: </strong> {{ lab.name }}
+          <br />
+          <strong>University: </strong> {{ lab.university }}
+          <br />
+          <strong>Course: </strong> {{ lab.course }}
+          <br />
+          <strong>Instructor: </strong> {{ lab.instructor }}
+          <br />
+          <strong>Description:</strong>
+          {{ lab.description }}
+        </p>
+
     </div> -->
 
-    <div *ngFor="let component of components; index as i">
-      <div class="row">
-        <div class="col-8">
-          <container-element [ngSwitch]="component.code">
-            
-              
-              <input
-              *ngSwitchCase="'main-title'"
-              type="text"
-              [(ngModel)]="component.content"
-            />
-            
-              
-              <input
-              *ngSwitchCase="'title-1'"
-              type="text"
-              [(ngModel)]="component.content"
-            />
-            
-            
-              <input
-              *ngSwitchCase="'title-2'"
-              type="text"
-              [(ngModel)]="component.content"
-            />
-            
-              <textarea
-              *ngSwitchCase="'text'"
-              [(ngModel)]="component.content"
-            ></textarea>
-            
-              <input
-              *ngSwitchCase="'url'"
-              type="url"
-              [(ngModel)]="component.content"
-            />
-            
-            
-            <div *ngSwitchCase="'image'">
-              <input
-                type="file"
-                accept="image/*"
-                (change)="onUploadFile($event, i)"
-              />
-              <img [src]="component.content" />
-            </div>
-            <div *ngSwitchCase="'video'" class="video-container">
-              <input
-                type="file"
-                accept="video/*"
-                (change)="onUploadFile($event, i)"
-              />
-
-              <vg-player>
-                <video
-                  [vgMedia]="$any(media)"
-                  #media
-                  id="singleVideo"
-                  preload="auto"
-                  controls
-                  [src]="component.content"
-                >
-                </video>
-              </vg-player>
-            </div>
-          </container-element>
-        </div>
-        <div class="col-2">
-          <div class="dropdown">
-            <button class="dropbtn"><mat-icon>add</mat-icon></button>
-            <div class="dropdown-content">
-              <a *ngFor="let type of types" (click)="addComponent(type.code,i)">{{
-                type.name
-              }}</a>
-            </div>
+    <form ngNoForm>
+      <div *ngFor="let component of components; index as i">
+        <div class="row">
+          <div class="col-1">
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="goUp(i)"
+            >
+              <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="goDown(i)"
+            >
+              <mat-icon>arrow_downward</mat-icon>
+            </button>
           </div>
-          <button
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            (click)="deleteComponent(i)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
+          <div class="col-7">
+            <container-element [ngSwitch]="component.code">
+              <mat-form-field
+                *ngSwitchCase="'main-title'"
+                appearance="fill"
+                class="input-field"
+              >
+                <mat-label>{{ getType(component.code) }}</mat-label>
+                <input matInput type="text" [(ngModel)]="component.content" />
+              </mat-form-field>
+
+              <mat-form-field
+                *ngSwitchCase="'title-1'"
+                appearance="fill"
+                class="input-field"
+              >
+                <mat-label>{{ getType(component.code) }}</mat-label>
+                <input matInput type="text" [(ngModel)]="component.content" />
+              </mat-form-field>
+
+              <mat-form-field
+                *ngSwitchCase="'title-2'"
+                appearance="fill"
+                class="input-field"
+              >
+                <mat-label>{{ getType(component.code) }}</mat-label>
+                <input matInput type="text" [(ngModel)]="component.content" />
+              </mat-form-field>
+
+              <mat-form-field
+                *ngSwitchCase="'text'"
+                appearance="fill"
+                class="input-field"
+              >
+                <mat-label>{{ getType(component.code) }}</mat-label>
+                <textarea
+                  matInput
+                  *ngSwitchCase="'text'"
+                  [(ngModel)]="component.content"
+                ></textarea>
+              </mat-form-field>
+
+              <mat-form-field
+                *ngSwitchCase="'url'"
+                appearance="fill"
+                class="input-field"
+              >
+                <mat-label>{{ getType(component.code) }}</mat-label>
+                <input matInput type="text" [(ngModel)]="component.content" />
+              </mat-form-field>
+
+              <div *ngSwitchCase="'image'">
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onUploadFile($event, i)"
+                />
+                <img [src]="component.content" />
+              </div>
+              <div *ngSwitchCase="'video'" class="video-container">
+                <input
+                  type="file"
+                  accept="video/*"
+                  (change)="onUploadFile($event, i)"
+                />
+
+                <vg-player>
+                  <video
+                    [vgMedia]="$any(media)"
+                    #media
+                    id="singleVideo"
+                    preload="auto"
+                    controls
+                    [src]="component.content"
+                  ></video>
+                </vg-player>
+              </div>
+            </container-element>
+          </div>
+          <div class="col-2">
+            <div class="dropdown">
+              <button class="dropbtn" mat-icon-button aria-label="Clear">
+                <mat-icon>add</mat-icon>
+              </button>
+              <div class="dropdown-content">
+                <span
+                  *ngFor="let type of types"
+                  (click)="addComponent(type.code, i)"
+                  >{{ type.name }}</span
+                >
+              </div>
+            </div>
+            <button
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="deleteComponent(i)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <button
-      matSuffix
-      mat-icon-button
-      aria-label="Clear"
-      (click)="saveComponents()"
-    >
-      Save Description <mat-icon>save</mat-icon>
-    </button>
+      <button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="saveComponents()"
+      >
+        Save Description <mat-icon>save</mat-icon>
+      </button>
+    </form>
   </div>
 </mat-card>

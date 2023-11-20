@@ -55,6 +55,25 @@
           </p>
         </mat-card-content>
         <mat-card-actions align="end">
+          <div *ngIf="lab.is_timeframe_available_now == true">
+            <span
+              
+            style="color: green; font-weight: bold;"
+          >
+            AVAILABLE
+        </span>
+          </div>
+
+          <div *ngIf="lab.is_timeframe_available_now == false">
+              <span
+              
+              style="color: orange; font-weight: bold;"
+            >
+              NOT AVAILABLE
+          </span>
+
+          </div>
+        
           <button
             mat-button
             color="primary"
