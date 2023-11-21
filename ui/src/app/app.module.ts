@@ -64,6 +64,7 @@ import {VgCoreModule} from '@videogular/ngx-videogular/core';
 import {VgControlsModule} from '@videogular/ngx-videogular/controls';
 import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
 import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+import { LabStructureComponent } from './pages/lab-structure/lab-structure.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
     ProfileComponent,
     ProfileFormComponent,
     LabDescriptionComponent,
+    LabStructureComponent,
   ],
   imports: [
     BrowserModule,

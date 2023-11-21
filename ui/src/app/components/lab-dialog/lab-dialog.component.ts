@@ -4,7 +4,7 @@
 * MIT License - See LICENSE file in the root directory
 */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -15,7 +15,9 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-lab-dialog',
@@ -23,12 +25,16 @@ import { LabService } from 'src/app/services/lab.service';
   styleUrls: ['./lab-dialog.component.css'],
 })
 export class LabDialogComponent implements OnInit {
+  @ViewChild(LabDescriptionComponent) labDescription! : LabDescriptionComponent;
+
   title = 'Register laboratory';
   imageName = '';
 
   selectedLabId = 0;
 
   submitted = false;
+
+  lab!: any;
 
   labForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
@@ -88,6 +94,7 @@ export class LabDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
+      this.lab = lab;
 
       this.selectedLabId = lab.id;
       this.labForm.controls['name'].setValue(lab.name!);
@@ -133,13 +140,14 @@ export class LabDialogComponent implements OnInit {
       });
   }
 
-  createLabDescription(){
-    this.closeDialog();
-  }
-
-  save(): void {
+   async save() {
     this.cleanDescription();
+    var descriptionParams = this.getDescriptionParams(this.labDescription.components);
+    console.log(descriptionParams);
 
+    var response = await lastValueFrom(this.labService.postLabContent(descriptionParams));
+    console.log(response);
+    
     if (this.labForm.valid) {
       if (!this.dialogData) this.addLab();
       else this.updateLab();
@@ -147,6 +155,16 @@ export class LabDialogComponent implements OnInit {
       this.toastr.error('Please fill in correctly the data.');
       this.displayFormErrors();
     }
+  }
+
+  getDescriptionParams(descriptionArray:any[]){
+    var params : any[] = [];
+    for(var i = 0; i < descriptionArray.length ; i++){
+      descriptionArray[i].laboratory = this.selectedLabId;
+      descriptionArray[i].order = i;
+      params.push(descriptionArray[i]);
+    }
+    return params;
   }
 
   cleanDescription(): void {

@@ -1,8 +1,8 @@
 /*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -36,7 +36,7 @@ export class LabGridComponent implements OnInit {
     this.router.navigate(['/booking', lab.id]);
   }
 
-  moreInfoLab(): void {
-    this.router.navigate(['/lab-description']);
+  moreInfoLab(lab: Lab): void {
+    this.router.navigate(['/lab-structure', { id: lab.id }]);
   }
 }

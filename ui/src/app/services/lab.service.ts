@@ -64,7 +64,14 @@ export class LabService {
 
     return this.http.patch<Lab>(`${this.url}${id}/`, formData);
   }
-
+  getLabContent(){
+    var url: string = `${config.api.baseUrl}${config.api.content}`;
+    return this.http.get<any>(url);
+  }
+  postLabContent(params:any){
+    var url: string = `${config.api.baseUrl}${config.api.content}`;
+    return this.http.post<any>(url,params);
+  }
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };
     return this.http.patch<Lab>(`${this.url}${lab.id}/`, deletedLab);

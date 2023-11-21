@@ -15,5 +15,5 @@ export interface Lab {
   url?: string;
   enabled?: boolean;
   visible?: boolean;
-  is_timeframe_available_now? : boolean;
+  is_available_now? : boolean;
 }

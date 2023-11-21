@@ -1,0 +1,70 @@
+<app-navbar></app-navbar>
+<mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
+  <div class="page-content">
+    <div class="btn-container">
+      <button
+      mat-button
+      color="primary"
+      class="card-button"
+      (click)="selectLab(lab)"
+    >
+      BOOK >>
+      </button>
+    </div>
+    <div *ngIf="lab">
+      <h3> <strong>Card Description</strong></h3>
+      <div class="basic-info">
+        <div class="basic-image">
+          <img
+          [src]="lab.image ?? defaultLabImg"
+          alt="Remote lab"
+          class="remote-lab-img"
+        />
+        </div>
+        
+          <p>
+            <strong>Name: </strong> {{ lab.name }}
+            <br />
+            <strong>University: </strong> {{ lab.university }}
+            <br />
+            <strong>Course: </strong> {{ lab.course }}
+            <br />
+            <strong>Instructor: </strong> {{ lab.instructor }}
+            <br />
+            <strong>Description:</strong>
+            {{ lab.description }}
+          </p>
+  
+      </div>
+
+  <h3> <strong>General Description</strong></h3>
+    <div *ngIf="myLabContent.length == 0">
+      <span>There is no general description for this lab.</span>
+    </div>
+    <div *ngIf="myLabContent.length > 0">
+      <div *ngFor="let content of myLabContent">
+        
+        <span *ngIf="content['text']">{{ content['text'] }}</span>
+        <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
+        <h3 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h3>
+        <a *ngIf="content['link']" [href]="content['link']"></a>
+        <img *ngIf="content['image']" [src]="content['image']" />
+        <vg-player *ngIf="content['video']">
+          <video
+            [vgMedia]="$any(media)"
+            #media
+            id="singleVideo"
+            preload="auto"
+            controls
+            [src]="content['video']"
+          ></video>
+        </vg-player>
+      </div>
+      
+    </div>
+    </div>
+   
+        
+    
+  </div>
+</mat-card>

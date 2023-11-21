@@ -1,6 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 import { Lab } from 'src/app/interfaces/lab';
 import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
+import { LabService } from 'src/app/services/lab.service';
+import { compilePipeFromMetadata } from '@angular/compiler';
+import { FilterPipe } from '../../pipes/lab-filter.pipe';
 
 @Component({
   selector: 'app-lab-description',
@@ -8,74 +12,78 @@ import { Router } from '@angular/router';
   styleUrls: ['./lab-description.component.css'],
 })
 export class LabDescriptionComponent implements OnInit {
- 
-  @Input() lab!: Lab;
+  @Input() labId!: any;
 
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
   cols!: number;
-  
+
+  myLabContent!: any[];
   defaultLabImg = './assets/remote-lab.png';
 
-  components = [
-    {
-      content: 'title one',
-      code: 'main-title',
-    },
-    {
-      content: 'description my one',
-      code: 'text',
-    },
+  components: any[] = [];
+
+  types: any = [
+    { name: 'image', display: 'Image' },
+    { name: 'link', display: 'URL' },
+    { name: 'subtitle', display: 'Subtitle' },
+    { name: 'text', display: 'Normal Text' },
+    { name: 'title', display: 'Title' },
+    { name: 'video', display: 'Video' },
   ];
 
-  types = [
-    { code: 'main-title', name: 'Main Title' },
-    { code: 'title-1', name: 'Title 1' },
-    { code: 'title-2', name: 'Title 2' },
-    { code: 'text', name: 'Normal Text' },
-    { code: 'image', name: 'Image' },
-    { code: 'video', name: 'Video' },
-    { code: 'url', name: 'URL' },
-  ];
-
-  constructor(private router:Router) {
+  constructor(private router: Router, private labService: LabService) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.labId) {
+      // this.divideInfoDetails();ç
+      this.getLabsContentId(this.labId);
+    } 
+  }
 
-  onChange(event: any) {
-    console.log(event);
-    console.log(event.target.value);
-    console.log(event.target);
-
-    console.log(this.toDataURL(event.target.value));
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0] as File;
-
-      // this.imageName = file.name;
-      // this.imageControl.setValue(file);
+  async getLabsContentId(id: number) {
+    var labsContents: any[] = await lastValueFrom(
+      this.labService.getLabContent()
+    );
+    this.myLabContent = labsContents.filter(
+      (content) => content.laboratory == id
+    );
+    this.myLabContent.sort((a, b) => a.order - b.order);
+    for (var i = 0; i < this.myLabContent.length; i++) {
+      for (var t = 0; t < this.types.length; t++) {
+        if (this.myLabContent[i][this.types[t].name]) {
+          this.components.push({
+            [this.types[t].name]: this.myLabContent[i][this.types[t].name],
+          });
+          break;
+        }
+        // else if(this.myLabContent[i]['image']) this.components.push({'image':this.myLabContent[i]['image']});
+      }
     }
   }
 
-  getType(typeCode:any){
-    for(var i = 0;i<this.types.length;i++){
-      if(this.types[i].code == typeCode)return this.types[i].name;
+  getType(typeCode: any) {
+    for (var i = 0; i < this.types.length; i++) {
+      if (this.types[i].name == typeCode) return this.types[i].display;
     }
     return null;
-
   }
 
-  addComponent(typeChosen: any, i: number,content:string="") {
-    var componentsTemp = this.components;
-    if (i == this.components.length - 1) {
-      this.components.push({ code: typeChosen, content: content });
+  addNewComponent(typeChosen: string, index: number) {
+    if (this.components.length == 0) {
+      this.components.push({
+        [typeChosen]: '',
+      });
     } else {
-      this.components = [
-        ...componentsTemp.slice(0, i + 1),
-        { code: typeChosen, content: content },
-        ...componentsTemp.slice(i + 1),
-      ];
+      this.components.splice(index + 1, 0, {
+        [typeChosen]: '',
+      });
     }
+  }
+  addOldComponent(typeChosen: string, index: number, content: any) {
+    this.components.splice(index, 0, { [typeChosen]: content });
+    console.log(this.components);
   }
 
   selectLab(lab: Lab): void {
@@ -88,45 +96,20 @@ export class LabDescriptionComponent implements OnInit {
   deleteComponent(index: number) {
     return this.components.splice(index, 1);
   }
-  goUp(index:number){
+  goUp(index: number) {
     var component = this.deleteComponent(index);
-    this.addComponent(component[0].code , index, component[0].content);
+    if (index == 0) this.components.splice(0, 0, component[0]);
+    else this.components.splice(index - 1, 0, component[0]);
   }
-  goDown(index:number){
+  goDown(index: number) {
     var component = this.deleteComponent(index);
-    this.addComponent(component[0].code , index+1 , component[0].content);
+    this.components.splice(index + 1, 0, component[0]);
   }
-  toDataURL = async (url: any) => {
-    console.log('Downloading image...');
-    var res = await fetch(url);
-    var blob = await res.blob();
 
-    const result = await new Promise((resolve, reject) => {
-      var reader = new FileReader();
-      reader.addEventListener(
-        'load',
-        function () {
-          resolve(reader.result);
-        },
-        false
-      );
-
-      reader.onerror = () => {
-        return reject(this);
-      };
-      reader.readAsDataURL(blob);
-    });
-
-    return result;
-  };
-
-  onUploadFile(event: any, index: number) {
-    if (event.target.files) {
-      var reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      reader.onload = (event: any) => {
-        this.components[index].content = event.target.result;
-      };
+  onUploadFile(event: any, index: number, field:string): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0] as File;
+      this.components[index][field] = file;
     }
   }
 

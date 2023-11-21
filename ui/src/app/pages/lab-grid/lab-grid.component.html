@@ -54,39 +54,20 @@
             {{ lab.description }}
           </p>
         </mat-card-content>
-        <mat-card-actions align="end">
-          <div *ngIf="lab.is_timeframe_available_now == true">
-            <span
-              
-            style="color: green; font-weight: bold;"
-          >
-            AVAILABLE
-        </span>
+        <mat-card-actions align="end" class="actions-c">
+          <div *ngIf="lab.is_available_now == true">
+            <span style="color: green; font-weight: bold;"> AVAILABLE </span>
           </div>
 
-          <div *ngIf="lab.is_timeframe_available_now == false">
-              <span
-              
-              style="color: orange; font-weight: bold;"
-            >
-              NOT AVAILABLE
-          </span>
-
+          <div *ngIf="lab.is_available_now == false">
+            <span style="color: orange; font-weight: bold;"> NOT AVAILABLE </span>
           </div>
-        
+
           <button
             mat-button
             color="primary"
             class="card-button"
-            (click)="selectLab(lab)"
-          >
-            BOOK
-          </button>
-          <button
-            mat-button
-            color="primary"
-            class="card-button"
-            (click)="moreInfoLab()"
+            (click)="moreInfoLab(lab)"
           >
             MORE INFO >>
           </button>
