@@ -4,9 +4,9 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
-from booking.models import Booking, Equipment, Laboratory, TimeFrame
+from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer
+from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
@@ -176,6 +176,7 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
         return Response(serializer.data)
 
+
 class EquipmentList(generics.ListCreateAPIView):
 
     queryset = Equipment.objects.filter(enabled=True)
@@ -200,6 +201,34 @@ class EquipmentDetail(generics.RetrieveUpdateAPIView):
 
     queryset = Equipment.objects.filter(enabled=True)
     serializer_class = EquipmentSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+
+class TimeFrameList(generics.ListCreateAPIView):
+
+    queryset = TimeFrame.objects.all()
+    serializer_class = TimeFrameSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+    def get_queryset(self):
+        queryset = TimeFrame.objects.all()
+        equipment = self.request.query_params.get('equipment')
+
+        if equipment is not None:
+            if not equipment.isdigit():
+                raise SuspiciousOperation('Equipment id must be a number')
+
+            return queryset.filter(equipment_id=int(equipment))
+
+        return queryset
+
+
+class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = TimeFrame.objects.all()
+    serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
@@ -239,18 +268,6 @@ class PublicLaboratoryList(generics.ListAPIView):
 
         return queryset.filter(visible=True)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-
-        data = serializer.data
-        for lab_data in data:
-            lab_id = lab_data['id']
-            lab = Laboratory.objects.get(id=lab_id)
-            lab_data['is_timeframe_available_now'] = lab.is_timeframe_available_now()
-
-        return Response(data)
-
 
 class LaboratoryDetail(generics.RetrieveUpdateAPIView):
 
@@ -260,29 +277,25 @@ class LaboratoryDetail(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
-class TimeFrameList(generics.ListCreateAPIView):
-
-    queryset = TimeFrame.objects.all()
+class LaboratoryContentList(generics.ListCreateAPIView):
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
-    def get_queryset(self):
-        queryset = TimeFrame.objects.all()
-        equipment = self.request.query_params.get('equipment')
+    queryset = LaboratoryContent.objects.all()
+    serializer_class = LaboratoryContentSerializer
 
-        if equipment is not None:
-            if not equipment.isdigit():
-                raise SuspiciousOperation('Equipment id must be a number')
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get("data", {}), list):
+            kwargs["many"] = True
 
-            return queryset.filter(equipment_id=int(equipment))
-
-        return queryset
+        return super(LaboratoryContentList, self).get_serializer(*args, **kwargs)
 
 
-class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
-
-    queryset = TimeFrame.objects.all()
+class LaboratoryContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+    queryset = LaboratoryContent.objects.all()
+    serializer_class = LaboratoryContentSerializer

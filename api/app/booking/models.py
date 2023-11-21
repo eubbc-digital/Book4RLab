@@ -41,6 +41,20 @@ class Equipment(models.Model):
     def __str__(self):
         return f"{self.name} ({self.laboratory.name}) ({self.id})"
 
+class TimeFrame(models.Model):
+
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    start_hour = models.TimeField()
+    end_hour = models.TimeField()
+    slot_duration = models.IntegerField()
+    equipment = models.ForeignKey('Equipment', related_name='timeframes', on_delete=models.CASCADE)
+    enabled = models.BooleanField(default=True)
+    registration_date = models.DateTimeField(auto_now_add=True)
+    last_modification_date = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='timeframe_owner', on_delete=models.CASCADE)
+
+
 class Laboratory(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
@@ -74,55 +88,23 @@ class Laboratory(models.Model):
 
         return active_timeframes.exists()
 
-    details_big_title = models.CharField(max_length=100, blank=True, null=True, default='')
-    details_title_1= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_title_2= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_title_3= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_title_4= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_title_5= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_subtitle_1= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_subtitle_2= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_subtitle_3= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_subtitle_4= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_subtitle_5= models.CharField(max_length=100, blank=True, null=True, default='')
-    details_text_1 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_2 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_3 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_4 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_5 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_6 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_7 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_8 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_9 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_text_10 = models.CharField(max_length=500, blank=True, null=True, default='')
-    details_image_1 = models.ImageField(upload_to='detail_photos/', blank=True, null=True, default=None)
-    details_image_2 = models.ImageField(upload_to='detail_photos/', blank=True, null=True, default=None)
-    details_image_3 = models.ImageField(upload_to='detail_photos/', blank=True, null=True, default=None)
-    details_image_4 = models.ImageField(upload_to='detail_photos/', blank=True, null=True, default=None)
-    details_image_5 = models.ImageField(upload_to='detail_photos/', blank=True, null=True, default=None)
-    details_video_1 = models.FileField(upload_to='detail_videos/', blank=True, null=True, default=None)
-    details_video_2 = models.FileField(upload_to='detail_videos/', blank=True, null=True, default=None)
-    details_video_3 = models.FileField(upload_to='detail_videos/', blank=True, null=True, default=None)
-    details_video_4 = models.FileField(upload_to='detail_videos/', blank=True, null=True, default=None)
-    details_video_5 = models.FileField(upload_to='detail_videos/', blank=True, null=True, default=None)
-    details_link_1= models.URLField(blank=True, null=True, default=None)
-    details_link_2= models.URLField(blank=True, null=True, default=None)
-    details_link_3= models.URLField(blank=True, null=True, default=None)
-    details_link_4= models.URLField(blank=True, null=True, default=None)
-    details_link_5= models.URLField(blank=True, null=True, default=None)
+    @property
+    def is_available_now(self):
+        return self.is_timeframe_available_now()
 
     def __str__(self):
         return f"{self.name} (E={self.enabled}, V={self.visible}) ({self.id})"
 
-class TimeFrame(models.Model):
+class LaboratoryContent(models.Model):
+    laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE, related_name='contents')
+    order = models.PositiveIntegerField()
 
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    start_hour = models.TimeField()
-    end_hour = models.TimeField()
-    slot_duration = models.IntegerField()
-    equipment = models.ForeignKey('Equipment', related_name='timeframes', on_delete=models.CASCADE)
-    enabled = models.BooleanField(default=True)
-    registration_date = models.DateTimeField(auto_now_add=True)
-    last_modification_date = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='timeframe_owner', on_delete=models.CASCADE)
+    text = models.CharField(max_length=500, blank=True, null=True)
+    image = models.ImageField(upload_to='detail_photos/', blank=True, null=True)
+    video = models.FileField(upload_to='detail_videos/', blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
+    title = models.CharField(max_length=100, blank=True, null=True)
+    subtitle = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        ordering = ['order']

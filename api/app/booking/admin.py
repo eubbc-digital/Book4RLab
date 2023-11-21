@@ -5,7 +5,7 @@ Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
 from django.contrib import admin
-from booking.models import Booking, Equipment, Laboratory, TimeFrame
+from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from core import models
 
 class BookingAdmin(admin.ModelAdmin):
@@ -16,3 +16,4 @@ admin.site.register(Laboratory)
 admin.site.register(Equipment)
 admin.site.register(Booking, BookingAdmin)
 admin.site.register(TimeFrame)
+admin.site.register(LaboratoryContent)
