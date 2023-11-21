@@ -1,4 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
+import { Lab } from 'src/app/interfaces/lab';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lab-description',
@@ -6,9 +8,13 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
   styleUrls: ['./lab-description.component.css'],
 })
 export class LabDescriptionComponent implements OnInit {
-  cols!: number;
+ 
+  @Input() lab!: Lab;
 
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
+  cols!: number;
+  
+  defaultLabImg = './assets/remote-lab.png';
 
   components = [
     {
@@ -31,7 +37,7 @@ export class LabDescriptionComponent implements OnInit {
     { code: 'url', name: 'URL' },
   ];
 
-  constructor() {
+  constructor(private router:Router) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
   }
 
@@ -51,26 +57,45 @@ export class LabDescriptionComponent implements OnInit {
     }
   }
 
-  addComponent(typeChosen: any, i: number) {
+  getType(typeCode:any){
+    for(var i = 0;i<this.types.length;i++){
+      if(this.types[i].code == typeCode)return this.types[i].name;
+    }
+    return null;
+
+  }
+
+  addComponent(typeChosen: any, i: number,content:string="") {
     var componentsTemp = this.components;
     if (i == this.components.length - 1) {
-      this.components.push({ code: typeChosen, content: '' });
+      this.components.push({ code: typeChosen, content: content });
     } else {
       this.components = [
         ...componentsTemp.slice(0, i + 1),
-        { code: typeChosen, content: '' },
+        { code: typeChosen, content: content },
         ...componentsTemp.slice(i + 1),
       ];
     }
+  }
+
+  selectLab(lab: Lab): void {
+    this.router.navigate(['/booking', lab.id]);
   }
 
   saveComponents() {
     console.log(this.components);
   }
   deleteComponent(index: number) {
-    this.components.splice(index, 1);
+    return this.components.splice(index, 1);
   }
-
+  goUp(index:number){
+    var component = this.deleteComponent(index);
+    this.addComponent(component[0].code , index, component[0].content);
+  }
+  goDown(index:number){
+    var component = this.deleteComponent(index);
+    this.addComponent(component[0].code , index+1 , component[0].content);
+  }
   toDataURL = async (url: any) => {
     console.log('Downloading image...');
     var res = await fetch(url);
