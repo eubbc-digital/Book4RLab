@@ -100,11 +100,25 @@ class LaboratoryContent(models.Model):
     order = models.PositiveIntegerField()
 
     text = models.CharField(max_length=500, blank=True, null=True)
-    image = models.ImageField(upload_to='detail_photos/', blank=True, null=True)
-    video = models.FileField(upload_to='detail_videos/', blank=True, null=True)
+    image = models.ImageField(upload_to='content_photos/', blank=True, null=True)
+    video = models.FileField(upload_to='content_videos/', blank=True, null=True)
     link = models.URLField(blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     subtitle = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         ordering = ['order']
+
+    def __str__(self):
+      if self.text:
+        return f"({self.order}) Text ({self.laboratory.name})"
+      if self.image:
+        return f"({self.order}) Image ({self.laboratory.name})"
+      if self.video:
+        return f"({self.order}) Video ({self.laboratory.name})"
+      if self.link:
+        return f"({self.order}) Link ({self.laboratory.name})"
+      if self.title:
+        return f"({self.order}) Title ({self.laboratory.name})"
+      if self.subtitle:
+        return f"({self.order}) Subtitle ({self.laboratory.name})"
