@@ -1,7 +1,7 @@
 {
   "version": "1.0.9",
   "api": {
-    "baseUrl":"http://localhost:8000/",
+    "baseUrl": "https://eubbc-digital.upb.edu/booking/api/",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
@@ -11,6 +11,7 @@
     },
     "labs": "laboratories/",
     "public-labs": "public-laboratories/",
+    "content": "laboratory-contents/",
     "equipments": "equipments/",
     "timeframes": "timeframes/",
     "booking": {

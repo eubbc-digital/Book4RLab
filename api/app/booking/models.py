@@ -108,6 +108,7 @@ class LaboratoryContent(models.Model):
 
     class Meta:
         ordering = ['order']
+        unique_together = ['laboratory', 'order']
 
     def __str__(self):
       if self.text:

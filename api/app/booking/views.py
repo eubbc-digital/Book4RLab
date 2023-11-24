@@ -280,7 +280,7 @@ class LaboratoryDetail(generics.RetrieveUpdateAPIView):
 class LaboratoryContentList(generics.ListCreateAPIView):
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    permission_classes = (IsAuthenticated,)
 
     queryset = LaboratoryContent.objects.all()
     serializer_class = LaboratoryContentSerializer
@@ -295,7 +295,7 @@ class LaboratoryContentList(generics.ListCreateAPIView):
 class LaboratoryContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TimeFrameSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    permission_classes = (IsAuthenticated,)
 
     queryset = LaboratoryContent.objects.all()
     serializer_class = LaboratoryContentSerializer
