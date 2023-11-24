@@ -109,17 +109,17 @@ export class LabDescriptionComponent implements OnInit {
     }
   }
   getUrlFile(file:any){
-    var reader = new FileReader();
-    reader.onload = (event: any) => {
-      var url = event.target.result;
-      return url;
-    };
-    reader.onerror = (event: any) => {
-      console.log("File could not be read: " + event.target.error.code);
-    };
+    // var reader = new FileReader();
+    // reader.onload = (event: any) => {
+    //   var url = event.target.result;
+    //   return url;
+    // };
+    // reader.onerror = (event: any) => {
+    //   console.log("File could not be read: " + event.target.error.code);
+    // };
    
 
-    reader.readAsDataURL(file);
+    // reader.readAsDataURL(file);
     
   }
  
