@@ -58,25 +58,26 @@ export class LabStructureComponent implements OnInit {
     var labsContents :any[] = await lastValueFrom(this.labService.getLabContent());
     this.myLabContent = labsContents.filter((content)=> content.laboratory == id);
     this.myLabContent.sort((a:any,b:any) => a.order - b.order);
-    console.log(this.myLabContent);
 
   }
-  divideInfoDetails() {
-    var k = 0;
-    for (var i = 0; i < this.types.length; i++) {
-      for (var j = 1; j <= this.types[i].count; j++) {
-        if (this.lab[this.types[i].name]) {
-          this.components.push([
-            this.types[i].name,
-            this.lab[this.types[i].name + '_' + j],
-            k,
-          ]);
-          k++;
-        }
-      }
-    }
-    console.log("Components 2 :",this.components);
+
+  getUrlFile(file:any){
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      var url = event.target.result;
+      return url;
+    };
+    reader.onerror = (event: any) => {
+      console.log("File could not be read: " + event.target.error.code);
+    };
+   
+
+    reader.readAsDataURL(file);
+    
   }
+ 
+
+
 
   selectLab(lab: Lab): void {
     this.router.navigate(['/booking', lab.id]);

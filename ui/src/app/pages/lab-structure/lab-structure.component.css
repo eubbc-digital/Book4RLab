@@ -42,6 +42,8 @@
   }
 
   .basic-info{
+    border: 1px solid lightgray;
+    border-radius: 8px;
     position: relative;
     margin-top: 5px;
     display: flex;

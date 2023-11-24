@@ -43,6 +43,7 @@ export class LabService {
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
     formData.append('enabled', '1');
+    console.log('lab form data:', formData);
 
     return this.http.post<Lab>(this.url, formData);
   }
@@ -64,13 +65,41 @@ export class LabService {
 
     return this.http.patch<Lab>(`${this.url}${id}/`, formData);
   }
-  getLabContent(){
+  getLabContent() {
     var url: string = `${config.api.baseUrl}${config.api.content}`;
     return this.http.get<any>(url);
   }
-  postLabContent(params:any){
+  postLabContent(element: any) {
+    var newParams: any[] = [];
+
+    const formData = new FormData();
+
+    // params.forEach((element:any) => {
+    //   formData.append("title",element.title);
+    //   formData.append("subtitle",element.subtitle);
+    //   formData.append("image",element.image);
+    //   formData.append("video",element.video);
+    //   formData.append("link",element.link);
+    //   formData.append("text",element.text);
+    //   formData.append("order",element.order);
+    //   formData.append("laboratory",element.laboratory);
+    //   console.log(formData);
+    //   newParams.push(formData);
+    // });
+
+    formData.append('title', element[0].title);
+    formData.append('subtitle', element[0].subtitle);
+    formData.append('image', element[0].image);
+    formData.append('video', element[0].video);
+    formData.append('link', element[0].link);
+    formData.append('text', element[0].text);
+    formData.append('order', element[0].order);
+    formData.append('laboratory', element[0].laboratory);
+
+    console.log('with formd dat:', newParams);
+
     var url: string = `${config.api.baseUrl}${config.api.content}`;
-    return this.http.post<any>(url,params);
+    return this.http.post<any>(url, newParams);
   }
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };

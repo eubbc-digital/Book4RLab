@@ -83,16 +83,12 @@ export class LabDescriptionComponent implements OnInit {
   }
   addOldComponent(typeChosen: string, index: number, content: any) {
     this.components.splice(index, 0, { [typeChosen]: content });
-    console.log(this.components);
   }
 
   selectLab(lab: Lab): void {
     this.router.navigate(['/booking', lab.id]);
   }
 
-  saveComponents() {
-    console.log(this.components);
-  }
   deleteComponent(index: number) {
     return this.components.splice(index, 1);
   }
@@ -112,6 +108,21 @@ export class LabDescriptionComponent implements OnInit {
       this.components[index][field] = file;
     }
   }
+  getUrlFile(file:any){
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      var url = event.target.result;
+      return url;
+    };
+    reader.onerror = (event: any) => {
+      console.log("File could not be read: " + event.target.error.code);
+    };
+   
+
+    reader.readAsDataURL(file);
+    
+  }
+ 
 
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();

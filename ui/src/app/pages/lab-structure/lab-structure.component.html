@@ -12,7 +12,7 @@
       </button>
     </div>
     <div *ngIf="lab">
-      <h3> <strong>Card Description</strong></h3>
+      <h2> <strong>Card Description</strong></h2>
       <div class="basic-info">
         <div class="basic-image">
           <img
@@ -35,9 +35,10 @@
             {{ lab.description }}
           </p>
   
-      </div>
+        </div>
+      <br>
 
-  <h3> <strong>General Description</strong></h3>
+  <h2> <strong>General Description</strong></h2>
     <div *ngIf="myLabContent.length == 0">
       <span>There is no general description for this lab.</span>
     </div>
@@ -48,7 +49,7 @@
         <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
         <h3 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h3>
         <a *ngIf="content['link']" [href]="content['link']"></a>
-        <img *ngIf="content['image']" [src]="content['image']" />
+        <img *ngIf="content['image']" [src]="getUrlFile(content['image'])" />
         <vg-player *ngIf="content['video']">
           <video
             [vgMedia]="$any(media)"

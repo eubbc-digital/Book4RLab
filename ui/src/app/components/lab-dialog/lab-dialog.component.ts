@@ -143,10 +143,8 @@ export class LabDialogComponent implements OnInit {
    async save() {
     this.cleanDescription();
     var descriptionParams = this.getDescriptionParams(this.labDescription.components);
-    console.log(descriptionParams);
 
     var response = await lastValueFrom(this.labService.postLabContent(descriptionParams));
-    console.log(response);
     
     if (this.labForm.valid) {
       if (!this.dialogData) this.addLab();

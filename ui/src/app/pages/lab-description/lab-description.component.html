@@ -85,7 +85,7 @@
                     accept="image/*"
                     (change)="onUploadFile($event, i,'image')"
                   />
-                  <img [src]="component['image']" />
+                  <img [src]="getUrlFile(component['image'])" />
                 </div>
                 <div *ngIf="component['video'] != null" class="video-container">
                   <input
