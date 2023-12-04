@@ -335,3 +335,14 @@ class LaboratoryContentDeleteAll(generics.DestroyAPIView):
 
         LaboratoryContent.objects.filter(laboratory=laboratory_id).delete()
         return Response("All contents successfully deleted", status=status.HTTP_200_OK)
+
+class LaboratoryContentRetrieve(generics.ListAPIView):
+    serializer_class = LaboratoryContentSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        laboratory_id = self.kwargs.get('laboratory_id')
+        laboratory = Laboratory.objects.get(pk=laboratory_id)
+        contents = LaboratoryContent.objects.filter(laboratory=laboratory)
+        return contents
