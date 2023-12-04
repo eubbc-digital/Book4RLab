@@ -10,7 +10,7 @@ from booking.serializers import BookingSerializer, EquipmentSerializer, Laborato
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -278,12 +278,11 @@ class LaboratoryDetail(generics.RetrieveUpdateAPIView):
 
 
 class LaboratoryContentList(generics.ListCreateAPIView):
-    serializer_class = TimeFrameSerializer
+    serializer_class = LaboratoryContentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     queryset = LaboratoryContent.objects.all()
-    serializer_class = LaboratoryContentSerializer
 
     def get_serializer(self, *args, **kwargs):
         if isinstance(kwargs.get("data", {}), list):
@@ -291,11 +290,48 @@ class LaboratoryContentList(generics.ListCreateAPIView):
 
         return super(LaboratoryContentList, self).get_serializer(*args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        laboratory_id = data[0].get("laboratory")
 
-class LaboratoryContentDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = TimeFrameSerializer
+        existing_contents = LaboratoryContent.objects.filter(laboratory=laboratory_id)
+
+        request_orders = set(item.get("order") for item in data)
+
+        existing_contents.filter(order__gt=max(request_orders)).delete()
+
+        for item in data:
+            order = item.get("order")
+
+            content_instance = existing_contents.filter(order=order).first()
+
+            if content_instance:
+                serializer = LaboratoryContentSerializer(content_instance, data=item)
+                if serializer.is_valid():
+                    field_name = [key for key in item.keys() if key not in ('laboratory', 'order')][0]
+                    for field in ('text', 'image', 'video', 'link', 'title', 'subtitle'):
+                        if field != field_name:
+                            setattr(content_instance, field, None)
+
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer = LaboratoryContentSerializer(data=item)
+
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(LaboratoryContentSerializer(LaboratoryContent.objects.filter(laboratory=laboratory_id), many=True).data, status=status.HTTP_201_CREATED)
+
+class LaboratoryContentDeleteAll(generics.DestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    queryset = LaboratoryContent.objects.all()
-    serializer_class = LaboratoryContentSerializer
+    def delete(self, request, *args, **kwargs):
+        laboratory_id = kwargs.get('laboratory_id')
+
+        LaboratoryContent.objects.filter(laboratory=laboratory_id).delete()
+        return Response("All contents successfully deleted", status=status.HTTP_200_OK)

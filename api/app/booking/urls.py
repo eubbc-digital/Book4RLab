@@ -23,5 +23,5 @@ urlpatterns = [
     path('public-laboratories/', views.PublicLaboratoryList.as_view(), name='publiclaboratorylist'),
     path('laboratories/<int:pk>/', views.LaboratoryDetail.as_view(), name='laboratorydetail'),
     path('laboratory-contents/', views.LaboratoryContentList.as_view(), name='lab-content-list-create'),
-    path('laboratory-contents/<int:pk>/', views.LaboratoryContentDetail.as_view(), name='lab-content-retrieve-update-destroy'),
+    path('laboratories/<int:laboratory_id>/delete-contents/', views.LaboratoryContentDeleteAll.as_view(), name='delete_all_contents'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -150,3 +150,12 @@ class LaboratoryContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = LaboratoryContent
         fields = '__all__'
+
+    def validate(self, data):
+        non_null_fields = ['text', 'image', 'video', 'link', 'title', 'subtitle']
+        filled_fields = [field for field in non_null_fields if data.get(field) is not None]
+
+        if len(filled_fields) != 1:
+            raise serializers.ValidationError("Exactly one field among text, image, video, link, title, subtitle should have a non-null value.")
+
+        return data
