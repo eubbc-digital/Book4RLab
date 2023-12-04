@@ -55,8 +55,8 @@ export class LabStructureComponent implements OnInit {
   }
 
   async getLabsContentId(id:number){
-    var labsContents :any[] = await lastValueFrom(this.labService.getLabContent());
-    this.myLabContent = labsContents.filter((content)=> content.laboratory == id);
+    this.myLabContent = await lastValueFrom(this.labService.getLabContent(id));
+    // this.myLabContent = labsContents.filter((content)=> content.laboratory == id);
     this.myLabContent.sort((a:any,b:any) => a.order - b.order);
 
   }

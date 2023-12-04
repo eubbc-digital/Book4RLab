@@ -43,7 +43,6 @@ export class LabService {
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
     formData.append('enabled', '1');
-    console.log('lab form data:', formData);
 
     return this.http.post<Lab>(this.url, formData);
   }
@@ -65,41 +64,47 @@ export class LabService {
 
     return this.http.patch<Lab>(`${this.url}${id}/`, formData);
   }
-  getLabContent() {
-    var url: string = `${config.api.baseUrl}${config.api.content}`;
+  getLabContent(labId:number) {
+    var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api.content}`;
     return this.http.get<any>(url);
+  }
+  deleteLabContent(labId: number){
+    var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api['delete-content']}`
+    return this.http.delete(url);
   }
   postLabContent(params: any) {
     var newParams: any[] = [];
 
-    params.forEach((element:any) => {
-      const formData = new FormData();
-      formData.append("title",element.title);
-      formData.append("subtitle",element.subtitle);
-      formData.append("image",element.image);
-      formData.append("video",element.video);
-      formData.append("link",element.link);
-      formData.append("text",element.text);
-      formData.append("order",element.order);
-      formData.append("laboratory",element.laboratory);
-      console.log(formData);
-      newParams.push(formData);
-    });
+    // params.forEach((element:any) => {
+    //   const formData = new FormData();
+    //   formData.append("title",element.title ? element.title : null);
+    //   formData.append("subtitle",element.subtitle? element.subtitle : null);
+    //   formData.append("image",element.image ? element.image : null);
+    //   formData.append("video",element.video ? element.video : null);
+    //   formData.append("link",element.link ? element.link : null);
+    //   formData.append("text",element.text ? element.text : null);
+    //   formData.append("order",element.order);
+    //   formData.append("laboratory",element.laboratory );
+    //   newParams.push(formData);
+    // });
 
-    // const formData = new FormData();
-    // formData.append('title', element[0].title);
-    // formData.append('subtitle', element[0].subtitle);
-    // formData.append('image', element[0].image);
-    // formData.append('video', element[0].video);
-    // formData.append('link', element[0].link);
-    // formData.append('text', element[0].text);
-    // formData.append('order', element[0].order);
-    // formData.append('laboratory', element[0].laboratory);
+    console.log('without form data:', params);
+
+    const formData = new FormData();
+    formData.append('title', params[0].title?params[0].title:null);
+    formData.append('subtitle',params[0].subtitle? params[0].subtitle:null);
+    formData.append('image', params[0].image? params[0].image :null);
+    formData.append('video', params[0].video? params[0].video : null);
+    formData.append('link', params[0].link ? params[0].link : null);
+    formData.append('text', params[0].text? params[0].text : null);
+    formData.append('order', params[0].order);
+    formData.append('laboratory', params[0].laboratory );
 
     console.log('with form data:', newParams);
+   
 
-    var url: string = `${config.api.baseUrl}${config.api.content}`;
-    return this.http.post<any>(url, newParams);
+    var url: string = `${config.api.baseUrl}${config.api.labs}${config.api.content}`;
+    return this.http.post<any>(url, params);
   }
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };

@@ -27,7 +27,6 @@ export class LabGridComponent implements OnInit {
 
   ngOnInit(): void {
     this.publicLabsService.getPublicLabs().subscribe((labs) => {
-      console.log(labs);
       this.labs = labs;
     });
   }

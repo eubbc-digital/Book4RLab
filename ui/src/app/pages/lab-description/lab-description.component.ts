@@ -44,11 +44,12 @@ export class LabDescriptionComponent implements OnInit {
 
   async getLabsContentId(id: number) {
     var labsContents: any[] = await lastValueFrom(
-      this.labService.getLabContent()
+      this.labService.getLabContent(id)
     );
-    this.myLabContent = labsContents.filter(
-      (content) => content.laboratory == id
-    );
+    this.myLabContent = labsContents;
+    // this.myLabContent = labsContents.filter(
+    //   (content) => content.laboratory == id
+    // );
     this.myLabContent.sort((a, b) => a.order - b.order);
     for (var i = 0; i < this.myLabContent.length; i++) {
       for (var t = 0; t < this.types.length; t++) {

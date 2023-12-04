@@ -80,4 +80,8 @@
       width: 100%;
   }
 
+  a:hover{
+    color: green;
+  }
+
   
