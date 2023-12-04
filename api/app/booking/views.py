@@ -268,14 +268,15 @@ class PublicLaboratoryList(generics.ListAPIView):
 
         return queryset.filter(visible=True)
 
-
-class LaboratoryDetail(generics.RetrieveUpdateAPIView):
-
+class LaboratoryRetrieve(generics.RetrieveAPIView):
     queryset = Laboratory.objects.filter(enabled=True)
+
+class LaboratoryUpdate(generics.UpdateAPIView):
+    queryset = Laboratory.objects.filter(enabled=True)
+
     serializer_class = LaboratorySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-
 
 class LaboratoryContentList(generics.ListCreateAPIView):
     serializer_class = LaboratoryContentSerializer
@@ -338,8 +339,6 @@ class LaboratoryContentDeleteAll(generics.DestroyAPIView):
 
 class LaboratoryContentRetrieve(generics.ListAPIView):
     serializer_class = LaboratoryContentSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         laboratory_id = self.kwargs.get('laboratory_id')
