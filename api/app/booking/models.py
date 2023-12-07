@@ -105,6 +105,7 @@ class LaboratoryContent(models.Model):
     link = models.URLField(blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     subtitle = models.CharField(max_length=100, blank=True, null=True)
+    is_last = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['order']

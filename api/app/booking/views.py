@@ -269,6 +269,7 @@ class PublicLaboratoryList(generics.ListAPIView):
         return queryset.filter(visible=True)
 
 class LaboratoryRetrieve(generics.RetrieveAPIView):
+    serializer_class = LaboratorySerializer
     queryset = Laboratory.objects.filter(enabled=True)
 
 class LaboratoryUpdate(generics.UpdateAPIView):
@@ -293,39 +294,42 @@ class LaboratoryContentList(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        laboratory_id = data[0].get("laboratory")
-
+        laboratory_id = data.get("laboratory")
         existing_contents = LaboratoryContent.objects.filter(laboratory=laboratory_id)
 
-        request_orders = set(item.get("order") for item in data)
+        order = data.get("order")
+        if order is None:
+            return Response({"order": ["This field is required."]},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        existing_contents.filter(order__gt=max(request_orders)).delete()
+        if data.get("is_last"):
+            existing_contents.filter(order__gt=order).delete()
 
-        for item in data:
-            order = item.get("order")
+        content_instance = existing_contents.filter(order=order).first()
+        if content_instance:
+            serializer = LaboratoryContentSerializer(content_instance, data=data)
+            if serializer.is_valid():
+                field_name = [key for key in data.keys() if key not in ('laboratory', 'order')][0]
+                for field in ('text', 'image', 'video', 'link', 'title', 'subtitle'):
+                    if field != field_name:
+                        setattr(content_instance, field, None)
 
-            content_instance = existing_contents.filter(order=order).first()
-
-            if content_instance:
-                serializer = LaboratoryContentSerializer(content_instance, data=item)
-                if serializer.is_valid():
-                    field_name = [key for key in item.keys() if key not in ('laboratory', 'order')][0]
-                    for field in ('text', 'image', 'video', 'link', 'title', 'subtitle'):
-                        if field != field_name:
-                            setattr(content_instance, field, None)
-
-                    serializer.save()
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                serializer.save()
             else:
-                serializer = LaboratoryContentSerializer(data=item)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer = LaboratoryContentSerializer(data=data)
 
-                if serializer.is_valid():
-                    serializer.save()
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(LaboratoryContentSerializer(LaboratoryContent.objects.filter(laboratory=laboratory_id), many=True).data, status=status.HTTP_201_CREATED)
+        created_content = LaboratoryContent.objects.filter(laboratory=laboratory_id, order=order).first()
+        if not created_content:
+            return Response({"error": "Failed to retrieve the created content."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(LaboratoryContentSerializer(created_content).data, status=status.HTTP_201_CREATED)
 
 class LaboratoryContentDeleteAll(generics.DestroyAPIView):
     authentication_classes = (TokenAuthentication,)
