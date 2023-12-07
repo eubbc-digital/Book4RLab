@@ -146,7 +146,7 @@ export class LabDialogComponent implements OnInit {
     if (descriptionParams.length == 0 ){
       await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
     }else{
-      await lastValueFrom(this.labService.postLabContent(descriptionParams));
+      this.labService.postLabContent(descriptionParams);
     }
     
     if (this.labForm.valid) {

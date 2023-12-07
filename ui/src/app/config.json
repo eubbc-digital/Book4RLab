@@ -11,7 +11,8 @@
     },
     "labs": "laboratories/",
     "public-labs": "public-laboratories/",
-    "content": "laboratory-contents/",
+    "content": "contents/",
+    "delete-content": "delete-contents/",
     "equipments": "equipments/",
     "timeframes": "timeframes/",
     "booking": {

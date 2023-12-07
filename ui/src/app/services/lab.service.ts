@@ -5,7 +5,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams ,HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Lab } from '../interfaces/lab';
 import config from '../config.json';
@@ -73,38 +73,31 @@ export class LabService {
     return this.http.delete(url);
   }
   postLabContent(params: any) {
-    var newParams: any[] = [];
-
-    // params.forEach((element:any) => {
-    //   const formData = new FormData();
-    //   formData.append("title",element.title ? element.title : null);
-    //   formData.append("subtitle",element.subtitle? element.subtitle : null);
-    //   formData.append("image",element.image ? element.image : null);
-    //   formData.append("video",element.video ? element.video : null);
-    //   formData.append("link",element.link ? element.link : null);
-    //   formData.append("text",element.text ? element.text : null);
-    //   formData.append("order",element.order);
-    //   formData.append("laboratory",element.laboratory );
-    //   newParams.push(formData);
-    // });
-
-    console.log('without form data:', params);
-
-    const formData = new FormData();
-    formData.append('title', params[0].title?params[0].title:null);
-    formData.append('subtitle',params[0].subtitle? params[0].subtitle:null);
-    formData.append('image', params[0].image? params[0].image :null);
-    formData.append('video', params[0].video? params[0].video : null);
-    formData.append('link', params[0].link ? params[0].link : null);
-    formData.append('text', params[0].text? params[0].text : null);
-    formData.append('order', params[0].order);
-    formData.append('laboratory', params[0].laboratory );
-
-    console.log('with form data:', newParams);
-   
-
     var url: string = `${config.api.baseUrl}${config.api.labs}${config.api.content}`;
-    return this.http.post<any>(url, params);
+
+    for(var i = 0 ; i< params.length ; i++){
+      var element = params[i];
+
+      var formData = new FormData();
+      formData.append("title",element.title ? element.title : null);
+      formData.append("subtitle",element.subtitle? element.subtitle : null);
+      formData.append("image",element.image ? element.image : null);
+      formData.append("video",element.video ? element.video : null);
+      formData.append("link",element.link ? element.link : null);
+      formData.append("text",element.text ? element.text : null);
+      formData.append("order",element.order);
+      formData.append("laboratory",element.laboratory );
+
+      if(i == params.length-1) formData.append("last","false");
+      else formData.append("last","true");
+      
+      console.log("----- New element -----")
+      for (const pair of element.entries()) {
+        console.log(`${pair[0]}, ${pair[1]}`);
+      }
+      this.http.post<any>( url, formData);
+    }
+
   }
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };
