@@ -7,6 +7,7 @@
       color="primary"
       class="card-button"
       (click)="selectLab(lab)"
+      [disabled]="disabledBooking"
     >
       BOOK >>
       </button>
@@ -48,8 +49,8 @@
         <span *ngIf="content['text']">{{ content['text'] }}</span>
         <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
         <h2 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h2>
-        <a *ngIf="content['link']" [href]="content['link']"></a>
-        <img *ngIf="content['image']" [src]="getUrlFile(content['image'])" />
+        <a *ngIf="content['link']" [href]="content['link']">{{content['link']}}</a>
+        <img *ngIf="content['image']" [src]="content['image']" />
         <vg-player *ngIf="content['video']">
           <video
             [vgMedia]="$any(media)"
@@ -61,7 +62,6 @@
           ></video>
         </vg-player>
       </div>
-      
     </div>
     </div>
    

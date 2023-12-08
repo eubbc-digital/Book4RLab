@@ -21,6 +21,7 @@ export class LabDescriptionComponent implements OnInit {
   defaultLabImg = './assets/remote-lab.png';
 
   components: any[] = [];
+  imageName :string[]= [];
 
   types: any = [
     { name: 'image', display: 'Image' },
@@ -47,9 +48,6 @@ export class LabDescriptionComponent implements OnInit {
       this.labService.getLabContent(id)
     );
     this.myLabContent = labsContents;
-    // this.myLabContent = labsContents.filter(
-    //   (content) => content.laboratory == id
-    // );
     this.myLabContent.sort((a, b) => a.order - b.order);
     for (var i = 0; i < this.myLabContent.length; i++) {
       for (var t = 0; t < this.types.length; t++) {
@@ -59,10 +57,17 @@ export class LabDescriptionComponent implements OnInit {
           });
           break;
         }
-        // else if(this.myLabContent[i]['image']) this.components.push({'image':this.myLabContent[i]['image']});
       }
     }
   }
+
+  getImageName(imageName: string | null): string {
+    const defaultImage = 'default.jpeg';
+    return imageName
+      ? imageName.split('/').pop() ?? defaultImage
+      : defaultImage;
+  }
+
 
   getType(typeCode: any) {
     for (var i = 0; i < this.types.length; i++) {
@@ -109,21 +114,19 @@ export class LabDescriptionComponent implements OnInit {
       this.components[index][field] = file;
     }
   }
-  getUrlFile(file:any){
-    // var reader = new FileReader();
-    // reader.onload = (event: any) => {
-    //   var url = event.target.result;
-    //   return url;
-    // };
-    // reader.onerror = (event: any) => {
-    //   console.log("File could not be read: " + event.target.error.code);
-    // };
+  // async getUrlFile(file:any){
+  //   var reader = new FileReader();
+  //   reader.onload = (event: any) => {
+  //     var url = event.target.result;
+  //     return url;
+  //   };
+  //   reader.onerror = (event: any) => {
+  //     console.log("File could not be read: " + event.target.error.code);
+  //   };
    
-
-    // reader.readAsDataURL(file);
+  //   reader.readAsDataURL(file);
     
-  }
- 
+  // }
 
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();

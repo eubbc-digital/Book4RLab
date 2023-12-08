@@ -1,87 +1,90 @@
 .card-booking-stepper {
-    width: 70%;
-    margin: 30px auto;
-  }
-  
-  .row{
-      display: flex;
-      flex-direction: row;
-      position: relative;
-      width: 100%;
-      align-items: center;
-      justify-content: center;
-  }
-  .btn-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    width: 100%;
-  }
-  .col-7{
-    position: relative;
-    width: 70%;
-  }
-  .col-8{
-      position: relative;
-      width: 80%;
-  }
-  .col-2 {
-      position: relative;
-      width: 20%;
-  }
-  .col-1 {
-    position: relative;
-    width: 10%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  width: 70%;
+  margin: 30px auto;
+}
 
-  .card-button{
-    align-self: self-end;
-  }
+.row {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  width: 100%;
+}
+.col-7 {
+  position: relative;
+  width: 70%;
+}
+.col-8 {
+  position: relative;
+  width: 80%;
+}
+.col-2 {
+  position: relative;
+  width: 20%;
+}
+.col-1 {
+  position: relative;
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .basic-info{
-    border: 1px solid lightgray;
-    border-radius: 8px;
-    position: relative;
-    margin-top: 5px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
+.card-button {
+  align-self: self-end;
+}
 
-  .basic-image{
-    position: relative;
-    width:50%;
-  }
-  .remote-lab-img{
-    margin-top: 5px;
-    width: 90%;
-  }
-  
-  
-  input,textarea {
-    width: 100%;
-  }
-  
-  img {
-    position: relative;
-    width: 100%;
-  }
-  
-  .video-container {
-    width: 100%;
-  }
-  
-  video{
-      position: relative;
-      width: 100%;
-  }
+.basic-info {
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  position: relative;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
-  a:hover{
-    color: green;
-  }
+.basic-image {
+  position: relative;
+  width: 50%;
+}
+.remote-lab-img {
+  margin-top: 5px;
+  width: 90%;
+}
 
-  
+input,
+textarea {
+  width: 100%;
+}
+
+img {
+  position: relative;
+  width: 100%;
+}
+
+.video-container {
+  width: 100%;
+}
+
+video {
+  position: relative;
+  width: 100%;
+}
+
+a:hover {
+  color: green;
+}
+
+a,span{
+  margin-bottom: 10px;
+}
+

@@ -6,7 +6,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams ,HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { Lab } from '../interfaces/lab';
 import config from '../config.json';
 
@@ -62,7 +62,7 @@ export class LabService {
     formData.append('visible', String(newLab.visible!));
     formData.append('enabled', '1');
 
-    return this.http.patch<Lab>(`${this.url}${id}/`, formData);
+    return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }
   getLabContent(labId:number) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api.content}`;
@@ -72,30 +72,26 @@ export class LabService {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api['delete-content']}`
     return this.http.delete(url);
   }
-  postLabContent(params: any) {
+  async postLabContent(params: any) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${config.api.content}`;
 
     for(var i = 0 ; i< params.length ; i++){
       var element = params[i];
 
       var formData = new FormData();
-      formData.append("title",element.title ? element.title : null);
-      formData.append("subtitle",element.subtitle? element.subtitle : null);
-      formData.append("image",element.image ? element.image : null);
-      formData.append("video",element.video ? element.video : null);
-      formData.append("link",element.link ? element.link : null);
-      formData.append("text",element.text ? element.text : null);
+      if(element.title) formData.append("title",element.title);
+      if(element.subtitle) formData.append("subtitle",element.subtitle);
+      if(element.image) formData.append("image",element.image);
+      if(element.link) formData.append("link",element.link);
+      if(element.video) formData.append("video",element.video );
+      if(element.text) formData.append("text",element.text);
       formData.append("order",element.order);
       formData.append("laboratory",element.laboratory );
 
-      if(i == params.length-1) formData.append("last","false");
-      else formData.append("last","true");
+      if(i == params.length-1) formData.append("is_last","true");
+      else formData.append("is_last","false");
       
-      console.log("----- New element -----")
-      for (const pair of element.entries()) {
-        console.log(`${pair[0]}, ${pair[1]}`);
-      }
-      this.http.post<any>( url, formData);
+      await lastValueFrom(this.http.post<any>( url, formData));
     }
 
   }

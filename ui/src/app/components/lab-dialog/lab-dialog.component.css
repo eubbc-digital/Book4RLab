@@ -10,3 +10,12 @@
   margin-bottom: 20px;
 }
 
+mat-dialog-content{
+  width: 105%;
+  padding-right: 17px;
+  box-sizing: content-box;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  min-height: 60vh;
+}
+

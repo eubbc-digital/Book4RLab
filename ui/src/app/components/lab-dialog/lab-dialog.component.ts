@@ -143,10 +143,11 @@ export class LabDialogComponent implements OnInit {
    async save() {
     this.cleanDescription();
     var descriptionParams = this.getDescriptionParams(this.labDescription.components);
+  
     if (descriptionParams.length == 0 ){
       await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
     }else{
-      this.labService.postLabContent(descriptionParams);
+      await this.labService.postLabContent(descriptionParams);
     }
     
     if (this.labForm.valid) {
@@ -161,9 +162,18 @@ export class LabDialogComponent implements OnInit {
   getDescriptionParams(descriptionArray:any[]){
     var params : any[] = [];
     for(var i = 0; i < descriptionArray.length ; i++){
-      descriptionArray[i].laboratory = this.selectedLabId;
-      descriptionArray[i].order = i + 1;
-      params.push(descriptionArray[i]);
+      if(descriptionArray[i]["image"] && typeof descriptionArray[i]["image"] == "string"){
+        params.push({laboratory:this.selectedLabId,order:i+1})
+      }
+      else if(descriptionArray[i]["video"] && typeof descriptionArray[i]["video"] == "string"){
+        params.push({laboratory:this.selectedLabId,order:i+1})
+      }
+      else{
+        descriptionArray[i].laboratory = this.selectedLabId;
+        descriptionArray[i].order = i + 1;
+        params.push(descriptionArray[i]);
+      }
+      
     }
     return params;
   }

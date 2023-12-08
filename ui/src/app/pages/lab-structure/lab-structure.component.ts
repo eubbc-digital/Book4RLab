@@ -26,15 +26,17 @@ export class LabStructureComponent implements OnInit {
 
   components: any = [];
 
-  myLabContent : any = [];
+  myLabContent: any = [];
 
-  types :any = [
-    { name: 'image' , display: 'Image'},
-    { name: 'link', display : 'URL'},
-    { name: 'subtitle',display:'Subtitle' },
-    { name: 'text' , display:'Normal Text'},
-    { name: 'title' , display : 'Title'},
-    { name: 'video' , display:'Video'},
+  disabledBooking: boolean = false;
+
+  types: any = [
+    { name: 'image', display: 'Image' },
+    { name: 'link', display: 'URL' },
+    { name: 'subtitle', display: 'Subtitle' },
+    { name: 'text', display: 'Normal Text' },
+    { name: 'title', display: 'Title' },
+    { name: 'video', display: 'Video' },
   ];
 
   constructor(
@@ -49,35 +51,29 @@ export class LabStructureComponent implements OnInit {
       next: async (params) => {
         var id = params['id'];
         this.lab = await lastValueFrom(this.labService.getLabById(id));
+        this.disabledBooking = !this.lab.is_available_now;
         this.getLabsContentId(id);
       },
     });
   }
 
-  async getLabsContentId(id:number){
+  async getLabsContentId(id: number) {
     this.myLabContent = await lastValueFrom(this.labService.getLabContent(id));
-    // this.myLabContent = labsContents.filter((content)=> content.laboratory == id);
-    this.myLabContent.sort((a:any,b:any) => a.order - b.order);
-
+    this.myLabContent.sort((a: any, b: any) => a.order - b.order);
   }
 
-  getUrlFile(file:any){
+  getUrlFile(file: any) {
     var reader = new FileReader();
     reader.onload = (event: any) => {
       var url = event.target.result;
       return url;
     };
     reader.onerror = (event: any) => {
-      console.log("File could not be read: " + event.target.error.code);
+      console.log('File could not be read: ' + event.target.error.code);
     };
-   
 
     reader.readAsDataURL(file);
-    
   }
- 
-
-
 
   selectLab(lab: Lab): void {
     this.router.navigate(['/booking', lab.id]);
