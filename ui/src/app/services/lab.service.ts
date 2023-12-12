@@ -68,6 +68,9 @@ export class LabService {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api.content}`;
     return this.http.get<any>(url);
   }
+  getLabFile(filepath: string) {
+    return this.http.get(`${filepath}`, { responseType: 'blob' });
+  }
   deleteLabContent(labId: number){
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api['delete-content']}`
     return this.http.delete(url);

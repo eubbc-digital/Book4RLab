@@ -67,18 +67,11 @@
           </mat-form-field>
 
           <div *ngIf="component['image'] != null">
-            <!-- <input
-                    type="file"
-                    accept="image/*"
-                    [value]="component['image']"
-                    (change)="onUploadFile($event, i,'image')"
-                  />
-                  <img [src]="component['image']" /> -->
             <div class="input-field">
               <div *ngIf="component['image'] != ''; else showImageLabel">
                 <p>
                   <strong>Current image: </strong>
-                  {{ getImageName(component["image"].name) }}
+                  {{ getImageName(component["image"]) }}
                 </p>
 
                 <p>
@@ -87,7 +80,7 @@
               </div>
 
               <ng-template #showImageLabel>
-                <p class="file-label">Choose an image for description:</p>
+                <p class="file-label">Choose an image/video for description:</p>
               </ng-template>
 
               <input
@@ -100,9 +93,25 @@
             </div>
           </div>
           <div *ngIf="component['video'] != null" class="video-container">
+            <div *ngIf="component['video'] != ''; else showImageLabel">
+              <p>
+                <strong>Current video: </strong>
+                {{ getImageName(component["video"]) }}
+              </p>
+
+              <p>
+                <strong>If you want to change, choose another:</strong>
+              </p>
+            </div>
+
+            <ng-template #showImageLabel>
+              <p class="file-label">Choose an image/video for description:</p>
+            </ng-template>
+
             <input
               type="file"
               accept="video/*"
+              name="Video"
               (change)="onUploadFile($event, i, 'video')"
             />
 

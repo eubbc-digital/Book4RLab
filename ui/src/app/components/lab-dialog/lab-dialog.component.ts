@@ -1,8 +1,8 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
@@ -25,7 +25,7 @@ import { lastValueFrom } from 'rxjs';
   styleUrls: ['./lab-dialog.component.css'],
 })
 export class LabDialogComponent implements OnInit {
-  @ViewChild(LabDescriptionComponent) labDescription! : LabDescriptionComponent;
+  @ViewChild(LabDescriptionComponent) labDescription!: LabDescriptionComponent;
 
   title = 'Register laboratory';
   imageName = '';
@@ -140,16 +140,18 @@ export class LabDialogComponent implements OnInit {
       });
   }
 
-   async save() {
+  async save() {
     this.cleanDescription();
-    var descriptionParams = this.getDescriptionParams(this.labDescription.components);
-  
-    if (descriptionParams.length == 0 ){
+    var descriptionParams = await this.getDescriptionParams(
+      this.labDescription.components
+    );
+
+    if (descriptionParams.length == 0) {
       await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
-    }else{
+    } else {
       await this.labService.postLabContent(descriptionParams);
     }
-    
+
     if (this.labForm.valid) {
       if (!this.dialogData) this.addLab();
       else this.updateLab();
@@ -159,23 +161,51 @@ export class LabDialogComponent implements OnInit {
     }
   }
 
-  getDescriptionParams(descriptionArray:any[]){
-    var params : any[] = [];
-    for(var i = 0; i < descriptionArray.length ; i++){
-      if(descriptionArray[i]["image"] && typeof descriptionArray[i]["image"] == "string"){
-        params.push({laboratory:this.selectedLabId,order:i+1})
-      }
-      else if(descriptionArray[i]["video"] && typeof descriptionArray[i]["video"] == "string"){
-        params.push({laboratory:this.selectedLabId,order:i+1})
-      }
-      else{
+  async getDescriptionParams(descriptionArray: any[]) {
+    var params: any[] = [];
+    for (var i = 0; i < descriptionArray.length; i++) {
+      if (
+        descriptionArray[i]['image'] &&
+        typeof descriptionArray[i]['image'] == 'string'
+      ) {
+        var blobImage = await lastValueFrom(
+          this.labService.getLabFile(descriptionArray[i]['image'])
+        );
+        var fileType = this.getImageName(descriptionArray[i]['image']);
+        console.log('printing file type:', fileType);
+        const file = new File([blobImage], fileType);
+        params.push({
+          laboratory: this.selectedLabId,
+          order: i + 1,
+          image: file,
+        });
+      } else if (
+        descriptionArray[i]['video'] &&
+        typeof descriptionArray[i]['video'] == 'string'
+      ) {
+        var blobVideo = await lastValueFrom(
+          this.labService.getLabFile(descriptionArray[i]['video'])
+        );
+        var fileType = this.getImageName(descriptionArray[i]['video']);
+        console.log('printing file type:', fileType);
+        const file = new File([blobVideo], fileType);
+        params.push({
+          laboratory: this.selectedLabId,
+          order: i + 1,
+          video: file,
+        });
+      } else {
         descriptionArray[i].laboratory = this.selectedLabId;
         descriptionArray[i].order = i + 1;
         params.push(descriptionArray[i]);
       }
-      
     }
     return params;
+  }
+
+  async getBlobContent(fileUrl:string){
+    let blob = await fetch(fileUrl).then(r => r.blob());
+    return blob;
   }
 
   cleanDescription(): void {
@@ -190,7 +220,7 @@ export class LabDialogComponent implements OnInit {
   }
 
   closeDialog(msg?: string): void {
-    this.dialogRef.close("lab-description");
+    this.dialogRef.close('lab-description');
   }
 
   onFileChange(event: any): void {

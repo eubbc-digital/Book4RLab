@@ -38,7 +38,6 @@ export class LabDescriptionComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.labId) {
-      // this.divideInfoDetails();ç
       this.getLabsContentId(this.labId);
     } 
   }
