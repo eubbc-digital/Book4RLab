@@ -7,7 +7,10 @@ Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
+import hashlib
+import os
 import uuid
 
 class Booking(models.Model):
@@ -95,13 +98,49 @@ class Laboratory(models.Model):
     def __str__(self):
         return f"{self.name} (E={self.enabled}, V={self.visible}) ({self.id})"
 
+
+def generate_unique_filename_image(instance, filename):
+    image_content = instance.image.read()
+    md5_hash = hashlib.md5(image_content).hexdigest()
+    _, ext = os.path.splitext(filename)
+    new_filename = f"{md5_hash}{ext}"
+    return os.path.join('content_photos', new_filename)
+
+def generate_unique_filename_video(instance, filename):
+    video_content= instance.video.read()
+    md5_hash = hashlib.md5(video_content).hexdigest()
+    _, ext = os.path.splitext(filename)
+    new_filename = f"{md5_hash}{ext}"
+    return os.path.join('content_videos', new_filename)
+
+class UniqueFilenameStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        if max_length and len(name) > max_length:
+            raise(Exception("name's length is greater than max_length"))
+        return name
+
+    def _save(self, name, content):
+        if self.exists(name):
+            return name
+        return super(UniqueFilenameStorage, self)._save(name, content)
+
 class LaboratoryContent(models.Model):
     laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE, related_name='contents')
     order = models.PositiveIntegerField()
 
     text = models.CharField(max_length=500, blank=True, null=True)
-    image = models.ImageField(upload_to='content_photos/', blank=True, null=True)
-    video = models.FileField(upload_to='content_videos/', blank=True, null=True)
+    image = models.ImageField(
+        upload_to=generate_unique_filename_image,
+        storage=UniqueFilenameStorage(),
+        blank=True,
+        null=True
+    )
+    video = models.FileField(
+        upload_to=generate_unique_filename_video,
+        storage=UniqueFilenameStorage(),
+        blank=True,
+        null=True
+    )
     link = models.URLField(blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     subtitle = models.CharField(max_length=100, blank=True, null=True)
