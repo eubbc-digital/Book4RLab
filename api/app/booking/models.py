@@ -128,7 +128,7 @@ class LaboratoryContent(models.Model):
     laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE, related_name='contents')
     order = models.PositiveIntegerField()
 
-    text = models.CharField(max_length=500, blank=True, null=True)
+    text = models.CharField(max_length=1500, blank=True, null=True)
     image = models.ImageField(
         upload_to=generate_unique_filename_image,
         storage=UniqueFilenameStorage(),
