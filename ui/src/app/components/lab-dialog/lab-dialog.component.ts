@@ -232,6 +232,7 @@ export class LabDialogComponent implements OnInit {
   }
 
   getImageName(imageName: string | null): string {
+    console.log("Image name in dialog:", imageName);
     const defaultImage = 'default.jpeg';
     return imageName
       ? imageName.split('/').pop() ?? defaultImage

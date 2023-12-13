@@ -60,11 +60,16 @@ export class LabDescriptionComponent implements OnInit {
     }
   }
 
-  getImageName(imageName: string | null): string {
-    const defaultImage = 'default.jpeg';
-    return imageName
-      ? imageName.split('/').pop() ?? defaultImage
-      : defaultImage;
+  getImageName(imageName: string | File | null): string {
+    if(typeof imageName == 'string'){
+      console.log("Image name in description:", imageName);
+      const defaultImage = 'default.jpeg';
+      return imageName
+        ? imageName.split('/').pop() ?? defaultImage
+        : defaultImage;
+    }
+    else return imageName!.name;
+    
   }
 
 
