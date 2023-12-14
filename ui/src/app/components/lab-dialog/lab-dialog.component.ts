@@ -172,7 +172,6 @@ export class LabDialogComponent implements OnInit {
           this.labService.getLabFile(descriptionArray[i]['image'])
         );
         var fileType = this.getImageName(descriptionArray[i]['image']);
-        console.log('printing file type:', fileType);
         const file = new File([blobImage], fileType);
         params.push({
           laboratory: this.selectedLabId,
@@ -187,7 +186,6 @@ export class LabDialogComponent implements OnInit {
           this.labService.getLabFile(descriptionArray[i]['video'])
         );
         var fileType = this.getImageName(descriptionArray[i]['video']);
-        console.log('printing file type:', fileType);
         const file = new File([blobVideo], fileType);
         params.push({
           laboratory: this.selectedLabId,
@@ -232,7 +230,6 @@ export class LabDialogComponent implements OnInit {
   }
 
   getImageName(imageName: string | null): string {
-    console.log("Image name in dialog:", imageName);
     const defaultImage = 'default.jpeg';
     return imageName
       ? imageName.split('/').pop() ?? defaultImage

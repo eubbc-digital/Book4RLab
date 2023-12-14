@@ -12,7 +12,8 @@
 
 mat-dialog-content{
   width: 105%;
-  padding-right: 17px;
+  padding-right: 20px;
+  padding-top: 20px;
   box-sizing: content-box;
   overflow-x: hidden;
   overflow-y: scroll;

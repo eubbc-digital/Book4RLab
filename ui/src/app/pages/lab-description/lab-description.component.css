@@ -48,10 +48,6 @@ video{
     position: relative;
     width: 100%;
 }
-/* .page-content{
-  height: 100%;
-} */
-
 
 /* Style The Dropdown Button */
 .dropbtn {
@@ -72,7 +68,7 @@ video{
   .dropdown-content {
     display: none;
     position: absolute;
-    left: -15px;
+    left: -10px;
     min-height: 300px;
     z-index: 5;
     background-color: #f9f9f9;
@@ -87,6 +83,9 @@ video{
     text-decoration: none;
     display: flex;
     flex-direction: column;
+  }
+  #btn-add{
+    margin-left: 10px;
   }
   
   /* Change color of dropdown links on hover */

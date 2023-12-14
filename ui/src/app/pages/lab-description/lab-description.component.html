@@ -2,8 +2,8 @@
   <span>No general description for now.</span>
   <br />
   <div class="dropdown">
-    <button class="dropbtn" mat-icon-button aria-label="Clear">
-      Add new component <mat-icon>add</mat-icon>
+    <button id="btn-add" class="dropbtn" mat-icon-button aria-label="Clear">
+      Add new component<mat-icon>add</mat-icon>
     </button>
     <div class="dropdown-content">
       <a *ngFor="let type of types" (click)="addNewComponent(type.name, 0)">{{
@@ -71,8 +71,8 @@
               <div *ngIf="component['image'] != ''; else showImageLabel">
                 <p>
                   <strong>Current image: </strong>
-                  {{ getImageName(component["image"]) }}
                 </p>
+                <img [src]="contentArray[i]" />
 
                 <p>
                   <strong>If you want to change, choose another:</strong>
@@ -96,8 +96,17 @@
             <div *ngIf="component['video'] != ''; else showImageLabel">
               <p>
                 <strong>Current video: </strong>
-                {{ getImageName(component["video"]) }}
               </p>
+              <vg-player>
+                <video
+                  [vgMedia]="$any(media)"
+                  #media
+                  id="singleVideo"
+                  preload="auto"
+                  controls
+                  [src]="contentArray[i]"
+                ></video>
+              </vg-player>
 
               <p>
                 <strong>If you want to change, choose another:</strong>
@@ -114,17 +123,6 @@
               name="Video"
               (change)="onUploadFile($event, i, 'video')"
             />
-
-            <!-- <vg-player>
-              <video
-                [vgMedia]="$any(media)"
-                #media
-                id="singleVideo"
-                preload="auto"
-                controls
-                [src]="component['video']"
-              ></video>
-            </vg-player> -->
           </div>
         </div>
       </div>

@@ -21,7 +21,9 @@ export class LabDescriptionComponent implements OnInit {
   defaultLabImg = './assets/remote-lab.png';
 
   components: any[] = [];
-  imageName :string[]= [];
+  imageName: string[] = [];
+
+  contentArray: string[] | any[] = [];
 
   types: any = [
     { name: 'image', display: 'Image' },
@@ -32,6 +34,13 @@ export class LabDescriptionComponent implements OnInit {
     { name: 'video', display: 'Video' },
   ];
 
+  typesSearch: any = [
+    { name: 'link', display: 'URL' },
+    { name: 'subtitle', display: 'Subtitle' },
+    { name: 'text', display: 'Normal Text' },
+    { name: 'title', display: 'Title' },
+  ];
+
   constructor(private router: Router, private labService: LabService) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
   }
@@ -39,7 +48,7 @@ export class LabDescriptionComponent implements OnInit {
   ngOnInit(): void {
     if (this.labId) {
       this.getLabsContentId(this.labId);
-    } 
+    }
   }
 
   async getLabsContentId(id: number) {
@@ -49,29 +58,35 @@ export class LabDescriptionComponent implements OnInit {
     this.myLabContent = labsContents;
     this.myLabContent.sort((a, b) => a.order - b.order);
     for (var i = 0; i < this.myLabContent.length; i++) {
-      for (var t = 0; t < this.types.length; t++) {
-        if (this.myLabContent[i][this.types[t].name]) {
-          this.components.push({
-            [this.types[t].name]: this.myLabContent[i][this.types[t].name],
-          });
-          break;
+      if (
+        this.myLabContent[i]['image'] &&
+        typeof this.myLabContent[i]['image'] == 'string'
+      ) {
+        this.components.push({
+          image: this.myLabContent[i]['image'],
+        });
+        this.contentArray.push(this.myLabContent[i]['image']);
+      } else if (
+        this.myLabContent[i]['video'] != null &&
+        typeof this.myLabContent[i]['video'] == 'string'
+      ) {
+        this.components.push({
+          video: this.myLabContent[i]['video'],
+        });
+        this.contentArray.push(this.myLabContent[i]['video']);
+      } else {
+        for (var t = 0; t < this.types.length; t++) {
+          if (this.myLabContent[i][this.types[t].name]) {
+            this.components.push({
+              [this.types[t].name]: this.myLabContent[i][this.types[t].name],
+            });
+            this.contentArray.push('');
+            break;
+          }
         }
       }
     }
   }
-
-  getImageName(imageName: string | File | null): string {
-    if(typeof imageName == 'string'){
-      console.log("Image name in description:", imageName);
-      const defaultImage = 'default.jpeg';
-      return imageName
-        ? imageName.split('/').pop() ?? defaultImage
-        : defaultImage;
-    }
-    else return imageName!.name;
-    
-  }
-
 
   getType(typeCode: any) {
     for (var i = 0; i < this.types.length; i++) {
@@ -112,25 +127,24 @@ export class LabDescriptionComponent implements OnInit {
     this.components.splice(index + 1, 0, component[0]);
   }
 
-  onUploadFile(event: any, index: number, field:string): void {
+  onUploadFile(event: any, index: number, field: string): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
       this.components[index][field] = file;
+      this.getUrlFile(file, index);
     }
   }
-  // async getUrlFile(file:any){
-  //   var reader = new FileReader();
-  //   reader.onload = (event: any) => {
-  //     var url = event.target.result;
-  //     return url;
-  //   };
-  //   reader.onerror = (event: any) => {
-  //     console.log("File could not be read: " + event.target.error.code);
-  //   };
-   
-  //   reader.readAsDataURL(file);
-    
-  // }
+  async getUrlFile(file: any, index: number) {
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.contentArray[index] = event.target.result;
+    };
+    reader.onerror = (event: any) => {
+      console.log('File could not be read: ' + event.target.error.code);
+    };
+
+    reader.readAsDataURL(file);
+  }
 
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
