@@ -5,8 +5,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams ,HttpHeaders} from '@angular/common/http';
+import { Observable, lastValueFrom } from 'rxjs';
 import { Lab } from '../interfaces/lab';
 import config from '../config.json';
 
@@ -62,9 +62,42 @@ export class LabService {
     formData.append('visible', String(newLab.visible!));
     formData.append('enabled', '1');
 
-    return this.http.patch<Lab>(`${this.url}${id}/`, formData);
+    return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }
+  getLabContent(labId:number) {
+    var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api.content}`;
+    return this.http.get<any>(url);
+  }
+  getLabFile(filepath: string) {
+    return this.http.get(`${filepath}`, { responseType: 'blob' });
+  }
+  deleteLabContent(labId: number){
+    var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api['delete-content']}`
+    return this.http.delete(url);
+  }
+  async postLabContent(params: any) {
+    var url: string = `${config.api.baseUrl}${config.api.labs}${config.api.content}`;
 
+    for(var i = 0 ; i< params.length ; i++){
+      var element = params[i];
+
+      var formData = new FormData();
+      if(element.title) formData.append("title",element.title);
+      if(element.subtitle) formData.append("subtitle",element.subtitle);
+      if(element.image) formData.append("image",element.image);
+      if(element.link) formData.append("link",element.link);
+      if(element.video) formData.append("video",element.video );
+      if(element.text) formData.append("text",element.text);
+      formData.append("order",element.order);
+      formData.append("laboratory",element.laboratory );
+
+      if(i == params.length-1) formData.append("is_last","true");
+      else formData.append("is_last","false");
+      
+      await lastValueFrom(this.http.post<any>( url, formData));
+    }
+
+  }
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };
     return this.http.patch<Lab>(`${this.url}${lab.id}/`, deletedLab);

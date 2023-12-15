@@ -5,7 +5,7 @@ Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 """
 
 from rest_framework import serializers
-from booking.models import Booking, Equipment, Laboratory, TimeFrame
+from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from django.utils.crypto import get_random_string
 from datetime import datetime, date, timedelta
 
@@ -57,24 +57,6 @@ class EquipmentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['owner'] = self.context['request'].user
         return Equipment.objects.create(**validated_data)
-
-
-class LaboratorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Laboratory
-        fields = '__all__'
-        extra_kwargs = {
-            'name': {'required': True},
-            'description': {'required': False},
-            'owner': {'required': False},
-            'image': {'required': False}
-        }
-
-    def create(self, validated_data):
-        validated_data['owner'] = self.context['request'].user
-        return Laboratory.objects.create(**validated_data)
-
 
 class TimeFrameSerializer(serializers.ModelSerializer):
 
@@ -145,3 +127,35 @@ class TimeFrameSerializer(serializers.ModelSerializer):
         Booking.objects.bulk_create(bookings)
 
         return timeframe
+
+class LaboratorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Laboratory
+        fields = '__all__'
+        extra_kwargs = {
+            'name': {'required': True},
+            'description': {'required': False},
+            'owner': {'required': False},
+            'image': {'required': False}
+        }
+
+    is_available_now = serializers.ReadOnlyField()
+
+    def create(self, validated_data):
+        validated_data['owner'] = self.context['request'].user
+        return Laboratory.objects.create(**validated_data)
+
+class LaboratoryContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LaboratoryContent
+        fields = '__all__'
+
+    def validate(self, data):
+        non_null_fields = ['text', 'image', 'video', 'link', 'title', 'subtitle']
+        filled_fields = [field for field in non_null_fields if data.get(field) is not None]
+
+        if len(filled_fields) != 1:
+            raise serializers.ValidationError("Exactly one field among text, image, video, link, title, subtitle should have a non-null value.")
+
+        return data

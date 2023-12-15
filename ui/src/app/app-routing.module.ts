@@ -20,12 +20,22 @@ import { LabsGuard } from './services/guards/labs.guard';
 import { AuthGuard } from './services/guards/auth.guard';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ActivationComponent } from './pages/activation/activation.component';
+import { LabDescriptionComponent } from './pages/lab-description/lab-description.component';
+import { LabStructureComponent } from './pages/lab-structure/lab-structure.component';
 
 const routes: Routes = [
   {
     path: 'labs',
     component: LabGridComponent,
   },
+  { path: 'lab-description', 
+   component: LabDescriptionComponent,
+   canActivate: [LabsGuard],
+   },
+   { 
+    path: 'lab-structure', 
+    component: LabStructureComponent,
+   },
   {
     path: 'booking/:id',
     component: BookingStepperComponent,
@@ -36,9 +46,7 @@ const routes: Routes = [
     component: AccessComponent,
     canActivate: [AuthGuard],
   },
-  { path: 'activate',
-    component: ActivationComponent
-  },
+  { path: 'activate', component: ActivationComponent },
   { path: '', redirectTo: '/labs', pathMatch: 'full' },
   {
     path: 'my-reservations',

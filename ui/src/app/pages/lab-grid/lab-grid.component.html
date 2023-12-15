@@ -54,14 +54,22 @@
             {{ lab.description }}
           </p>
         </mat-card-content>
-        <mat-card-actions align="end">
+        <mat-card-actions align="end" class="actions-c">
+          <div *ngIf="lab.is_available_now == true">
+            <span style="color: green; font-weight: bold;"> AVAILABLE </span>
+          </div>
+
+          <div *ngIf="lab.is_available_now == false">
+            <span style="color: orange; font-weight: bold;"> NOT AVAILABLE </span>
+          </div>
+
           <button
             mat-button
             color="primary"
             class="card-button"
-            (click)="selectLab(lab)"
+            (click)="moreInfoLab(lab)"
           >
-            BOOK
+            MORE INFO >>
           </button>
         </mat-card-actions>
       </mat-card>

@@ -1,10 +1,10 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -13,8 +13,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-lab-dialog',
@@ -22,12 +25,16 @@ import { LabService } from 'src/app/services/lab.service';
   styleUrls: ['./lab-dialog.component.css'],
 })
 export class LabDialogComponent implements OnInit {
+  @ViewChild(LabDescriptionComponent) labDescription!: LabDescriptionComponent;
+
   title = 'Register laboratory';
   imageName = '';
 
   selectedLabId = 0;
 
   submitted = false;
+
+  lab!: any;
 
   labForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
@@ -87,6 +94,7 @@ export class LabDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
+      this.lab = lab;
 
       this.selectedLabId = lab.id;
       this.labForm.controls['name'].setValue(lab.name!);
@@ -132,8 +140,17 @@ export class LabDialogComponent implements OnInit {
       });
   }
 
-  save(): void {
+  async save() {
     this.cleanDescription();
+    var descriptionParams = await this.getDescriptionParams(
+      this.labDescription.components
+    );
+
+    if (descriptionParams.length == 0) {
+      await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
+    } else {
+      await this.labService.postLabContent(descriptionParams);
+    }
 
     if (this.labForm.valid) {
       if (!this.dialogData) this.addLab();
@@ -142,6 +159,51 @@ export class LabDialogComponent implements OnInit {
       this.toastr.error('Please fill in correctly the data.');
       this.displayFormErrors();
     }
+  }
+
+  async getDescriptionParams(descriptionArray: any[]) {
+    var params: any[] = [];
+    for (var i = 0; i < descriptionArray.length; i++) {
+      if (
+        descriptionArray[i]['image'] &&
+        typeof descriptionArray[i]['image'] == 'string'
+      ) {
+        var blobImage = await lastValueFrom(
+          this.labService.getLabFile(descriptionArray[i]['image'])
+        );
+        var fileType = this.getImageName(descriptionArray[i]['image']);
+        const file = new File([blobImage], fileType);
+        params.push({
+          laboratory: this.selectedLabId,
+          order: i + 1,
+          image: file,
+        });
+      } else if (
+        descriptionArray[i]['video'] &&
+        typeof descriptionArray[i]['video'] == 'string'
+      ) {
+        var blobVideo = await lastValueFrom(
+          this.labService.getLabFile(descriptionArray[i]['video'])
+        );
+        var fileType = this.getImageName(descriptionArray[i]['video']);
+        const file = new File([blobVideo], fileType);
+        params.push({
+          laboratory: this.selectedLabId,
+          order: i + 1,
+          video: file,
+        });
+      } else {
+        descriptionArray[i].laboratory = this.selectedLabId;
+        descriptionArray[i].order = i + 1;
+        params.push(descriptionArray[i]);
+      }
+    }
+    return params;
+  }
+
+  async getBlobContent(fileUrl:string){
+    let blob = await fetch(fileUrl).then(r => r.blob());
+    return blob;
   }
 
   cleanDescription(): void {
@@ -153,6 +215,10 @@ export class LabDialogComponent implements OnInit {
     if (msg) this.toastr.success(msg);
     this.labForm.reset();
     this.dialogRef.close(msg);
+  }
+
+  closeDialog(msg?: string): void {
+    this.dialogRef.close('lab-description');
   }
 
   onFileChange(event: any): void {

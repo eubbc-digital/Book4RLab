@@ -77,15 +77,19 @@ export class LabsComponent implements OnInit {
 
   openLabDialog(): void {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
+    dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'dialog-responsive';
     dialogConfig.data = this.selectedLab;
+    
 
     const dialogRef = this.dialog.open(LabDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((response) => {
-      if (response) this.getLabs(this.userId);
+      if(response == "lab-description"){
+        this.router.navigate(["/lab-description"]);
+      }
+      else if (response) this.getLabs(this.userId);
       this.selectedLab = undefined;
     });
   }

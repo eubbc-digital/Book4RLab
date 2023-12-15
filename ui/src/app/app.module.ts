@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QrCodeModule } from 'ng-qrcode';
-import { CountdownModule } from 'ngx-countdown';
+
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgHttpLoaderModule } from 'ng-http-loader';
@@ -57,6 +57,14 @@ import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 import { FilterPipe } from './pipes/lab-filter.pipe';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
+import { LabDescriptionComponent } from './pages/lab-description/lab-description.component';
+import { CountdownModule } from 'ngx-countdown';
+
+import {VgCoreModule} from '@videogular/ngx-videogular/core';
+import {VgControlsModule} from '@videogular/ngx-videogular/controls';
+import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
+import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+import { LabStructureComponent } from './pages/lab-structure/lab-structure.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +97,8 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
     FilterPipe,
     ProfileComponent,
     ProfileFormComponent,
+    LabDescriptionComponent,
+    LabStructureComponent,
   ],
   imports: [
     BrowserModule,
@@ -107,6 +117,10 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
     }),
     HttpClientModule,
     NgHttpLoaderModule.forRoot(),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   providers: [
     CookieService,

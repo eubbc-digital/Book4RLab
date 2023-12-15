@@ -55,6 +55,13 @@ img {
   }
 }
 
+.actions-c{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: end;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }

@@ -1,0 +1,102 @@
+form{
+  padding: 0px;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.col-7{
+  position: relative;
+  width: 70%;
+}
+.col-8{
+    position: relative;
+    width: 80%;
+}
+.col-2 {
+    position: relative;
+    width: 20%;
+}
+.col-1 {
+  position: relative;
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+input,textarea {
+  width: 100%;
+}
+
+img {
+  position: relative;
+  width: 100%;
+}
+
+.video-container {
+  width: 100%;
+}
+
+video{
+    position: relative;
+    width: 100%;
+}
+
+/* Style The Dropdown Button */
+.dropbtn {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    left: -10px;
+    min-height: 300px;
+    z-index: 5;
+    background-color: #f9f9f9;
+    /* min-width: 180px; */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+  }
+  #btn-add{
+    margin-left: 10px;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #f1f1f1}
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  mat-form-field{
+    margin-top: 20px;
+  }

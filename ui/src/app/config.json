@@ -10,7 +10,10 @@
       "passwordReset": "accounts/password_reset/"
     },
     "labs": "laboratories/",
+    "labs-update":"update/",
     "public-labs": "public-laboratories/",
+    "content": "contents/",
+    "delete-content": "delete-contents/",
     "equipments": "equipments/",
     "timeframes": "timeframes/",
     "booking": {
