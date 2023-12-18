@@ -104,14 +104,14 @@ def generate_unique_filename_image(instance, filename):
     md5_hash = hashlib.md5(image_content).hexdigest()
     _, ext = os.path.splitext(filename)
     new_filename = f"{md5_hash}{ext}"
-    return os.path.join('content_photos', new_filename)
+    return os.path.join('labs', new_filename)
 
 def generate_unique_filename_video(instance, filename):
     video_content= instance.video.read()
     md5_hash = hashlib.md5(video_content).hexdigest()
     _, ext = os.path.splitext(filename)
     new_filename = f"{md5_hash}{ext}"
-    return os.path.join('content_videos', new_filename)
+    return os.path.join('labs', new_filename)
 
 class UniqueFilenameStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
