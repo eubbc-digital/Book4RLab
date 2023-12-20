@@ -100,6 +100,6 @@ export class LabService {
   }
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };
-    return this.http.patch<Lab>(`${this.url}${lab.id}/`, deletedLab);
+    return this.http.patch<Lab>(`${this.url}${lab.id}/${config.api['labs-update']}`, deletedLab);
   }
 }
