@@ -141,6 +141,7 @@ class LaboratoryContent(models.Model):
         blank=True,
         null=True
     )
+    video_link = models.URLField(blank=True, null=True)
     link = models.URLField(blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     subtitle = models.CharField(max_length=100, blank=True, null=True)
@@ -157,6 +158,8 @@ class LaboratoryContent(models.Model):
         return f"({self.order}) Image ({self.laboratory.name})"
       if self.video:
         return f"({self.order}) Video ({self.laboratory.name})"
+      if self.video_link:
+        return f"({self.order}) Video Link ({self.laboratory.name})"
       if self.link:
         return f"({self.order}) Link ({self.laboratory.name})"
       if self.title:

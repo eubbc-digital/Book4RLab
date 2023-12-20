@@ -310,7 +310,7 @@ class LaboratoryContentList(generics.ListCreateAPIView):
             serializer = LaboratoryContentSerializer(content_instance, data=data)
             if serializer.is_valid():
                 field_name = [key for key in data.keys() if key not in ('laboratory', 'order')][0]
-                for field in ('text', 'image', 'video', 'link', 'title', 'subtitle'):
+                for field in ('text', 'image', 'video', 'video_link', 'link', 'title', 'subtitle'):
                     if field != field_name:
                         setattr(content_instance, field, None)
 
