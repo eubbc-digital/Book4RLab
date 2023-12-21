@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { LabService } from 'src/app/services/lab.service';
 import { compilePipeFromMetadata } from '@angular/compiler';
 import { FilterPipe } from '../../pipes/lab-filter.pipe';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-lab-description',
@@ -41,7 +42,7 @@ export class LabDescriptionComponent implements OnInit {
     { name: 'title', display: 'Title' },
   ];
 
-  constructor(private router: Router, private labService: LabService) {
+  constructor(private router: Router, private labService: LabService, private toastr: ToastrService,) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
   }
 
@@ -130,8 +131,15 @@ export class LabDescriptionComponent implements OnInit {
   onUploadFile(event: any, index: number, field: string): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
-      this.components[index][field] = file;
-      this.getUrlFile(file, index);
+      const file_size = file.size;
+      if(file_size <= 50000000){
+        this.components[index][field] = file;
+        this.getUrlFile(file, index);
+      }
+      else{
+        this.toastr.error("File size must be 50MB or smaller.");
+        this.deleteComponent(index);
+      }
     }
   }
   async getUrlFile(file: any, index: number) {
