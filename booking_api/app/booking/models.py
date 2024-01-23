@@ -41,9 +41,6 @@ class Equipment(models.Model):
     enabled = models.BooleanField(default=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='equipment_owner', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.name} ({self.laboratory.name}) ({self.id})"
-
 class TimeFrame(models.Model):
 
     start_date = models.DateTimeField()
@@ -95,23 +92,20 @@ class Laboratory(models.Model):
     def is_available_now(self):
         return self.is_timeframe_available_now()
 
-    def __str__(self):
-        return f"{self.name} (E={self.enabled}, V={self.visible}) ({self.id})"
-
 
 def generate_unique_filename_image(instance, filename):
     image_content = instance.image.read()
     md5_hash = hashlib.md5(image_content).hexdigest()
     _, ext = os.path.splitext(filename)
     new_filename = f"{md5_hash}{ext}"
-    return os.path.join('labs', new_filename)
+    return os.path.join('labs_content_photos', new_filename)
 
 def generate_unique_filename_video(instance, filename):
     video_content= instance.video.read()
     md5_hash = hashlib.md5(video_content).hexdigest()
     _, ext = os.path.splitext(filename)
     new_filename = f"{md5_hash}{ext}"
-    return os.path.join('labs', new_filename)
+    return os.path.join('labs_content_videos', new_filename)
 
 class UniqueFilenameStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
@@ -150,19 +144,3 @@ class LaboratoryContent(models.Model):
     class Meta:
         ordering = ['order']
         unique_together = ['laboratory', 'order']
-
-    def __str__(self):
-      if self.text:
-        return f"({self.order}) Text ({self.laboratory.name})"
-      if self.image:
-        return f"({self.order}) Image ({self.laboratory.name})"
-      if self.video:
-        return f"({self.order}) Video ({self.laboratory.name})"
-      if self.video_link:
-        return f"({self.order}) Video Link ({self.laboratory.name})"
-      if self.link:
-        return f"({self.order}) Link ({self.laboratory.name})"
-      if self.title:
-        return f"({self.order}) Title ({self.laboratory.name})"
-      if self.subtitle:
-        return f"({self.order}) Subtitle ({self.laboratory.name})"

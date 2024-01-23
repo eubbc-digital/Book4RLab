@@ -14,7 +14,7 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'name', 'last_name')
     ordering = ['id']
-    list_display = ['id', 'email', 'name', 'last_name']
+    list_display = ['id', 'email', 'name', 'last_name', 'country', 'time_zone', 'is_active']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal Info'), {'fields': ('name', 'last_name')}),
