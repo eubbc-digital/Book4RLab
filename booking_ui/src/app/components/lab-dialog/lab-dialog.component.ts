@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
 import { lastValueFrom } from 'rxjs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-lab-dialog',
@@ -25,6 +26,7 @@ import { lastValueFrom } from 'rxjs';
   styleUrls: ['./lab-dialog.component.css'],
 })
 export class LabDialogComponent implements OnInit {
+
   @ViewChild(LabDescriptionComponent) labDescription!: LabDescriptionComponent;
 
   title = 'Register laboratory';
@@ -33,6 +35,7 @@ export class LabDialogComponent implements OnInit {
   selectedLabId = 0;
 
   submitted = false;
+  onUpdate!:boolean;
 
   lab!: any;
 
@@ -54,8 +57,9 @@ export class LabDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private dialogRef: MatDialogRef<LabDialogComponent>,
     private toastr: ToastrService,
-    private labService: LabService
-  ) {}
+    private labService: LabService,
+  ) {
+  }
 
   trimAndValidateUrl(control: AbstractControl) {
     const value = control.value;
@@ -107,8 +111,10 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['visible'].setValue(lab.visible);
 
       this.title = 'Update laboratory';
+      this.onUpdate = true;
     } else {
       this.title = 'Register laboratory';
+      this.onUpdate = false;
     }
   }
 
@@ -242,4 +248,5 @@ export class LabDialogComponent implements OnInit {
       control.markAsTouched();
     });
   }
+  
 }

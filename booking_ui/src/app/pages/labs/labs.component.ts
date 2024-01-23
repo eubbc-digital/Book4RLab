@@ -81,10 +81,8 @@ export class LabsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'dialog-responsive';
     dialogConfig.data = this.selectedLab;
-    
-
     const dialogRef = this.dialog.open(LabDialogComponent, dialogConfig);
-
+    
     dialogRef.afterClosed().subscribe((response) => {
       if(response == "lab-description"){
         this.router.navigate(["/lab-description"]);
