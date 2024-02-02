@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
  * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
  * MIT License - See LICENSE file in the root directory
@@ -35,7 +35,7 @@ export class LabDialogComponent implements OnInit {
   selectedLabId = 0;
 
   submitted = false;
-  onUpdate!:boolean;
+  onUpdate!: boolean;
 
   lab!: any;
 
@@ -51,6 +51,7 @@ export class LabDialogComponent implements OnInit {
       this.trimAndValidateUrl,
     ]),
     description: new UntypedFormControl('', [Validators.required]),
+    notify_owner: new UntypedFormControl('', [Validators.required]),
   });
 
   constructor(
@@ -109,6 +110,7 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['url'].setValue(lab.url!);
       this.labForm.controls['description'].setValue(lab.description);
       this.labForm.controls['visible'].setValue(lab.visible);
+      this.labForm.controls['notify_owner'].setValue(lab.notify_owner);
 
       this.title = 'Update laboratory';
       this.onUpdate = true;
@@ -207,7 +209,7 @@ export class LabDialogComponent implements OnInit {
     return params;
   }
 
-  async getBlobContent(fileUrl:string){
+  async getBlobContent(fileUrl: string) {
     let blob = await fetch(fileUrl).then(r => r.blob());
     return blob;
   }
@@ -248,5 +250,5 @@ export class LabDialogComponent implements OnInit {
       control.markAsTouched();
     });
   }
-  
+
 }

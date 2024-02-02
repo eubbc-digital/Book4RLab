@@ -1,6 +1,6 @@
 <h2 mat-dialog-title class="text-center">{{ title }}</h2>
 
-<mat-tab-group >
+<mat-tab-group>
   <mat-tab label="Card Description">
     <mat-dialog-content>
       <form [formGroup]="labForm" ngNoForm>
@@ -40,17 +40,8 @@
             <p class="file-label">Choose an image for the laboratory:</p>
           </ng-template>
 
-          <input
-            class="file"
-            type="file"
-            name="Image"
-            accept="image/*"
-            (change)="onFileChange($event)"
-          />
-          <div
-            *ngIf="imageControl.errors && (imageControl.dirty || submitted)"
-            class="text-danger"
-          >
+          <input class="file" type="file" name="Image" accept="image/*" (change)="onFileChange($event)" />
+          <div *ngIf="imageControl.errors && (imageControl.dirty || submitted)" class="text-danger">
             <div *ngIf="imageControl.errors['required']">Image is required</div>
           </div>
         </div>
@@ -65,36 +56,28 @@
 
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Description</mat-label>
-          <textarea
-            #description
-            matInput
-            formControlName="description"
-            maxlength="500"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="2"
-            cdkAutosizeMaxRows="15"
-          ></textarea>
+          <textarea #description matInput formControlName="description" maxlength="500" cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="15"></textarea>
           <mat-hint align="end">{{ description.value.length }} / 500 </mat-hint>
         </mat-form-field>
 
-        <mat-checkbox
-          class="input-field"
-          id="visibility-checkbox"
-          formControlName="visible"
-        >
+        <mat-checkbox class="input-field" id="visibility-checkbox" formControlName="visible">
           Visible
+        </mat-checkbox>
+
+        <mat-checkbox class="input-field" id="notify-owner-checkbox" formControlName="notify_owner">
+          Notify Owner (When a booking is placed)
         </mat-checkbox>
 
         <p class="mat-small">* Indicates required fields.</p>
       </form>
     </mat-dialog-content>
   </mat-tab>
-  <mat-tab [disabled]= '!onUpdate' label="Laboratory Contents">
+  <mat-tab [disabled]='!onUpdate' label="Laboratory Contents">
     <mat-dialog-content>
-      <app-lab-description #description [labId] = "selectedLabId"></app-lab-description>
+      <app-lab-description #description [labId]="selectedLabId"></app-lab-description>
     </mat-dialog-content>
-    
+
   </mat-tab>
 </mat-tab-group>
 

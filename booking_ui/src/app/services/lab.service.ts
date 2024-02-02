@@ -1,11 +1,11 @@
-﻿/*
+/*
  * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
  * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
  * MIT License - See LICENSE file in the root directory
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams ,HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, lastValueFrom } from 'rxjs';
 import { Lab } from '../interfaces/lab';
 import config from '../config.json';
@@ -16,7 +16,7 @@ import config from '../config.json';
 export class LabService {
   private url: string = `${config.api.baseUrl}${config.api.labs}`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getLabs(owner?: number): Observable<Lab[]> {
     const labsUrl = owner ? `${this.url}?owner=${owner}` : this.url;
@@ -42,6 +42,7 @@ export class LabService {
     formData.append('url', lab.url!);
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
+    formData.append('notify_owner', String(lab.notify_owner!));
     formData.append('enabled', '1');
 
     return this.http.post<Lab>(this.url, formData);
@@ -60,41 +61,42 @@ export class LabService {
     if (newLab.url) formData.append('url', newLab.url!);
     if (newLab.description) formData.append('description', newLab.description!);
     formData.append('visible', String(newLab.visible!));
+    formData.append('notify_owner', String(newLab.notify_owner!));
     formData.append('enabled', '1');
 
     return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }
-  getLabContent(labId:number) {
+  getLabContent(labId: number) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api.content}`;
     return this.http.get<any>(url);
   }
   getLabFile(filepath: string) {
     return this.http.get(`${filepath}`, { responseType: 'blob' });
   }
-  deleteLabContent(labId: number){
+  deleteLabContent(labId: number) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api['delete-content']}`
     return this.http.delete(url);
   }
   async postLabContent(params: any) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${config.api.content}`;
 
-    for(var i = 0 ; i< params.length ; i++){
+    for (var i = 0; i < params.length; i++) {
       var element = params[i];
 
       var formData = new FormData();
-      if(element.title) formData.append("title",element.title);
-      if(element.subtitle) formData.append("subtitle",element.subtitle);
-      if(element.image) formData.append("image",element.image);
-      if(element.link) formData.append("link",element.link);
-      if(element.video) formData.append("video",element.video );
-      if(element.text) formData.append("text",element.text);
-      formData.append("order",element.order);
-      formData.append("laboratory",element.laboratory );
+      if (element.title) formData.append("title", element.title);
+      if (element.subtitle) formData.append("subtitle", element.subtitle);
+      if (element.image) formData.append("image", element.image);
+      if (element.link) formData.append("link", element.link);
+      if (element.video) formData.append("video", element.video);
+      if (element.text) formData.append("text", element.text);
+      formData.append("order", element.order);
+      formData.append("laboratory", element.laboratory);
 
-      if(i == params.length-1) formData.append("is_last","true");
-      else formData.append("is_last","false");
-      
-      await lastValueFrom(this.http.post<any>( url, formData));
+      if (i == params.length - 1) formData.append("is_last", "true");
+      else formData.append("is_last", "false");
+
+      await lastValueFrom(this.http.post<any>(url, formData));
     }
 
   }
