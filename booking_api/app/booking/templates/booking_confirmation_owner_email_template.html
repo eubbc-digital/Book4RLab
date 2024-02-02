@@ -1,0 +1,17 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+{% extends 'base_email_template.html' %}
+
+{% block title %}New booking for your laboratory{% endblock %}
+
+{% block content %}
+<h2>A new booking has been made for your laboratory</h2>
+<p>Student: {{student_name}}</p>
+<p>Student email: {{student_email}}</p>
+<p>Laboratory: {{ lab_name }}</p>
+<p>Equipment: {{ equipment_name }}</p>
+<p>Start date confirmed: {{start_date}}</p>
+<p>End date confirmed: {{end_date}}</p>
+{% endblock %}
