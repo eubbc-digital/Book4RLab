@@ -1,5 +1,5 @@
 <div *ngIf="components.length == 0">
-  <span>No laboratory contents for now.</span>
+  <span>No laboratory content for now.</span>
   <br />
   <div class="dropdown">
     <button id="btn-add" class="dropbtn" mat-icon-button aria-label="Clear">
@@ -8,7 +8,7 @@
     <div class="dropdown-content">
       <a *ngFor="let type of types" (click)="addNewComponent(type.name, 0)">{{
         type.display
-      }}</a>
+        }}</a>
     </div>
   </div>
 </div>
@@ -19,49 +19,28 @@
         <button matSuffix mat-icon-button aria-label="Clear" (click)="goUp(i)">
           <mat-icon>arrow_upward</mat-icon>
         </button>
-        <button
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="goDown(i)"
-        >
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="goDown(i)">
           <mat-icon>arrow_downward</mat-icon>
         </button>
       </div>
       <div class="col-7">
         <div>
-          <mat-form-field
-            *ngIf="component['title'] != null"
-            appearance="fill"
-            class="input-field"
-          >
+          <mat-form-field *ngIf="component['title'] != null" appearance="fill" class="input-field">
             <mat-label>{{ getType("title") }}</mat-label>
             <input matInput type="text" [(ngModel)]="component['title']" />
           </mat-form-field>
 
-          <mat-form-field
-            *ngIf="component['subtitle'] != null"
-            appearance="fill"
-            class="input-field"
-          >
+          <mat-form-field *ngIf="component['subtitle'] != null" appearance="fill" class="input-field">
             <mat-label>{{ getType("subtitle") }}</mat-label>
             <input matInput type="text" [(ngModel)]="component['subtitle']" />
           </mat-form-field>
 
-          <mat-form-field
-            *ngIf="component['text'] != null"
-            appearance="fill"
-            class="input-field"
-          >
+          <mat-form-field *ngIf="component['text'] != null" appearance="fill" class="input-field">
             <mat-label>{{ getType("text") }}</mat-label>
             <textarea matInput [(ngModel)]="component['text']"></textarea>
           </mat-form-field>
 
-          <mat-form-field
-            *ngIf="component['link'] != null"
-            appearance="fill"
-            class="input-field"
-          >
+          <mat-form-field *ngIf="component['link'] != null" appearance="fill" class="input-field">
             <mat-label>{{ getType("link") }}</mat-label>
             <input matInput type="text" [(ngModel)]="component['link']" />
           </mat-form-field>
@@ -70,7 +49,7 @@
             <div class="input-field">
               <div *ngIf="component['image'] != ''; else showImageLabel">
                 <p>
-                  <strong>Current image: </strong>
+                  <strong>Current Image: </strong>
                 </p>
                 <img [src]="contentArray[i]" />
 
@@ -83,29 +62,18 @@
                 <p class="file-label">Choose a file (under 50MB):</p>
               </ng-template>
 
-              <input
-                class="file"
-                type="file"
-                name="Image"
-                accept="image/*"
-                (change)="onUploadFile($event, i, 'image')"
-              />
+              <input class="file" type="file" name="Image" accept="image/*"
+                (change)="onUploadFile($event, i, 'image')" />
             </div>
           </div>
           <div *ngIf="component['video'] != null" class="video-container">
             <div *ngIf="component['video'] != ''; else showImageLabel">
               <p>
-                <strong>Current video: </strong>
+                <strong>Current Video: </strong>
               </p>
               <vg-player>
-                <video
-                  [vgMedia]="$any(media)"
-                  #media
-                  id="singleVideo"
-                  preload="auto"
-                  controls
-                  [src]="contentArray[i]"
-                ></video>
+                <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls
+                  [src]="contentArray[i]"></video>
               </vg-player>
 
               <p>
@@ -117,12 +85,7 @@
               <p class="file-label">Choose a file (under 50MB):</p>
             </ng-template>
 
-            <input
-              type="file"
-              accept="video/*"
-              name="Video"
-              (change)="onUploadFile($event, i, 'video')"
-            />
+            <input type="file" accept="video/*" name="Video" (change)="onUploadFile($event, i, 'video')" />
           </div>
         </div>
       </div>
@@ -132,19 +95,10 @@
             <mat-icon>add</mat-icon>
           </button>
           <div class="dropdown-content">
-            <a
-              *ngFor="let type of types"
-              (click)="addNewComponent(type.name, i)"
-              >{{ type.display }}</a
-            >
+            <a *ngFor="let type of types" (click)="addNewComponent(type.name, i)">{{ type.display }}</a>
           </div>
         </div>
-        <button
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="deleteComponent(i)"
-        >
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="deleteComponent(i)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>

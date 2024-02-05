@@ -1,7 +1,7 @@
 <h2 mat-dialog-title class="text-center">{{ title }}</h2>
 
 <mat-tab-group>
-  <mat-tab label="Card Description">
+  <mat-tab label="Remote Laboratory">
     <mat-dialog-content>
       <form [formGroup]="labForm" ngNoForm>
         <mat-form-field appearance="fill" class="input-field">
@@ -27,7 +27,7 @@
         <div class="input-field">
           <div *ngIf="imageName != ''; else showImageLabel">
             <p>
-              <strong>Current image: </strong>
+              <strong>Current Image: </strong>
               {{ imageName }}
             </p>
 
@@ -66,14 +66,14 @@
         </mat-checkbox>
 
         <mat-checkbox class="input-field" id="notify-owner-checkbox" formControlName="notify_owner">
-          Notify Owner (When a booking is placed)
+          Notify me when a booking is placed
         </mat-checkbox>
 
         <p class="mat-small">* Indicates required fields.</p>
       </form>
     </mat-dialog-content>
   </mat-tab>
-  <mat-tab [disabled]='!onUpdate' label="Laboratory Contents">
+  <mat-tab [disabled]='!onUpdate' label="Remote Laboratory Content">
     <mat-dialog-content>
       <app-lab-description #description [labId]="selectedLabId"></app-lab-description>
     </mat-dialog-content>

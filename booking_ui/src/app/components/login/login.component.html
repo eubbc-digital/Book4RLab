@@ -10,20 +10,9 @@
 
   <mat-form-field class="input-field">
     <mat-label>Password</mat-label>
-    <input
-      matInput
-      [type]="hide ? 'password' : 'text'"
-      formControlName="password"
-      autocomplete="on"
-    />
-    <button
-      mat-icon-button
-      matSuffix
-      (click)="hide = !hide"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide"
-      tabindex="-1"
-    >
+    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" autocomplete="on" />
+    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide" tabindex="-1">
       <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
     <mat-error *ngIf="passwordControl.invalid">
@@ -33,7 +22,7 @@
 
   <p id="password-link">
     <a class="mat-caption" [href]="passwordResetUrl" target="_blank">
-      Forgot password?
+      Forgot Password?
     </a>
   </p>
 

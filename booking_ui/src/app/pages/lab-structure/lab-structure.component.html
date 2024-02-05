@@ -2,70 +2,50 @@
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
   <div class="page-content">
     <div class="btn-container">
-      <button
-      mat-button
-      color="primary"
-      class="card-button"
-      (click)="selectLab(lab)"
-      [disabled]="disabledBooking"
-    >
-      BOOK >>
+      <button mat-button color="primary" class="card-button" (click)="selectLab(lab)" [disabled]="disabledBooking">
+        BOOK >>
       </button>
     </div>
     <div *ngIf="lab">
-      <h2 color="primary"> <strong>Card Description</strong></h2>
+      <h2 color="primary"> <strong>Remote Laboratory Content</strong></h2>
       <div class="basic-info">
         <div class="basic-image">
-          <img
-          [src]="lab.image ?? defaultLabImg"
-          alt="Remote lab"
-          class="remote-lab-img"
-        />
+          <img [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="remote-lab-img" />
         </div>
-        
-          <p>
-            <strong>Name: </strong> {{ lab.name }}
-            <br />
-            <strong>University: </strong> {{ lab.university }}
-            <br />
-            <strong>Course: </strong> {{ lab.course }}
-            <br />
-            <strong>Instructor: </strong> {{ lab.instructor }}
-            <br />
-            <strong>Description:</strong>
-            {{ lab.description }}
-          </p>
-  
-        </div>
+
+        <p>
+          <strong>Name: </strong> {{ lab.name }}
+          <br />
+          <strong>University: </strong> {{ lab.university }}
+          <br />
+          <strong>Course: </strong> {{ lab.course }}
+          <br />
+          <strong>Instructor: </strong> {{ lab.instructor }}
+          <br />
+          <strong>Description:</strong>
+          {{ lab.description }}
+        </p>
+
+      </div>
       <br>
 
-  <h2 color="primary"> <strong>Laboratory Contents</strong></h2>
-    <div *ngIf="myLabContent.length == 0">
-      <span>There are no laboratory contents for this lab.</span>
-    </div>
-    <div *ngIf="myLabContent.length > 0">
-      <div *ngFor="let content of myLabContent">
-        
-        <span *ngIf="content['text']">{{ content['text'] }}</span>
-        <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
-        <h2 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h2>
-        <a *ngIf="content['link']" [href]="content['link']">{{content['link']}}</a>
-        <img *ngIf="content['image']" [src]="content['image']" />
-        <vg-player *ngIf="content['video']">
-          <video
-            [vgMedia]="$any(media)"
-            #media
-            id="singleVideo"
-            preload="auto"
-            controls
-            [src]="content['video']"
-          ></video>
-        </vg-player>
+      <div *ngIf="myLabContent.length == 0">
+        <span>There are no content for this laboratory.</span>
+      </div>
+      <div *ngIf="myLabContent.length > 0">
+        <div *ngFor="let content of myLabContent">
+
+          <span *ngIf="content['text']">{{ content['text'] }}</span>
+          <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
+          <h2 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h2>
+          <a *ngIf="content['link']" [href]="content['link']">{{content['link']}}</a>
+          <img *ngIf="content['image']" [src]="content['image']" />
+          <vg-player *ngIf="content['video']">
+            <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls
+              [src]="content['video']"></video>
+          </vg-player>
+        </div>
       </div>
     </div>
-    </div>
-   
-        
-    
   </div>
 </mat-card>

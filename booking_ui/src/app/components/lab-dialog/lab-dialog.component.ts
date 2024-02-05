@@ -112,10 +112,10 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['visible'].setValue(lab.visible);
       this.labForm.controls['notify_owner'].setValue(lab.notify_owner);
 
-      this.title = 'Update laboratory';
+      this.title = 'Update Laboratory';
       this.onUpdate = true;
     } else {
-      this.title = 'Register laboratory';
+      this.title = 'Register Laboratory';
       this.onUpdate = false;
     }
   }
