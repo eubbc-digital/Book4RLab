@@ -1,18 +1,14 @@
 <app-navbar></app-navbar>
 
 <div class="reservation-list center">
-  <p class="title">Public reservations</p>
+  <p class="title">Public Reservations</p>
 
   <form [formGroup]="searcherControlGroup" (ngSubmit)="getPublicBookingList()">
     <div class="row">
       <div class="cols-3">
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Laboratories</mat-label>
-          <mat-select
-            formControlName="selectedLab"
-            (selectionChange)="getEquipmentsByLabId($event.value.id)"
-            required
-          >
+          <mat-select formControlName="selectedLab" (selectionChange)="getEquipmentsByLabId($event.value.id)" required>
             <mat-option *ngFor="let lab of labs" [value]="lab">
               {{ lab.name }}
             </mat-option>
@@ -34,26 +30,11 @@
           <mat-label>Enter a date range</mat-label>
 
           <mat-date-range-input [rangePicker]="picker">
-            <input
-              matStartDate
-              placeholder="Start date"
-              formControlName="startDate"
-              format="yyyy-MM-dd"
-              required
-            />
-            <input
-              matEndDate
-              placeholder="End date"
-              formControlName="endDate"
-              format="yyyy-MM-dd"
-              required
-            />
+            <input matStartDate placeholder="Start date" formControlName="startDate" format="yyyy-MM-dd" required />
+            <input matEndDate placeholder="End date" formControlName="endDate" format="yyyy-MM-dd" required />
           </mat-date-range-input>
           <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
 
           <mat-error *ngIf="isStartDateInvalid()">
@@ -77,21 +58,14 @@
 <div class="reservation-list center" *ngIf="reservationList.length > 0">
   <div class="row">
     <div class="column" *ngFor="let reservation of reservationList">
-      <app-reservation-card
-        [reservation]="reservation"
-        [privateList]="false"
-      ></app-reservation-card>
+      <app-reservation-card [reservation]="reservation" [privateList]="false"></app-reservation-card>
     </div>
   </div>
 </div>
 
 <div class="text-center message" *ngIf="showMessage">
   <p>There are no public reservations in this date range.</p>
-  <img
-    class="image"
-    src="./assets/empty-folder.png"
-    alt="Empty folder"
-  />
+  <img class="image" src="./assets/empty-folder.png" alt="Empty folder" />
 </div>
 
 <app-spinner *ngIf="showSpinner"></app-spinner>

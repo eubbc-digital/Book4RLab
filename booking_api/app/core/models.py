@@ -1,7 +1,7 @@
 """
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
-Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    country = models.CharField(max_length=10)
+    country = models.CharField(max_length=10, default=None, null=True)
     time_zone = models.CharField(max_length=25, default="Etc/UTC")
 
     is_active = models.BooleanField(default=True)

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -21,7 +21,7 @@ import { EquipmentService } from 'src/app/services/equipment.service';
   styleUrls: ['./equipment-dialog.component.css'],
 })
 export class EquipmentDialogComponent implements OnInit {
-  title = 'Register equipment';
+  title = 'Register Equipment';
 
   selectedEquipmentId = 0;
   labId = 0;
@@ -36,7 +36,7 @@ export class EquipmentDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<EquipmentDialogComponent>,
     private toastr: ToastrService,
     private equipmentService: EquipmentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.labId = this.dialogData.laboratory!;
@@ -48,9 +48,9 @@ export class EquipmentDialogComponent implements OnInit {
       this.equipmentForm.controls['name'].setValue(equipment.name!);
       this.equipmentForm.controls['description'].setValue(equipment.description);
 
-      this.title = 'Update equipment';
+      this.title = 'Update Equipment';
     } else {
-      this.title = 'Register equipment';
+      this.title = 'Register Equipment';
     }
   }
 

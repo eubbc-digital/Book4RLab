@@ -1,7 +1,7 @@
 """
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
-Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
@@ -144,7 +144,7 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
         if confirmed is not None and confirmed == 'true':
             recipient = [self.request.user.email]
-            subject = 'Booking Confirmation'
+            subject = 'Booking confirmation'
             user_tz = User.objects.get(email=instance.reserved_by).time_zone
             template = 'booking_confirmation_email_template.html'
 
@@ -155,9 +155,23 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 
             send_custom_email(subject, template, context, recipient)
 
+            if laboratory.notify_owner:
+                owner_recipient = [laboratory.owner.email]
+                owner_subject = 'New booking for your laboratory'
+                owner_tz = User.objects.get(email=laboratory.owner.email).time_zone
+                owner_template = 'booking_confirmation_owner_email_template.html'
+
+                owner_context = context
+                owner_context['start_date'] = get_correct_datetime(instance.start_date, owner_tz).strftime(date_format)
+                owner_context['end_date'] = get_correct_datetime(instance.end_date, owner_tz).strftime(date_format)
+                owner_context['student_name'] = f'{self.request.user.name} {self.request.user.last_name}'
+                owner_context['student_email'] = f'{self.request.user.email}'
+
+                send_custom_email(owner_subject, owner_template, owner_context, owner_recipient)
+
         if cancelled is not None and cancelled== 'true':
             recipient = [self.request.user.email]
-            subject = 'Booking Cancellation'
+            subject = 'Booking cancellation'
             user_tz = User.objects.get(email=instance.reserved_by).time_zone
             template = 'booking_cancellation_email_template.html'
 
@@ -310,7 +324,7 @@ class LaboratoryContentList(generics.ListCreateAPIView):
             serializer = LaboratoryContentSerializer(content_instance, data=data)
             if serializer.is_valid():
                 field_name = [key for key in data.keys() if key not in ('laboratory', 'order')][0]
-                for field in ('text', 'image', 'video', 'link', 'title', 'subtitle'):
+                for field in ('text', 'image', 'video', 'video_link', 'link', 'title', 'subtitle'):
                     if field != field_name:
                         setattr(content_instance, field, None)
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -15,5 +15,6 @@ export interface Lab {
   url?: string;
   enabled?: boolean;
   visible?: boolean;
-  is_available_now? : boolean;
+  is_available_now?: boolean;
+  notify_owner?: boolean;
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -26,7 +26,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./labs.component.css'],
 })
 export class LabsComponent implements OnInit {
-  tableTitle = 'Labs';
+  tableTitle = 'Laboratories';
 
   userId!: number;
 
@@ -45,7 +45,7 @@ export class LabsComponent implements OnInit {
     private userService: UserService,
     private labService: LabService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userService.getUserData().subscribe((user) => {
@@ -81,12 +81,10 @@ export class LabsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'dialog-responsive';
     dialogConfig.data = this.selectedLab;
-    
-
     const dialogRef = this.dialog.open(LabDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((response) => {
-      if(response == "lab-description"){
+      if (response == "lab-description") {
         this.router.navigate(["/lab-description"]);
       }
       else if (response) this.getLabs(this.userId);
@@ -100,7 +98,7 @@ export class LabsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'dialog-responsive';
     dialogConfig.data = {
-      message: 'Are you sure you want to delete this lab?',
+      message: 'Are you sure you want to delete this laboratory?',
     };
 
     const dialogRef = this.dialog.open(

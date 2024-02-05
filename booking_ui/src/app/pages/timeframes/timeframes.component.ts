@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -26,7 +26,7 @@ import { EquipmentService } from 'src/app/services/equipment.service';
   styleUrls: ['./timeframes.component.css'],
 })
 export class TimeframesComponent implements OnInit {
-  tableTitle = 'Timeframes assignment';
+  tableTitle = 'Timeframes Assignment';
 
   isLoading = false;
 
@@ -54,7 +54,7 @@ export class TimeframesComponent implements OnInit {
     private timeframeService: TimeframeService,
     private equipmentService: EquipmentService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {

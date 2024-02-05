@@ -7,26 +7,16 @@
   <span class="spacer"></span>
 
   <!-- Mobile menu -->
-  <button
-    type="button"
-    aria-label="side nav"
-    [matMenuTriggerFor]="menu"
-    mat-icon-button
-    *ngIf="(isHandset | async)!.matches; else navbarButtons"
-  >
+  <button type="button" aria-label="side nav" [matMenuTriggerFor]="menu" mat-icon-button
+    *ngIf="(isHandset | async)!.matches; else navbarButtons">
     <mat-icon aria-label="Side nav icon">menu</mat-icon>
   </button>
 
   <mat-menu class="navbar-menu" #menu="matMenu">
     <div *ngIf="shownMenu; else showLoginButton">
-      <button
-        mat-menu-item
-        aria-label="Labs button"
-        (click)="goToLabManager()"
-        *ngIf="showLabsButton"
-      >
+      <button mat-menu-item aria-label="Labs button" (click)="goToLabManager()" *ngIf="showLabsButton">
         <mat-icon class="icon">science</mat-icon>
-        <span>My labs</span>
+        <span>My Laboratories</span>
       </button>
 
       <button mat-menu-item aria-label="Booking button" (click)="goToLabGrid()">
@@ -34,29 +24,17 @@
         <span>New booking</span>
       </button>
 
-      <button
-        mat-menu-item
-        aria-label="Public reservation list button"
-        (click)="goToPublicReservations()"
-      >
+      <button mat-menu-item aria-label="Public reservation list button" (click)="goToPublicReservations()">
         <mat-icon class="icon">list</mat-icon>
-        <span>Public rooms</span>
+        <span>Public Rooms</span>
       </button>
 
-      <button
-        mat-menu-item
-        aria-label="Personal reservation list button"
-        (click)="goToMyReservations()"
-      >
+      <button mat-menu-item aria-label="Personal reservation list button" (click)="goToMyReservations()">
         <mat-icon class="icon">list</mat-icon>
-        <span> My reservations </span>
+        <span> My Reservations </span>
       </button>
 
-      <button
-        mat-menu-item
-        aria-label="Profile list button"
-        (click)="goToMyProfile()"
-      >
+      <button mat-menu-item aria-label="Profile list button" (click)="goToMyProfile()">
         <mat-icon class="icon">person</mat-icon>
         <span> Profile </span>
       </button>
@@ -78,41 +56,24 @@
   <!-- Web menu -->
   <ng-template #navbarButtons>
     <div *ngIf="shownMenu; else showLoginButton">
-      <button
-        mat-button
-        aria-label="Labs button"
-        (click)="goToLabManager()"
-        *ngIf="showLabsButton"
-      >
-        <span>My labs</span>
+      <button mat-button aria-label="Labs button" (click)="goToLabManager()" *ngIf="showLabsButton">
+        <span>My Laboratories</span>
       </button>
 
       <button mat-button aria-label="Booking button" (click)="goToLabGrid()">
         <mat-icon class="icon">book_online</mat-icon>
-        New booking
+        New Booking
       </button>
 
-      <button
-        mat-button
-        aria-label="Public reservation list button"
-        (click)="goToPublicReservations()"
-      >
-        Public rooms
+      <button mat-button aria-label="Public reservation list button" (click)="goToPublicReservations()">
+        Public Rooms
       </button>
 
-      <button
-        mat-button
-        aria-label="Personal reservation list button"
-        (click)="goToMyReservations()"
-      >
-        My reservations
+      <button mat-button aria-label="Personal reservation list button" (click)="goToMyReservations()">
+        My Reservations
       </button>
 
-      <button
-        mat-button
-        aria-label="Profile list button"
-        (click)="goToMyProfile()"
-      >
+      <button mat-button aria-label="Profile list button" (click)="goToMyProfile()">
         <mat-icon class="icon">person</mat-icon>
         <span> Profile </span>
       </button>

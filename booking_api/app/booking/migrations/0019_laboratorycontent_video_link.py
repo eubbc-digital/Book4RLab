@@ -10,13 +10,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('booking', '0015_alter_laboratory_image'),
+        ('booking', '0018_laboratorycontent'),
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='kit',
-            name='description',
-            field=models.CharField(default='', max_length=500),
+        migrations.AddField(
+            model_name='laboratorycontent',
+            name='video_link',
+            field=models.URLField(blank=True, null=True),
         ),
     ]

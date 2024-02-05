@@ -1,7 +1,7 @@
-﻿"""
+"""
 Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
-Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
 from django.contrib import admin
@@ -14,7 +14,7 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'name', 'last_name')
     ordering = ['id']
-    list_display = ['id', 'email', 'name', 'last_name']
+    list_display = ['id', 'email', 'name', 'last_name', 'country', 'time_zone', 'is_active']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal Info'), {'fields': ('name', 'last_name')}),

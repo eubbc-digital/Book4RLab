@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -25,7 +25,7 @@ import { Timeframe } from 'src/app/interfaces/timeframe';
   styleUrls: ['./timeframe-dialog.component.css'],
 })
 export class TimeframeDialogComponent implements OnInit {
-  title = 'Register timeframe';
+  title = 'Register Timeframe';
 
   selectedTimeframeId = 0;
   equipmentId = 0;
@@ -70,9 +70,9 @@ export class TimeframeDialogComponent implements OnInit {
         timeframe.slot_duration!
       );
 
-      this.title = 'Update timeframe';
+      this.title = 'Update Timeframe';
     } else {
-      this.title = 'Register timeframe';
+      this.title = 'Register Timeframe';
     }
   }
 
@@ -170,10 +170,10 @@ export class TimeframeDialogComponent implements OnInit {
       localTime = new Date(
         date.toLocaleDateString('en-US', { hour12: false }) + ' ' + hour
       );
-    else localTime = new Date(date.toLocaleDateString('en-US', { hour12: true}) + ' ' + hour);
+    else localTime = new Date(date.toLocaleDateString('en-US', { hour12: true }) + ' ' + hour);
 
     const utcTime = new Date(localTime.getTime() + timezoneOffset);
-    
+
     return utcTime.toString().substring(16, 21);
   }
 

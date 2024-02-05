@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
  * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
  * MIT License - See LICENSE file in the root directory
@@ -28,7 +28,7 @@ import { Lab } from 'src/app/interfaces/lab';
   styleUrls: ['./equipments.component.css'],
 })
 export class EquipmentsComponent implements OnInit {
-  tableTitle = 'Equipment assignment';
+  tableTitle = 'Equipment Assignment';
 
   isLoading = false;
 
@@ -49,7 +49,7 @@ export class EquipmentsComponent implements OnInit {
     private EquipmentService: EquipmentService,
     private labService: LabService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
