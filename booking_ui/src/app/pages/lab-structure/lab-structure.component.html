@@ -32,18 +32,22 @@
       <div *ngIf="myLabContent.length == 0">
         <span>There are no content for this laboratory.</span>
       </div>
-      <div *ngIf="myLabContent.length > 0">
-        <div *ngFor="let content of myLabContent">
 
-          <span *ngIf="content['text']">{{ content['text'] }}</span>
+      <div *ngIf="myLabContent.length > 0" class="content-container">
+        <div *ngFor="let content of myLabContent" class="content-item">
+          <span *ngIf="content['text']" class="text-content">{{ content['text'] }}</span>
           <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
           <h2 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h2>
           <a *ngIf="content['link']" [href]="content['link']">{{content['link']}}</a>
-          <img *ngIf="content['image']" [src]="content['image']" />
+          <img *ngIf="content['image']" [src]="content['image']" class="centered-content" />
           <vg-player *ngIf="content['video']">
-            <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls
-              [src]="content['video']"></video>
+            <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls [src]="content['video']"
+              class="centered-content"></video>
           </vg-player>
+          <div class="youtube-container">
+            <youtube-player *ngIf="content['video_link']"
+              [videoId]="getVideoId(content['video_link'])"></youtube-player>
+          </div>
         </div>
       </div>
     </div>

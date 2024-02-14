@@ -278,9 +278,8 @@ class PublicLaboratoryList(generics.ListAPIView):
     serializer_class = LaboratorySerializer
 
     def get_queryset(self):
-        queryset = Laboratory.objects.filter(enabled=True)
-
-        return queryset.filter(visible=True)
+        queryset = Laboratory.objects.filter(enabled=True).filter(visible=True).order_by('id')
+        return queryset
 
 class LaboratoryRetrieve(generics.RetrieveAPIView):
     serializer_class = LaboratorySerializer
@@ -323,7 +322,7 @@ class LaboratoryContentList(generics.ListCreateAPIView):
         if content_instance:
             serializer = LaboratoryContentSerializer(content_instance, data=data)
             if serializer.is_valid():
-                field_name = [key for key in data.keys() if key not in ('laboratory', 'order')][0]
+                field_name = [key for key in data.keys() if key not in ('laboratory', 'order', 'is_last')][0]
                 for field in ('text', 'image', 'video', 'video_link', 'link', 'title', 'subtitle'):
                     if field != field_name:
                         setattr(content_instance, field, None)

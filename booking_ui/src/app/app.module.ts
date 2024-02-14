@@ -16,6 +16,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { CookieService } from 'ngx-cookie-service';
+import { YouTubePlayerModule } from '@angular/youtube-player';
 
 // Components
 import { AppComponent } from './app.component';
@@ -60,10 +61,10 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
 import { LabDescriptionComponent } from './pages/lab-description/lab-description.component';
 import { CountdownModule } from 'ngx-countdown';
 
-import {VgCoreModule} from '@videogular/ngx-videogular/core';
-import {VgControlsModule} from '@videogular/ngx-videogular/controls';
-import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
-import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { LabStructureComponent } from './pages/lab-structure/lab-structure.component';
 
 @NgModule({
@@ -120,7 +121,8 @@ import { LabStructureComponent } from './pages/lab-structure/lab-structure.compo
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
-    VgBufferingModule
+    VgBufferingModule,
+    YouTubePlayerModule
   ],
   providers: [
     CookieService,
@@ -133,4 +135,4 @@ import { LabStructureComponent } from './pages/lab-structure/lab-structure.compo
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

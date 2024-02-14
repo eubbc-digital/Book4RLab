@@ -37,6 +37,7 @@ export class LabStructureComponent implements OnInit {
     { name: 'text', display: 'Normal Text' },
     { name: 'title', display: 'Title' },
     { name: 'video', display: 'Video' },
+    { name: 'video_link', display: 'Video URL' },
   ];
 
   constructor(
@@ -88,5 +89,11 @@ export class LabStructureComponent implements OnInit {
 
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
+  }
+
+  getVideoId(url: string): string {
+    const videoIdMatch = url.match(/(?:\/|%3D|v=|vi=)([0-9A-Za-z_-]{11})(?:[%#?&]|$)/);
+    console.log(videoIdMatch)
+    return videoIdMatch ? videoIdMatch[1] : '';
   }
 }

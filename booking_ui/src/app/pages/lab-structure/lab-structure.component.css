@@ -11,24 +11,29 @@
   align-items: center;
   justify-content: center;
 }
+
 .btn-container {
   display: flex;
   flex-direction: row;
   justify-content: end;
   width: 100%;
 }
+
 .col-7 {
   position: relative;
   width: 70%;
 }
+
 .col-8 {
   position: relative;
   width: 80%;
 }
+
 .col-2 {
   position: relative;
   width: 20%;
 }
+
 .col-1 {
   position: relative;
   width: 10%;
@@ -56,9 +61,10 @@
   position: relative;
   width: 50%;
 }
+
 .remote-lab-img {
   margin-top: 5px;
-  width: 90%;
+  width: 80%;
 }
 
 input,
@@ -68,23 +74,45 @@ textarea {
 
 img {
   position: relative;
-  width: 100%;
-}
-
-.video-container {
-  width: 100%;
-}
-
-video {
-  position: relative;
-  width: 100%;
+  width: 80%;
 }
 
 a:hover {
   color: green;
 }
 
-a,span{
+a,
+span {
   margin-bottom: 10px;
 }
 
+#singleVideo {
+  max-width: 1280px;
+  max-height: 720px;
+  width: 80%;
+  height: auto;
+  object-fit: cover;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-item {
+  margin-bottom: 20px;
+}
+
+.text-content {
+  text-align: left;
+}
+
+.centered-content {
+  margin: 0 auto;
+  display: block;
+}
+
+.youtube-container {
+  display: flex;
+  justify-content: center;
+}

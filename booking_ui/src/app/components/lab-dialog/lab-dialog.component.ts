@@ -150,10 +150,10 @@ export class LabDialogComponent implements OnInit {
 
   async save() {
     this.cleanDescription();
+
     var descriptionParams = await this.getDescriptionParams(
       this.labDescription.components
     );
-
     if (descriptionParams.length == 0) {
       await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
     } else {
@@ -172,10 +172,7 @@ export class LabDialogComponent implements OnInit {
   async getDescriptionParams(descriptionArray: any[]) {
     var params: any[] = [];
     for (var i = 0; i < descriptionArray.length; i++) {
-      if (
-        descriptionArray[i]['image'] &&
-        typeof descriptionArray[i]['image'] == 'string'
-      ) {
+      if (descriptionArray[i]['image'] && typeof descriptionArray[i]['image'] == 'string') {
         var blobImage = await lastValueFrom(
           this.labService.getLabFile(descriptionArray[i]['image'])
         );
@@ -186,10 +183,7 @@ export class LabDialogComponent implements OnInit {
           order: i + 1,
           image: file,
         });
-      } else if (
-        descriptionArray[i]['video'] &&
-        typeof descriptionArray[i]['video'] == 'string'
-      ) {
+      } else if (descriptionArray[i]['video'] && typeof descriptionArray[i]['video'] == 'string') {
         var blobVideo = await lastValueFrom(
           this.labService.getLabFile(descriptionArray[i]['video'])
         );
