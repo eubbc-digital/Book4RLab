@@ -159,3 +159,7 @@ class LaboratoryContentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Exactly one field among text, image, video, video_link, link, title, subtitle should have a non-null value.")
 
         return data
+
+class LaboratoryAccessSerializer(serializers.Serializer):
+    laboratory_id = serializers.IntegerField()
+    user_email = serializers.EmailField()

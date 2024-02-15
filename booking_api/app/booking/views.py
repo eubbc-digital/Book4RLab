@@ -6,7 +6,7 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer
+from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer, LaboratoryAccessSerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
@@ -362,3 +362,23 @@ class LaboratoryContentRetrieve(generics.ListAPIView):
         laboratory = Laboratory.objects.get(pk=laboratory_id)
         contents = LaboratoryContent.objects.filter(laboratory=laboratory)
         return contents
+
+class LaboratoryAccessAPIView(generics.GenericAPIView):
+    def post(self, request):
+        serializer = LaboratoryAccessSerializer(data=request.data)
+        if serializer.is_valid():
+            laboratory_id = serializer.validated_data.get('laboratory_id')
+            user_email = serializer.validated_data.get('user_email')
+
+            try:
+                laboratory = Laboratory.objects.get(id=laboratory_id)
+            except Laboratory.DoesNotExist:
+                return Response({"error": "Laboratory does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+            allowed_emails = laboratory.allowed_emails.split(',')
+            if user_email in allowed_emails:
+                return Response({"access": True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"access": False}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
