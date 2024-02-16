@@ -37,6 +37,7 @@ export class LabDialogComponent implements OnInit {
   submitted = false;
   onUpdate!: boolean;
 
+  emails: string[] = [''];
   lab!: any;
 
   labForm = new UntypedFormGroup({
@@ -52,6 +53,7 @@ export class LabDialogComponent implements OnInit {
     ]),
     description: new UntypedFormControl('', [Validators.required]),
     notify_owner: new UntypedFormControl('', [Validators.required]),
+    allowed_emails: new UntypedFormControl('', [Validators.required]),
   });
 
   constructor(
@@ -111,6 +113,7 @@ export class LabDialogComponent implements OnInit {
       this.labForm.controls['description'].setValue(lab.description);
       this.labForm.controls['visible'].setValue(lab.visible);
       this.labForm.controls['notify_owner'].setValue(lab.notify_owner);
+      this.labForm.controls['allowed_emails'].setValue(lab.allowed_emails);
 
       this.title = 'Update Laboratory';
       this.onUpdate = true;
@@ -243,6 +246,18 @@ export class LabDialogComponent implements OnInit {
       const control = this.labForm.controls[controlName];
       control.markAsTouched();
     });
+  }
+
+  addEmail() {
+    this.emails.push('');
+  }
+
+  removeEmail(index: number) {
+    this.emails.splice(index, 1);
+  }
+
+  getFormattedEmails(): string {
+    return this.emails.filter(email => email.trim() !== '').join(',');
   }
 
 }

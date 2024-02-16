@@ -10,7 +10,7 @@
   margin-bottom: 20px;
 }
 
-mat-dialog-content{
+mat-dialog-content {
   width: 105%;
   padding-right: 20px;
   padding-top: 20px;
@@ -20,3 +20,34 @@ mat-dialog-content{
   min-height: 60vh;
 }
 
+.email-container {
+  margin-top: 2%;
+  margin-bottom: 5%;
+}
+
+.email-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.mat-icon {
+  cursor: pointer;
+}
+
+.input-field {
+  height: auto;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.dialog-label {
+  font-weight: bold;
+  margin-bottom: 2%;
+}
+
+.add-button-container {
+  margin-top: 8px;
+}

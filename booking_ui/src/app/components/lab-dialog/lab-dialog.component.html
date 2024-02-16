@@ -4,6 +4,7 @@
   <mat-tab label="Remote Laboratory">
     <mat-dialog-content>
       <form [formGroup]="labForm" ngNoForm>
+
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
@@ -68,6 +69,26 @@
         <mat-checkbox class="input-field" id="notify-owner-checkbox" formControlName="notify_owner">
           Notify me when a booking is placed
         </mat-checkbox>
+
+        <div class="email-container">
+          <div class="dialog-label">Allowed emails:</div>
+          <ng-container *ngFor="let email of emails; let i = index">
+            <div class="email-group">
+              <div class="input-field">
+                <mat-form-field appearance="fill">
+                  <mat-label>Email Address</mat-label>
+                  <input matInput [(ngModel)]="emails[i]" />
+                </mat-form-field>
+              </div>
+              <button mat-icon-button color="warn" (click)="removeEmail(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+          <div class="add-button-container">
+            <button mat-raised-button color="primary" (click)="addEmail()">Add Email</button>
+          </div>
+        </div>
 
         <p class="mat-small">* Indicates required fields.</p>
       </form>
