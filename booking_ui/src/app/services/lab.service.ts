@@ -43,7 +43,7 @@ export class LabService {
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
     formData.append('notify_owner', String(lab.notify_owner!));
-    formData.append('allowed_emails', String(lab.allowed_emails!));
+    formData.append('allowed_emails', String(lab.allowed_emails));
     formData.append('enabled', '1');
 
     return this.http.post<Lab>(this.url, formData);
@@ -111,5 +111,14 @@ export class LabService {
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };
     return this.http.patch<Lab>(`${this.url}${lab.id}/${config.api['labs-update']}`, deletedLab);
+  }
+
+  checkUserLaboratoryAccess(laboratoryId: number, userEmail: string) {
+    const url: string = `${config.api.baseUrl}${config.api.labs}${config.api['user-access']}`;
+    const data = {
+      laboratory_id: laboratoryId,
+      user_email: userEmail
+    };
+    return this.http.post<any>(url, data);
   }
 }

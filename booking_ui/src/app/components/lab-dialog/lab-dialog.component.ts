@@ -6,11 +6,7 @@
 
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
-  AbstractControl,
-  FormControl,
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators,
+  FormBuilder, FormGroup, Validators, FormArray, AbstractControl, FormControl
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -19,101 +15,66 @@ import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-descr
 import { LabService } from 'src/app/services/lab.service';
 import { lastValueFrom } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Lab } from 'src/app/interfaces/lab';
 
 @Component({
   selector: 'app-lab-dialog',
   templateUrl: './lab-dialog.component.html',
   styleUrls: ['./lab-dialog.component.css'],
 })
+
 export class LabDialogComponent implements OnInit {
-
   @ViewChild(LabDescriptionComponent) labDescription!: LabDescriptionComponent;
-
-  title = 'Register laboratory';
-  imageName = '';
-
-  selectedLabId = 0;
-
-  submitted = false;
-  onUpdate!: boolean;
-
-  emails: string[] = [''];
-  lab!: any;
-
-  labForm = new UntypedFormGroup({
-    name: new UntypedFormControl('', [Validators.required]),
-    instructor: new UntypedFormControl('', [Validators.required]),
-    university: new UntypedFormControl('', [Validators.required]),
-    course: new UntypedFormControl('', [Validators.required]),
-    image: new UntypedFormControl(null),
-    visible: new UntypedFormControl(false, [Validators.required]),
-    url: new UntypedFormControl('', [
-      Validators.required,
-      this.trimAndValidateUrl,
-    ]),
-    description: new UntypedFormControl('', [Validators.required]),
-    notify_owner: new UntypedFormControl('', [Validators.required]),
-    allowed_emails: new UntypedFormControl('', [Validators.required]),
-  });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private dialogRef: MatDialogRef<LabDialogComponent>,
     private toastr: ToastrService,
     private labService: LabService,
-  ) {
-  }
+    private fb: FormBuilder
+  ) { }
 
-  trimAndValidateUrl(control: AbstractControl) {
-    const value = control.value;
+  labForm = this.fb.group({
+    name: ['', Validators.required],
+    instructor: ['', Validators.required],
+    university: ['', Validators.required],
+    course: ['', Validators.required],
+    image: [null as File | null],
+    visible: [false, Validators.required],
+    url: ['', [Validators.required, this.trimAndValidateUrl]],
+    description: ['', Validators.required],
+    notify_owner: [false, Validators.required],
+    allowed_emails: this.fb.array([])
+  });
 
-    if (typeof value === 'string') {
-      const trimmedValue = value.trim();
+  get urlControl() { return this.labForm.controls['url']; }
+  get imageControl() { return this.labForm.controls['image']; }
+  get descriptionControl() { return this.labForm.controls['description']; }
 
-      return Validators.pattern(
-        '(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]'
-      )(new FormControl(trimmedValue));
-    }
-
-    return null;
-  }
-
-  get urlControl() {
-    return this.labForm.controls['url'];
-  }
-
-  get imageControl() {
-    return this.labForm.controls['image'];
-  }
-
-  get descriptionControl() {
-    return this.labForm.controls['description'];
-  }
-
-  getUrlErrorMessage() {
-    if (this.urlControl.hasError('required')) return 'Please provide url.';
-
-    return this.urlControl.hasError('pattern')
-      ? 'Please provide a valid url.'
-      : '';
-  }
+  title = 'Register laboratory';
+  imageName = '';
+  selectedLabId = 0;
+  submitted = false;
+  onUpdate!: boolean;
+  lab!: any;
 
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
-      this.lab = lab;
-
       this.selectedLabId = lab.id;
-      this.labForm.controls['name'].setValue(lab.name!);
-      this.labForm.controls['instructor'].setValue(lab.instructor!);
-      this.labForm.controls['university'].setValue(lab.university!);
-      this.labForm.controls['course'].setValue(lab.course!);
-      this.imageName = this.getImageName(lab.image);
-      this.labForm.controls['url'].setValue(lab.url!);
-      this.labForm.controls['description'].setValue(lab.description);
-      this.labForm.controls['visible'].setValue(lab.visible);
-      this.labForm.controls['notify_owner'].setValue(lab.notify_owner);
-      this.labForm.controls['allowed_emails'].setValue(lab.allowed_emails);
+
+      this.labForm.patchValue({
+        name: lab.name,
+        instructor: lab.instructor,
+        university: lab.university,
+        course: lab.course,
+        image: lab.image,
+        visible: lab.visible,
+        url: lab.url,
+        description: lab.description,
+        notify_owner: lab.notify_owner
+      });
+      this.populateAllowedEmails(lab.allowed_emails);
 
       this.title = 'Update Laboratory';
       this.onUpdate = true;
@@ -121,34 +82,6 @@ export class LabDialogComponent implements OnInit {
       this.title = 'Register Laboratory';
       this.onUpdate = false;
     }
-  }
-
-  addLab(): void {
-    this.labService.addLab(this.labForm.value).subscribe({
-      next: (_) => {
-        this.resetDialog('The lab has been created successfully.');
-      },
-      error: (e) => {
-        this.toastr.error(
-          'There was an error creating the lab. Please try later.'
-        );
-      },
-    });
-  }
-
-  updateLab(): void {
-    this.labService
-      .updateLab(this.labForm.value, this.selectedLabId)
-      .subscribe({
-        next: (_) => {
-          this.resetDialog('The lab has been updated successfully.');
-        },
-        error: (e) => {
-          this.toastr.error(
-            'There was an error updating the lab. Please try later.'
-          );
-        },
-      });
   }
 
   async save() {
@@ -170,6 +103,34 @@ export class LabDialogComponent implements OnInit {
       this.toastr.error('Please fill in correctly the data.');
       this.displayFormErrors();
     }
+  }
+
+  addLab(): void {
+    this.labService.addLab(this.labForm.value as Lab).subscribe({
+      next: (_) => {
+        this.resetDialog('The lab has been created successfully.');
+      },
+      error: (e) => {
+        this.toastr.error(
+          'There was an error creating the lab. Please try later.'
+        );
+      },
+    });
+  }
+
+  updateLab(): void {
+    this.labService
+      .updateLab(this.labForm.value as Lab, this.selectedLabId)
+      .subscribe({
+        next: (_) => {
+          this.resetDialog('The lab has been updated successfully.');
+        },
+        error: (e) => {
+          this.toastr.error(
+            'There was an error updating the lab. Please try later.'
+          );
+        },
+      });
   }
 
   async getDescriptionParams(descriptionArray: any[]) {
@@ -206,14 +167,36 @@ export class LabDialogComponent implements OnInit {
     return params;
   }
 
+  trimAndValidateUrl(control: AbstractControl) {
+    const value = control.value;
+    if (typeof value === 'string') {
+      const trimmedValue = value.trim();
+
+      return Validators.pattern(
+        '(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]'
+      )(new FormControl(trimmedValue));
+    }
+    return null;
+  }
+
+  getUrlErrorMessage() {
+    if (this.urlControl.hasError('required')) return 'Please provide url.';
+    return this.urlControl.hasError('pattern')
+      ? 'Please provide a valid url.'
+      : '';
+  }
+
   async getBlobContent(fileUrl: string) {
     let blob = await fetch(fileUrl).then(r => r.blob());
     return blob;
   }
 
   cleanDescription(): void {
-    let description = this.descriptionControl.value.replace(/\r\n/g, '\n');
-    this.descriptionControl.setValue(description);
+    const descriptionControl = this.descriptionControl;
+    if (descriptionControl?.value) {
+      let description = descriptionControl.value.replace(/\r\n/g, '\n');
+      descriptionControl.setValue(description);
+    }
   }
 
   resetDialog(msg?: string): void {
@@ -222,15 +205,14 @@ export class LabDialogComponent implements OnInit {
     this.dialogRef.close(msg);
   }
 
-  closeDialog(msg?: string): void {
-    this.dialogRef.close('lab-description');
-  }
-
   onFileChange(event: any): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
       this.imageName = file.name;
       this.imageControl.setValue(file);
+    } else {
+      this.imageName = '';
+      this.imageControl.setValue(null);
     }
   }
 
@@ -242,22 +224,27 @@ export class LabDialogComponent implements OnInit {
   }
 
   displayFormErrors(): void {
-    Object.keys(this.labForm.controls).forEach((controlName) => {
-      const control = this.labForm.controls[controlName];
+    (Object.keys(this.labForm.controls) as Array<keyof typeof this.labForm.controls>).forEach(controlKey => {
+      const control = this.labForm.controls[controlKey];
       control.markAsTouched();
     });
   }
 
-  addEmail() {
-    this.emails.push('');
+  addEmail(): void {
+    const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
+    emailsFormArray.push(this.fb.control('', Validators.required));
   }
 
-  removeEmail(index: number) {
-    this.emails.splice(index, 1);
+  removeEmail(index: number): void {
+    const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
+    emailsFormArray.removeAt(index);
   }
 
-  getFormattedEmails(): string {
-    return this.emails.filter(email => email.trim() !== '').join(',');
+  populateAllowedEmails(emailsString: string): void {
+    const emailsArray = emailsString.split(',');
+    const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
+    emailsArray.forEach(email => {
+      emailsFormArray.push(this.fb.control(email, Validators.required));
+    });
   }
-
 }

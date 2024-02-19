@@ -6,7 +6,7 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer, LaboratoryAccessSerializer
+from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer, UserLaboratoryAccessSerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
@@ -363,9 +363,9 @@ class LaboratoryContentRetrieve(generics.ListAPIView):
         contents = LaboratoryContent.objects.filter(laboratory=laboratory)
         return contents
 
-class LaboratoryAccessAPIView(generics.GenericAPIView):
+class UserLaboratoryAccess(generics.GenericAPIView):
     def post(self, request):
-        serializer = LaboratoryAccessSerializer(data=request.data)
+        serializer = UserLaboratoryAccessSerializer(data=request.data)
         if serializer.is_valid():
             laboratory_id = serializer.validated_data.get('laboratory_id')
             user_email = serializer.validated_data.get('user_email')

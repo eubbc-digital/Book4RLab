@@ -10,6 +10,7 @@
       "passwordReset": "accounts/password_reset/"
     },
     "labs": "laboratories/",
+    "user-access":"user-access/",
     "labs-update":"update/",
     "public-labs": "public-laboratories/",
     "content": "contents/",

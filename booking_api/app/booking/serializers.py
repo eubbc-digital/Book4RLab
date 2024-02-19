@@ -160,6 +160,6 @@ class LaboratoryContentSerializer(serializers.ModelSerializer):
 
         return data
 
-class LaboratoryAccessSerializer(serializers.Serializer):
+class UserLaboratoryAccessSerializer(serializers.Serializer):
     laboratory_id = serializers.IntegerField()
     user_email = serializers.EmailField()

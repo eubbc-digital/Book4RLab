@@ -72,12 +72,15 @@
 
         <div class="email-container">
           <div class="dialog-label">Allowed emails:</div>
-          <ng-container *ngFor="let email of emails; let i = index">
-            <div class="email-group">
+          <div class="dialog-sublabel">
+            Add the email addresses that will be able to book a timeframe in your laboratory.
+          </div>
+          <ng-container *ngIf="labForm.controls['allowed_emails'] as emailsArray">
+            <div class="email-group" *ngFor="let emailControl of emailsArray.controls; let i = index">
               <div class="input-field">
                 <mat-form-field appearance="fill">
                   <mat-label>Email Address</mat-label>
-                  <input matInput [(ngModel)]="emails[i]" />
+                  <input matInput [formControl]="emailControl" />
                 </mat-form-field>
               </div>
               <button mat-icon-button color="warn" (click)="removeEmail(i)">
