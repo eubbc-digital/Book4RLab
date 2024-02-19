@@ -88,8 +88,14 @@
               </button>
             </div>
           </ng-container>
-          <div class="add-button-container">
-            <button mat-raised-button color="primary" (click)="addEmail()">Add Email</button>
+          <div class="add-buttons-container">
+            <button mat-raised-button color="primary" (click)="addEmail()"
+              matTooltip="Add an email address manually.">Add email</button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()"
+              matTooltip="The file must contain one email address per line.">
+              Load emails from file
+            </button>
+            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)">
           </div>
         </div>
 

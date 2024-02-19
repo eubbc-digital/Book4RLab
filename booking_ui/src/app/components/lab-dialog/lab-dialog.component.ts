@@ -247,4 +247,33 @@ export class LabDialogComponent implements OnInit {
       emailsFormArray.push(this.fb.control(email, Validators.required));
     });
   }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    this.readFile(file);
+  }
+
+  readFile(file: File) {
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      const contents: string = e.target.result;
+      this.parseFileContents(contents);
+    };
+    reader.readAsText(file);
+  }
+
+  parseFileContents(contents: string) {
+    const newEmails: string[] = contents.split(/[\r\n]+/).map(email => email.trim()).filter(email => email !== '');
+    const existingEmails: Set<string> = new Set(
+      (this.labForm.get('allowed_emails') as FormArray).value.map((email: string) => email.trim())
+    );
+    const combinedEmails: string[] = Array.from(new Set([...existingEmails, ...newEmails]));
+
+    const allowedEmailsArray = this.labForm.get('allowed_emails') as FormArray;
+    allowedEmailsArray.clear();
+
+    combinedEmails.forEach(email => {
+      allowedEmailsArray.push(this.fb.control(email.trim()));
+    });
+  }
 }

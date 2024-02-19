@@ -54,6 +54,10 @@ mat-dialog-content {
   margin-bottom: 2%;
 }
 
-.add-button-container {
-  margin-top: 8px;
+.add-buttons-container {
+  display: flex;
+}
+
+.add-buttons-container button {
+  margin-right: 10px;
 }

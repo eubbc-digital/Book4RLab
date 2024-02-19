@@ -6,6 +6,7 @@
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
@@ -117,6 +118,7 @@ import { LabStructureComponent } from './pages/lab-structure/lab-structure.compo
       progressBar: true,
     }),
     HttpClientModule,
+    MatTooltipModule,
     NgHttpLoaderModule.forRoot(),
     VgCoreModule,
     VgControlsModule,
