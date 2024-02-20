@@ -33,13 +33,7 @@ export class LabDescriptionComponent implements OnInit {
     { name: 'text', display: 'Normal Text' },
     { name: 'title', display: 'Title' },
     { name: 'video', display: 'Video' },
-  ];
-
-  typesSearch: any = [
-    { name: 'link', display: 'URL' },
-    { name: 'subtitle', display: 'Subtitle' },
-    { name: 'text', display: 'Normal Text' },
-    { name: 'title', display: 'Title' },
+    { name: 'video_link', display: 'Video URL' },
   ];
 
   constructor(private router: Router, private labService: LabService, private toastr: ToastrService,) {
@@ -53,24 +47,17 @@ export class LabDescriptionComponent implements OnInit {
   }
 
   async getLabsContentId(id: number) {
-    var labsContents: any[] = await lastValueFrom(
-      this.labService.getLabContent(id)
-    );
-    this.myLabContent = labsContents;
+    var labContent: any[] = await lastValueFrom(this.labService.getLabContent(id));
+    this.myLabContent = labContent;
     this.myLabContent.sort((a, b) => a.order - b.order);
+
     for (var i = 0; i < this.myLabContent.length; i++) {
-      if (
-        this.myLabContent[i]['image'] &&
-        typeof this.myLabContent[i]['image'] == 'string'
-      ) {
+      if (this.myLabContent[i]['image'] && typeof this.myLabContent[i]['image'] == 'string') {
         this.components.push({
           image: this.myLabContent[i]['image'],
         });
         this.contentArray.push(this.myLabContent[i]['image']);
-      } else if (
-        this.myLabContent[i]['video'] != null &&
-        typeof this.myLabContent[i]['video'] == 'string'
-      ) {
+      } else if (this.myLabContent[i]['video'] != null && typeof this.myLabContent[i]['video'] == 'string') {
         this.components.push({
           video: this.myLabContent[i]['video'],
         });
@@ -107,22 +94,17 @@ export class LabDescriptionComponent implements OnInit {
       });
     }
   }
-  addOldComponent(typeChosen: string, index: number, content: any) {
-    this.components.splice(index, 0, { [typeChosen]: content });
-  }
-
-  selectLab(lab: Lab): void {
-    this.router.navigate(['/booking', lab.id]);
-  }
 
   deleteComponent(index: number) {
     return this.components.splice(index, 1);
   }
+
   goUp(index: number) {
     var component = this.deleteComponent(index);
     if (index == 0) this.components.splice(0, 0, component[0]);
     else this.components.splice(index - 1, 0, component[0]);
   }
+
   goDown(index: number) {
     var component = this.deleteComponent(index);
     this.components.splice(index + 1, 0, component[0]);
@@ -132,16 +114,17 @@ export class LabDescriptionComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
       const file_size = file.size;
-      if(file_size <= 50000000){
+      if (file_size <= 50000000) {
         this.components[index][field] = file;
         this.getUrlFile(file, index);
       }
-      else{
+      else {
         this.toastr.error("File size must be 50MB or smaller.");
         this.deleteComponent(index);
       }
     }
   }
+
   async getUrlFile(file: any, index: number) {
     var reader = new FileReader();
     reader.onload = (event: any) => {

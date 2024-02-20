@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "api": {
     "baseUrl": "https://eubbc-digital.upb.edu/booking/api/",
     "users": {
@@ -10,6 +10,7 @@
       "passwordReset": "accounts/password_reset/"
     },
     "labs": "laboratories/",
+    "user-access":"user-access/",
     "labs-update":"update/",
     "public-labs": "public-laboratories/",
     "content": "contents/",

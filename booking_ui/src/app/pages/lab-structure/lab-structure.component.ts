@@ -9,7 +9,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Lab } from 'src/app/interfaces/lab';
 import { LabService } from 'src/app/services/lab.service';
+import { ToastrService } from 'ngx-toastr';
 import { lastValueFrom } from 'rxjs';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-lab-structure',
@@ -30,6 +32,8 @@ export class LabStructureComponent implements OnInit {
 
   disabledBooking: boolean = false;
 
+  user_email: string = ''
+
   types: any = [
     { name: 'image', display: 'Image' },
     { name: 'link', display: 'URL' },
@@ -37,12 +41,15 @@ export class LabStructureComponent implements OnInit {
     { name: 'text', display: 'Normal Text' },
     { name: 'title', display: 'Title' },
     { name: 'video', display: 'Video' },
+    { name: 'video_link', display: 'Video URL' },
   ];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private labService: LabService
+    private labService: LabService,
+    private userService: UserService,
+    private toastr: ToastrService,
   ) {
     this.cols = window.innerWidth <= 900 ? 1 : 2;
   }
@@ -55,6 +62,7 @@ export class LabStructureComponent implements OnInit {
         this.getLabsContentId(id);
       },
     });
+    this.getUserEmail();
   }
 
   async getLabsContentId(id: number) {
@@ -76,7 +84,25 @@ export class LabStructureComponent implements OnInit {
   }
 
   selectLab(lab: Lab): void {
-    this.router.navigate(['/booking', lab.id]);
+    this.labService.checkUserLaboratoryAccess(this.lab.id, this.user_email).subscribe({
+      next: (response) => {
+        if (response.access === true) {
+          this.toastr.success(
+            'Access granted to this laboratory'
+          );
+          this.router.navigate(['/booking', lab.id]);
+        } else {
+          this.toastr.error(
+            'You do not have access to this laboratory. Please contact your instructor.'
+          );
+        }
+      },
+      error: (e) => {
+        this.toastr.error(
+          'There was an error verifying the user access to this laboratory.'
+        );
+      }
+    });
   }
 
   getType(typeCode: any) {
@@ -88,5 +114,16 @@ export class LabStructureComponent implements OnInit {
 
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
+  }
+
+  getVideoId(url: string): string {
+    const videoIdMatch = url.match(/(?:\/|%3D|v=|vi=)([0-9A-Za-z_-]{11})(?:[%#?&]|$)/);
+    return videoIdMatch ? videoIdMatch[1] : '';
+  }
+
+  getUserEmail(): void {
+    this.userService
+      .getUserData()
+      .subscribe((user) => (this.user_email = user.email));
   }
 }

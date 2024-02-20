@@ -5,7 +5,7 @@
     <h1 class="title">Welcome</h1>
     <div class="text-center">
       <h4>
-        Search for a lab by name and select an available time slot to make a
+        Search for a laboratory by name and select an available time slot to make a
         reservation:
       </h4>
 
@@ -13,13 +13,7 @@
         <mat-label>Laboratory</mat-label>
         <input matInput type="text" [(ngModel)]="searchedLab" />
         <mat-icon matPrefix id="search-icon">search</mat-icon>
-        <button
-          *ngIf="searchedLab"
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="searchedLab = ''"
-        >
+        <button *ngIf="searchedLab" matSuffix mat-icon-button aria-label="Clear" (click)="searchedLab = ''">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -27,22 +21,14 @@
   </div>
 
   <div class="row">
-    <div
-      *ngFor="let lab of labs | filter : searchedLab"
-      class="cols-5 card-container"
-    >
+    <div *ngFor="let lab of labs | filter : searchedLab" class="cols-5 card-container">
       <mat-card class="card card-hghlght">
-        <mat-card-header>
+        <mat-card-header class="card-header">
           <mat-card-title>{{ lab.name }}</mat-card-title>
           <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
         </mat-card-header>
 
-        <img
-          mat-card-image
-          [src]="lab.image ?? defaultLabImg"
-          alt="Remote lab"
-          class="remote-lab-img"
-        />
+        <img mat-card-image [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="remote-lab-img" />
 
         <mat-card-content class="card-content">
           <p>
@@ -63,12 +49,7 @@
             <span style="color: orange; font-weight: bold;"> NOT AVAILABLE </span>
           </div>
 
-          <button
-            mat-button
-            color="primary"
-            class="card-button"
-            (click)="moreInfoLab(lab)"
-          >
+          <button mat-button color="primary" class="card-button" (click)="moreInfoLab(lab)">
             MORE INFO >>
           </button>
         </mat-card-actions>

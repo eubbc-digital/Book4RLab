@@ -66,6 +66,7 @@
                 (change)="onUploadFile($event, i, 'image')" />
             </div>
           </div>
+
           <div *ngIf="component['video'] != null" class="video-container">
             <div *ngIf="component['video'] != ''; else showImageLabel">
               <p>
@@ -87,6 +88,11 @@
 
             <input type="file" accept="video/*" name="Video" (change)="onUploadFile($event, i, 'video')" />
           </div>
+
+          <mat-form-field *ngIf="component['video_link'] != null" appearance="fill" class="input-field">
+            <mat-label>{{ getType("video_link") }}</mat-label>
+            <input matInput type="text" [(ngModel)]="component['video_link']" />
+          </mat-form-field>
         </div>
       </div>
       <div class="col-2">

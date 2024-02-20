@@ -10,7 +10,7 @@
   margin-bottom: 20px;
 }
 
-mat-dialog-content{
+mat-dialog-content {
   width: 105%;
   padding-right: 20px;
   padding-top: 20px;
@@ -20,3 +20,44 @@ mat-dialog-content{
   min-height: 60vh;
 }
 
+.email-container {
+  margin-top: 2%;
+  margin-bottom: 5%;
+  /* border: 0.5px solid #007bff; */
+  /* padding: 10px; */
+}
+
+.email-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.mat-icon {
+  cursor: pointer;
+}
+
+.input-field {
+  height: auto;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.dialog-label {
+  font-weight: bold;
+}
+
+.dialog-sublabel {
+  font-style: italic;
+  margin-bottom: 2%;
+}
+
+.add-buttons-container {
+  display: flex;
+}
+
+.add-buttons-container button {
+  margin-right: 10px;
+}

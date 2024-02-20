@@ -26,4 +26,5 @@ urlpatterns = [
     path('laboratories/contents/', views.LaboratoryContentList.as_view(), name='lab-content-list-create'),
     path('laboratories/<int:laboratory_id>/contents/', views.LaboratoryContentRetrieve.as_view(), name='contents-for-laboratory'),
     path('laboratories/<int:laboratory_id>/delete-contents/', views.LaboratoryContentDeleteAll.as_view(), name='delete_all_contents'),
+    path('laboratories/user-access/', views.UserLaboratoryAccess.as_view(), name='lab-user-access'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

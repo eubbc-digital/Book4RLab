@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -40,7 +40,7 @@ export class ConfirmationFormComponent implements OnInit {
   constructor(
     private userService: UserService,
     private bookingService: BookingService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getUserData();

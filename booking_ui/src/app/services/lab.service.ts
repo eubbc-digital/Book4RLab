@@ -43,6 +43,7 @@ export class LabService {
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
     formData.append('notify_owner', String(lab.notify_owner!));
+    formData.append('allowed_emails', String(lab.allowed_emails));
     formData.append('enabled', '1');
 
     return this.http.post<Lab>(this.url, formData);
@@ -62,21 +63,26 @@ export class LabService {
     if (newLab.description) formData.append('description', newLab.description!);
     formData.append('visible', String(newLab.visible!));
     formData.append('notify_owner', String(newLab.notify_owner!));
+    formData.append('allowed_emails', String(newLab.allowed_emails!));
     formData.append('enabled', '1');
 
     return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }
+
   getLabContent(labId: number) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api.content}`;
     return this.http.get<any>(url);
   }
+
   getLabFile(filepath: string) {
     return this.http.get(`${filepath}`, { responseType: 'blob' });
   }
+
   deleteLabContent(labId: number) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${labId}/${config.api['delete-content']}`
     return this.http.delete(url);
   }
+
   async postLabContent(params: any) {
     var url: string = `${config.api.baseUrl}${config.api.labs}${config.api.content}`;
 
@@ -90,6 +96,7 @@ export class LabService {
       if (element.link) formData.append("link", element.link);
       if (element.video) formData.append("video", element.video);
       if (element.text) formData.append("text", element.text);
+      if (element.video_link) formData.append("video_link", element.video_link);
       formData.append("order", element.order);
       formData.append("laboratory", element.laboratory);
 
@@ -100,8 +107,18 @@ export class LabService {
     }
 
   }
+
   deleteLab(lab: Lab) {
     const deletedLab = { enabled: false };
     return this.http.patch<Lab>(`${this.url}${lab.id}/${config.api['labs-update']}`, deletedLab);
+  }
+
+  checkUserLaboratoryAccess(laboratoryId: number, userEmail: string) {
+    const url: string = `${config.api.baseUrl}${config.api.labs}${config.api['user-access']}`;
+    const data = {
+      laboratory_id: laboratoryId,
+      user_email: userEmail
+    };
+    return this.http.post<any>(url, data);
   }
 }

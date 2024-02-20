@@ -6,7 +6,7 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer
+from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer, UserLaboratoryAccessSerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
@@ -278,9 +278,8 @@ class PublicLaboratoryList(generics.ListAPIView):
     serializer_class = LaboratorySerializer
 
     def get_queryset(self):
-        queryset = Laboratory.objects.filter(enabled=True)
-
-        return queryset.filter(visible=True)
+        queryset = Laboratory.objects.filter(enabled=True).filter(visible=True).order_by('id')
+        return queryset
 
 class LaboratoryRetrieve(generics.RetrieveAPIView):
     serializer_class = LaboratorySerializer
@@ -323,7 +322,7 @@ class LaboratoryContentList(generics.ListCreateAPIView):
         if content_instance:
             serializer = LaboratoryContentSerializer(content_instance, data=data)
             if serializer.is_valid():
-                field_name = [key for key in data.keys() if key not in ('laboratory', 'order')][0]
+                field_name = [key for key in data.keys() if key not in ('laboratory', 'order', 'is_last')][0]
                 for field in ('text', 'image', 'video', 'video_link', 'link', 'title', 'subtitle'):
                     if field != field_name:
                         setattr(content_instance, field, None)
@@ -363,3 +362,23 @@ class LaboratoryContentRetrieve(generics.ListAPIView):
         laboratory = Laboratory.objects.get(pk=laboratory_id)
         contents = LaboratoryContent.objects.filter(laboratory=laboratory)
         return contents
+
+class UserLaboratoryAccess(generics.GenericAPIView):
+    def post(self, request):
+        serializer = UserLaboratoryAccessSerializer(data=request.data)
+        if serializer.is_valid():
+            laboratory_id = serializer.validated_data.get('laboratory_id')
+            user_email = serializer.validated_data.get('user_email')
+
+            try:
+                laboratory = Laboratory.objects.get(id=laboratory_id)
+            except Laboratory.DoesNotExist:
+                return Response({"error": "Laboratory does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+            allowed_emails = laboratory.allowed_emails.split(',')
+            if user_email in allowed_emails:
+                return Response({"access": True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"access": False}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

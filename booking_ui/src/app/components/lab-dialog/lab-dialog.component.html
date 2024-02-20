@@ -4,6 +4,7 @@
   <mat-tab label="Remote Laboratory">
     <mat-dialog-content>
       <form [formGroup]="labForm" ngNoForm>
+
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
@@ -68,6 +69,36 @@
         <mat-checkbox class="input-field" id="notify-owner-checkbox" formControlName="notify_owner">
           Notify me when a booking is placed
         </mat-checkbox>
+
+        <div class="email-container">
+          <div class="dialog-label">Allowed emails:</div>
+          <div class="dialog-sublabel">
+            Add the email addresses that will be able to book a timeframe in your laboratory.
+          </div>
+          <ng-container *ngIf="labForm.controls['allowed_emails'] as emailsArray">
+            <div class="email-group" *ngFor="let emailControl of emailsArray.controls; let i = index">
+              <div class="input-field">
+                <mat-form-field appearance="fill">
+                  <mat-label>Email Address</mat-label>
+                  <input matInput [formControl]="emailControl" />
+                </mat-form-field>
+              </div>
+              <button mat-icon-button color="warn" (click)="removeEmail(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+          <div class="add-buttons-container">
+            <button mat-raised-button color="primary" (click)="addEmail()" matTooltip="Add an email address manually.">
+              Add email
+            </button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()"
+              matTooltip="The file must contain comma separated emails or one email address per line (without commas).">
+              Load emails from file
+            </button>
+            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)">
+          </div>
+        </div>
 
         <p class="mat-small">* Indicates required fields.</p>
       </form>

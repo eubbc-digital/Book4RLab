@@ -70,6 +70,7 @@ class Laboratory(models.Model):
     visible = models.BooleanField(default=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='laboratory_owner', on_delete=models.CASCADE)
     notify_owner = models.BooleanField(default=False)
+    allowed_emails = models.TextField(blank=True, default='')
 
     def is_timeframe_available_now(self):
         current_datetime = timezone.now()

@@ -22,12 +22,22 @@
 .card {
   width: 100%;
   padding-top: 30px;
-  overflow: auto;
   pointer-events: auto;
   transform: scale(1);
   transition: all 0.2s;
-  height: 475px;
+  height: 500px;
   position: relative;
+}
+
+.card-header {
+  height: 60px;
+  margin-bottom: 5%;
+  overflow: hidden;
+}
+
+.card-content {
+  overflow: auto;
+  height: 100px;
 }
 
 img {
@@ -55,7 +65,7 @@ img {
   }
 }
 
-.actions-c{
+.actions-c {
   display: flex;
   flex-direction: row;
   align-items: center;
