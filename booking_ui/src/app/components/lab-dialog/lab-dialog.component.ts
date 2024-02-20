@@ -6,15 +6,13 @@
 
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
-  FormBuilder, FormGroup, Validators, FormArray, AbstractControl, FormControl
+  FormBuilder, Validators, FormArray, AbstractControl, FormControl
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
 import { lastValueFrom } from 'rxjs';
-import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Lab } from 'src/app/interfaces/lab';
 
 @Component({
@@ -232,7 +230,7 @@ export class LabDialogComponent implements OnInit {
 
   addEmail(): void {
     const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
-    emailsFormArray.push(this.fb.control('', Validators.required));
+    emailsFormArray.push(this.fb.control('', [Validators.required, Validators.email]));
   }
 
   removeEmail(index: number): void {
@@ -241,11 +239,15 @@ export class LabDialogComponent implements OnInit {
   }
 
   populateAllowedEmails(emailsString: string): void {
-    const emailsArray = emailsString.split(',');
-    const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
-    emailsArray.forEach(email => {
-      emailsFormArray.push(this.fb.control(email, Validators.required));
-    });
+    if (emailsString && emailsString.trim() !== '') {
+      const emailsArray = emailsString.split(',');
+      const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
+      emailsArray.forEach(email => {
+        if (email.trim() !== '') {
+          emailsFormArray.push(this.fb.control(email.trim(), [Validators.required, Validators.email]));
+        }
+      });
+    }
   }
 
   onFileSelected(event: any) {
@@ -263,7 +265,14 @@ export class LabDialogComponent implements OnInit {
   }
 
   parseFileContents(contents: string) {
-    const newEmails: string[] = contents.split(/[\r\n]+/).map(email => email.trim()).filter(email => email !== '');
+    let newEmails: string[];
+    if (contents.includes(',')) {
+      newEmails = contents.split(/\s*,\s*/);
+    } else {
+      newEmails = contents.split(/[\r\n]+/);
+    }
+    newEmails = newEmails.map(email => email.trim()).filter(email => email !== '');
+
     const existingEmails: Set<string> = new Set(
       (this.labForm.get('allowed_emails') as FormArray).value.map((email: string) => email.trim())
     );
