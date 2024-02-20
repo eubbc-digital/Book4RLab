@@ -282,7 +282,7 @@ export class LabDialogComponent implements OnInit {
     allowedEmailsArray.clear();
 
     combinedEmails.forEach(email => {
-      allowedEmailsArray.push(this.fb.control(email.trim()));
+      allowedEmailsArray.push(this.fb.control(email.trim(), [Validators.required, Validators.email]));
     });
   }
 
