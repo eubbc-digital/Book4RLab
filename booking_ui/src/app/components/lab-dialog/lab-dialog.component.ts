@@ -85,13 +85,13 @@ export class LabDialogComponent implements OnInit {
   async save() {
     this.cleanDescription();
 
-    var descriptionParams = await this.getDescriptionParams(
-      this.labDescription.components
-    );
-    if (descriptionParams.length == 0) {
-      await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
-    } else {
-      await this.labService.postLabContent(descriptionParams);
+    if (!this.arraysAreEqual(this.labDescription.components, this.labDescription.myLabContent)) {
+      var descriptionParams = await this.getDescriptionParams(this.labDescription.components);
+      if (descriptionParams.length == 0) {
+        await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
+      } else {
+        await this.labService.postLabContent(descriptionParams);
+      }
     }
 
     if (this.labForm.valid) {
@@ -284,5 +284,25 @@ export class LabDialogComponent implements OnInit {
     combinedEmails.forEach(email => {
       allowedEmailsArray.push(this.fb.control(email.trim()));
     });
+  }
+
+  arraysAreEqual(simplifiedArray: any, completeArray: any) {
+    if (simplifiedArray.length !== completeArray.length) {
+      return false;
+    }
+
+    for (let i = 0; i < simplifiedArray.length; i++) {
+      const simplifiedObj = simplifiedArray[i];
+      const completeObj = completeArray[i];
+      for (const key in simplifiedObj) {
+        if (Object.prototype.hasOwnProperty.call(simplifiedObj, key)) {
+          if (simplifiedObj[key] !== completeObj[key]) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 }
