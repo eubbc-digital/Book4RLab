@@ -85,7 +85,7 @@ export class LabDialogComponent implements OnInit {
   async save() {
     this.cleanDescription();
 
-    if (!this.arraysAreEqual(this.labDescription.components, this.labDescription.myLabContent)) {
+    if (!this.arraysAreEqual(this.labDescription.components, (this.labDescription.myLabContent || []))) {
       var descriptionParams = await this.getDescriptionParams(this.labDescription.components);
       if (descriptionParams.length == 0) {
         await lastValueFrom(this.labService.deleteLabContent(this.selectedLabId));
