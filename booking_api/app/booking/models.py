@@ -72,28 +72,22 @@ class Laboratory(models.Model):
     notify_owner = models.BooleanField(default=False)
     allowed_emails = models.TextField(blank=True, default='')
 
-    def is_timeframe_available_now(self):
-        current_datetime = timezone.now()
+    def is_timeframe_available_future(self):
+      current_datetime = timezone.now()
 
-        active_timeframes = TimeFrame.objects.filter(
-            Q(equipment__in=self.reservations.all()) &
-            (
-                Q(start_date__lt=current_datetime) |
-                (Q(start_date=current_datetime.date()) & Q(start_hour__lte=current_datetime.time()))
-            ) &
-            (
-                Q(end_date__gt=current_datetime) |
-                (Q(end_date=current_datetime.date()) & Q(end_hour__gte=current_datetime.time()))
-            ) &
-            Q(enabled=True)
-        )
-
-        return active_timeframes.exists()
+      future_timeframes = TimeFrame.objects.filter(
+        Q(equipment__in=self.reservations.all()) &
+          (
+            Q(start_date__gt=current_datetime.date()) |
+              (Q(start_date=current_datetime.date()) & Q(start_hour__gt=current_datetime.time()))
+          ) &
+          Q(enabled=True)
+      )
+      return future_timeframes.exists()
 
     @property
     def is_available_now(self):
-        return self.is_timeframe_available_now()
-
+        return self.is_timeframe_available_future()
 
 def generate_unique_filename_image(instance, filename):
     image_content = instance.image.read()
