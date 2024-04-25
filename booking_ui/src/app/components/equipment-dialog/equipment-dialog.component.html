@@ -18,6 +18,23 @@
       ></textarea>
     </mat-form-field>
 
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Number of bookings per user</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="bookings_per_user"
+        min="1"
+        max="10"
+      />
+      <mat-error *ngIf="equipmentForm.get('bookings_per_user')?.hasError('min')">
+        The minimum value allowed is 1.
+      </mat-error>
+      <mat-error *ngIf="equipmentForm.get('bookings_per_user')?.hasError('max')">
+        The maximum value allowed is 10.
+      </mat-error>
+    </mat-form-field>
+
     <p class="mat-small">* Indicates required fields.</p>
   </form>
 </mat-dialog-content>

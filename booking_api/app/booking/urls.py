@@ -17,6 +17,7 @@ urlpatterns = [
     path('me/', views.BookingUserList.as_view(), name='bookinguser'),
     path('equipments/', views.EquipmentList.as_view(), name='equipmentlist'),
     path('equipments/<int:pk>/', views.EquipmentDetail.as_view(), name='equipmentdetail'),
+    path('equipments/user-booking-availability/', views.UserBookingAvailability.as_view(), name='equipment-user-booking-availability'),
     path('timeframes/', views.TimeFrameList.as_view(), name='timeframelist'),
     path('timeframes/<int:pk>/', views.TimeFrameDetail.as_view(), name='timeframedetail'),
     path('laboratories/', views.LaboratoryList.as_view(), name='laboratorylist'),

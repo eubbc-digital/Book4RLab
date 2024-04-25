@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -11,13 +11,14 @@ import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { ComponentCanDeactivate } from '../../services/guards/pending-changes.guard';
 
 import { LabService } from 'src/app/services/lab.service';
 import { EquipmentService } from 'src/app/services/equipment.service';
+import { TimeframeService } from 'src/app/services/timeframe.service';
 import { ToastrService } from 'ngx-toastr';
 import { BookingService } from 'src/app/services/booking.service';
 import { UserService } from 'src/app/services/user.service';
@@ -109,6 +110,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     private formBuilder: FormBuilder,
     private labService: LabService,
     private equipmentService: EquipmentService,
+    private timeframeService: TimeframeService,
     private bookingService: BookingService,
     private toastService: ToastrService,
     private userService: UserService,
@@ -218,6 +220,16 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     this.getHoursByEquipmentIdAndDate(selectedEquipment.id!, this.selectedDate);
   }
 
+  private getUserBookingAvailability(equipmentId: number): Observable<boolean> {
+    return this.timeframeService.getTimeframeByEquipmentId(equipmentId).pipe(
+      switchMap(timeframe =>
+        this.equipmentService.checkUserBookingAvailability(equipmentId, timeframe[0].id!).pipe(
+          map(response => response.booking_available)
+        )
+      )
+    );
+  }
+
   getHoursByEquipmentIdAndDate(equipmentId: number, selectedDate: Date): void {
     if (!this.dateChanged) this.showCalendar = false;
 
@@ -297,21 +309,29 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
     if (equipment) this.getHoursByEquipmentIdAndDate(equipment.id, event);
   }
 
-  followNextStep() {
-    this.bookingId = this.reservationFormGroup.controls['selectedHour'].value;
+  followNextStep(){
+    const equipmentId = this.selectedEquipment.id;
 
-    this.bookingService.getBookingById(this.bookingId).subscribe((booking) => {
-      if (booking !== undefined && booking.available) {
-        this.isFirstStepCompleted = true;
+    this.getUserBookingAvailability(equipmentId!).subscribe(userBookingAvailability => {
+      if (userBookingAvailability) {
+        this.bookingId = this.reservationFormGroup.controls['selectedHour'].value;
 
-        this.saveReservation();
+        this.bookingService.getBookingById(this.bookingId).subscribe(async (booking) => {
+          if (booking !== undefined && booking.available) {
+            this.isFirstStepCompleted = true;
+            this.saveReservation();
+          } else {
+            this.toastService.error(
+              'This booking is not available. Please choose another.'
+            );
+            this.getHoursByEquipmentIdAndDate(this.selectedEquipment.id!, this.selectedDate);
+            this.bookingId = 0;
+          }
+        });
       } else {
         this.toastService.error(
-          'This booking is not available. Please choose another.'
+          "You can't make more bookings for this equipment"
         );
-
-        this.getHoursByEquipmentIdAndDate(this.selectedEquipment.id!, this.selectedDate);
-        this.bookingId = 0;
       }
     });
   }
@@ -329,47 +349,43 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
     if (!this.confirmedReservation) {
       this.countdown.restart();
+      this.bookingService.registerBooking(booking).subscribe((updatedBooking) => {
+        this.userService.getUserData().subscribe((response) => {
+          if (response && response.id == updatedBooking.reserved_by) {
+            this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}&${config.urlParams.password}=${updatedBooking.password}`;
+            this.publicAccessUrl = this.publicReservation
+              ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}`
+              : '';
+            this.reservationDate = moment(updatedBooking.start_date).format(
+              this.dateTimeFormat
+            );
 
-      this.bookingService
-        .registerBooking(booking)
-        .subscribe((updatedBooking) => {
-          this.userService.getUserData().subscribe((response) => {
-            if (response && response.id == updatedBooking.reserved_by) {
-              this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}&${config.urlParams.password}=${updatedBooking.password}`;
-              this.publicAccessUrl = this.publicReservation
-                ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${updatedBooking.access_key}`
-                : '';
-              this.reservationDate = moment(updatedBooking.start_date).format(
-                this.dateTimeFormat
-              );
+            this.stepper.next();
+          } else {
+            this.toastService.error(
+              'This booking is not available. Please choose another.'
+            );
 
-              this.stepper.next();
-            } else {
-              this.toastService.error(
-                'This booking is not available. Please choose another.'
-              );
+            this.getHoursByEquipmentIdAndDate(
+              this.selectedEquipment.id!,
+              this.selectedDate
+            );
 
-              this.getHoursByEquipmentIdAndDate(
-                this.selectedEquipment.id!,
-                this.selectedDate
-              );
-
-              this.bookingId = 0;
-            }
-          });
+            this.bookingId = 0;
+          }
         });
+      });
     } else {
-      this.bookingService
-        .confirmBooking(booking)
-        .subscribe((confirmedBooking) => {
-          this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${confirmedBooking.access_key}&${config.urlParams.password}=${confirmedBooking.password}`;
-          this.publicAccessUrl = this.publicReservation
-            ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${confirmedBooking.access_key}`
-            : '';
-          this.reservationDate = moment(confirmedBooking.start_date).format(
-            this.dateTimeFormat
-          );
-        });
+      this.bookingService.confirmBooking(booking).subscribe((confirmedBooking) => {
+        this.privateAccessUrl = `${this.selectedLab.url}?${config.urlParams.accessKey}=${confirmedBooking.access_key}&${config.urlParams.password}=${confirmedBooking.password}`;
+
+        this.publicAccessUrl = this.publicReservation
+          ? `${this.selectedLab.url}?${config.urlParams.accessKey}=${confirmedBooking.access_key}`
+          : '';
+        this.reservationDate = moment(confirmedBooking.start_date).format(
+          this.dateTimeFormat
+        );
+      });
     }
   }
 
@@ -401,9 +417,7 @@ export class BookingStepperComponent implements OnInit, ComponentCanDeactivate {
 
     if (this.privateAccessUrl !== '') {
       this.toastService.success('Reservation made successfully');
-
       this.countdown.stop();
-
       this.resetBookingId();
     }
   }

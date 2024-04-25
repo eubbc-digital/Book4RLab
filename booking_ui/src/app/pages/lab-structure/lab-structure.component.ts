@@ -84,7 +84,7 @@ export class LabStructureComponent implements OnInit {
   }
 
   selectLab(lab: Lab): void {
-    this.labService.checkUserLaboratoryAccess(this.lab.id, this.user_email).subscribe({
+    this.labService.checkUserLaboratoryAccess(this.lab.id).subscribe({
       next: (response) => {
         if (response.access === true) {
           this.toastr.success(

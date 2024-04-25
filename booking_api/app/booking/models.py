@@ -40,6 +40,7 @@ class Equipment(models.Model):
     last_modification_date = models.DateTimeField(auto_now=True)
     enabled = models.BooleanField(default=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='equipment_owner', on_delete=models.CASCADE)
+    bookings_per_user = models.IntegerField(default=3)
 
 class TimeFrame(models.Model):
 

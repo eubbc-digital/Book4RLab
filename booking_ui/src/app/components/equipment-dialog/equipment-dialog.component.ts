@@ -29,6 +29,7 @@ export class EquipmentDialogComponent implements OnInit {
   equipmentForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
     description: new UntypedFormControl('', [Validators.required]),
+    bookings_per_user: new UntypedFormControl(3, [Validators.required]),
   });
 
   constructor(
@@ -47,6 +48,7 @@ export class EquipmentDialogComponent implements OnInit {
       this.selectedEquipmentId = equipment.id!;
       this.equipmentForm.controls['name'].setValue(equipment.name!);
       this.equipmentForm.controls['description'].setValue(equipment.description);
+      this.equipmentForm.controls['bookings_per_user'].setValue(equipment.bookings_per_user);
 
       this.title = 'Update Equipment';
     } else {

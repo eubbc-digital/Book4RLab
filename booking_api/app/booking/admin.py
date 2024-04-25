@@ -21,6 +21,7 @@ class EquipmentAdmin(admin.ModelAdmin):
 class BookingAdmin(admin.ModelAdmin):
     ordering = ['id']
     list_display = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'owner', 'reserved_by', 'equipment', 'timeframe']
+    search_fields = ['owner__email', 'reserved_by__email', 'timeframe__id', 'equipment__id']
     readonly_fields = ['access_key']
 
 class TimeFrameAdmin(admin.ModelAdmin):

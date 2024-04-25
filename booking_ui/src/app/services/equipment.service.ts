@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -37,5 +37,14 @@ export class EquipmentService {
 
   updateEquipment(newEquipment: Equipment, id: number) {
     return this.http.put<Equipment>(`${this.url}${id}/`, newEquipment);
+  }
+
+  checkUserBookingAvailability(equipmentId: number, timeframeId: number) {
+    const url: string = `${this.url}${config.api['user-booking-availability']}`;
+    const data = {
+      equipment_id: equipmentId,
+      timeframe_id: timeframeId
+    };
+    return this.http.post<any>(url, data);
   }
 }

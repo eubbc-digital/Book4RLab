@@ -6,7 +6,8 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer, UserLaboratoryAccessSerializer
+from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer,\
+  TimeFrameSerializer, LaboratoryContentSerializer, UserLaboratoryAccessSerializer, UserBookingAvailabilitySerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
@@ -364,11 +365,14 @@ class LaboratoryContentRetrieve(generics.ListAPIView):
         return contents
 
 class UserLaboratoryAccess(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request):
         serializer = UserLaboratoryAccessSerializer(data=request.data)
         if serializer.is_valid():
             laboratory_id = serializer.validated_data.get('laboratory_id')
-            user_email = serializer.validated_data.get('user_email')
+            user_email= request.user.email
 
             try:
                 laboratory = Laboratory.objects.get(id=laboratory_id)
@@ -380,5 +384,30 @@ class UserLaboratoryAccess(generics.GenericAPIView):
                 return Response({"access": True}, status=status.HTTP_200_OK)
             else:
                 return Response({"access": False}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserBookingAvailability(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = UserBookingAvailabilitySerializer(data=request.data)
+        if serializer.is_valid():
+            equipment_id = serializer.validated_data.get('equipment_id')
+            timeframe_id = serializer.validated_data.get('timeframe_id')
+            user_id = request.user.id
+
+            try:
+                equipment = Equipment.objects.get(id=equipment_id)
+            except Equipment.DoesNotExist:
+                return Response({"error": "Equipment does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+            max_bookings_per_user = equipment.bookings_per_user
+            current_bookings_per_user = Booking.objects.all().filter(timeframe_id=timeframe_id, reserved_by=user_id).count()
+            if current_bookings_per_user < max_bookings_per_user:
+              return Response({"booking_available": True}, status=status.HTTP_200_OK)
+            else:
+              return Response({"booking_available": False}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

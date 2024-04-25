@@ -113,11 +113,10 @@ export class LabService {
     return this.http.patch<Lab>(`${this.url}${lab.id}/${config.api['labs-update']}`, deletedLab);
   }
 
-  checkUserLaboratoryAccess(laboratoryId: number, userEmail: string) {
+  checkUserLaboratoryAccess(laboratoryId: number) {
     const url: string = `${config.api.baseUrl}${config.api.labs}${config.api['user-access']}`;
     const data = {
-      laboratory_id: laboratoryId,
-      user_email: userEmail
+      laboratory_id: laboratoryId
     };
     return this.http.post<any>(url, data);
   }

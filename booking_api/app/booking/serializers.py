@@ -46,7 +46,7 @@ class EquipmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Equipment
-        fields = ['id', 'name', 'description', 'laboratory', 'enabled', 'owner']
+        fields = ['id', 'name', 'description', 'laboratory', 'enabled', 'owner', 'bookings_per_user']
         extra_kwargs = {
             'name': {'required': True},
             'laboratory': {'required': True},
@@ -162,4 +162,7 @@ class LaboratoryContentSerializer(serializers.ModelSerializer):
 
 class UserLaboratoryAccessSerializer(serializers.Serializer):
     laboratory_id = serializers.IntegerField()
-    user_email = serializers.EmailField()
+
+class UserBookingAvailabilitySerializer(serializers.Serializer):
+    equipment_id = serializers.IntegerField()
+    timeframe_id = serializers.IntegerField()
