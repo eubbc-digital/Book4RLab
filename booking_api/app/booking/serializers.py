@@ -33,6 +33,23 @@ class BookingSerializer(serializers.ModelSerializer):
         return Booking.objects.create(**validated_data)
 
 
+class BookingAccessSerializer(BookingSerializer):
+    reserved_by = serializers.SerializerMethodField()
+    equipment = serializers.SerializerMethodField()
+
+    class Meta(BookingSerializer.Meta):
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'reserved_by', 'equipment']
+
+    def get_reserved_by(self, obj):
+        if obj.reserved_by:
+          return {'name': obj.reserved_by.name, 'last_name': obj.reserved_by.last_name, 'email': obj.reserved_by.email}
+        return None
+
+    def get_equipment(self, obj):
+        if obj.reserved_by:
+            return {'name': obj.equipment.name}
+        return None
+
 class PublicBookingSerializer(serializers.ModelSerializer):
 
     reserved_by = UserSerializer()

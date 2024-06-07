@@ -6,8 +6,9 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
 from booking.permissions import IsOwnerOrReadOnly
-from booking.serializers import BookingSerializer, EquipmentSerializer, LaboratorySerializer, PublicBookingSerializer,\
-  TimeFrameSerializer, LaboratoryContentSerializer, UserLaboratoryAccessSerializer, UserBookingAvailabilitySerializer
+from booking.serializers import BookingSerializer, BookingAccessSerializer, EquipmentSerializer, LaboratorySerializer, \
+PublicBookingSerializer, TimeFrameSerializer, LaboratoryContentSerializer, UserLaboratoryAccessSerializer, \
+UserBookingAvailabilitySerializer
 from core.models import User
 from django.core.exceptions import SuspiciousOperation
 from django.utils import timezone
@@ -63,7 +64,7 @@ class BookingUserList(generics.ListAPIView):
 
 class BookingAccess(generics.ListAPIView):
 
-    serializer_class = BookingSerializer
+    serializer_class = BookingAccessSerializer
 
     def get_queryset(self):
         queryset = Booking.objects.all()
