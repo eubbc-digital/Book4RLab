@@ -43,7 +43,9 @@ To interact with different components of the project, follow these steps:
 ### Deployment
 
 The project's containerized architecture ensures easy deployment in a production environment.
+
 You can utilize any container orchestration tool, such as Kubernetes or Docker Swarm, to deploy the services.
+
 Additionally, for efficient handling of HTTP traffic, consider incorporating Nginx into your deployment setup to enhance performance and scalability.
 
 ## Authors
