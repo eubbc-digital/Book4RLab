@@ -10,7 +10,3 @@ RUN pip install -r /requirements.txt
 RUN mkdir /app
 WORKDIR /app
 COPY ./app/ /app
-
-RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
-
-ENTRYPOINT ["/app/entrypoint.sh"]

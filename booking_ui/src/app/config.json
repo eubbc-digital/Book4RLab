@@ -10,9 +10,9 @@
       "passwordReset": "accounts/password_reset/"
     },
     "labs": "laboratories/",
-    "user-access":"user-access/",
-    "user-booking-availability":"user-booking-availability/",
-    "labs-update":"update/",
+    "user-access": "user-access/",
+    "user-booking-availability": "user-booking-availability/",
+    "labs-update": "update/",
     "public-labs": "public-laboratories/",
     "content": "contents/",
     "delete-content": "delete-contents/",
