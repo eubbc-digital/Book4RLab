@@ -1,46 +1,48 @@
+
 # Book4RLab
-Book4RLab is a booking system for remote laboratories. It consists of a RESTful API built using Django and a user interface built using Angular.
+
+Book4RLab is a booking system for remote laboratories.
+
+The Booking system is aimed to reserve slots of the different Remote Laboratories and available equipment, with minimum intervention of the teacher.
+The learners will be able to reserve slots and a QR code and a link will allow to enter the reserved remote lab.
+
+Different Remote Labs from Project Partners can use the Remote Lab Booking System, which required small modification of their Remote Lab server application.
 
 ![](assets/architecture.png)
 
-## Getting Started
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
+## Usage
 ### Prerequisites
-You will need to have Docker and Docker Compose installed on your machine.
 
-### Installing
-To get the project up and running, clone the repository and navigate to the project's root directory.
+Before getting started, ensure you need to have [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on your system.
 
-`git clone https://github.com/eubbc-digital/Book4RLab`
+### Components
 
-`cd ui`
+The project consists of two main components:
 
-or 
+-   **RESTful API:** Built using [Django](https://www.djangoproject.com/).
+-   **User Interface (UI):** Built using [Angular](https://angular.io/).
 
-`cd api`
+### Setup
 
-Next, build and start the services using Docker Compose.
+To set up the project, follow these instructions for each component:
+- [Booking API Setup](booking_api/README.md)
+- [Booking UI Setup](booking_ui/README.md)
 
-`docker-compose up --build`
+These instructions will lead you through the setup process for both the API and UI components individually, providing step-by-step instructions to get a local development and testing environment up and running with ease.
 
-This command will start the Django API on port 8000 and the Angular UI on port 4200.
+### Interacting with the Project
 
-### Usage
-You can access the user interface by navigating to http://localhost:4200 in your web browser.
+To interact with different components of the project, follow these steps:
 
-The API can be accessed at http://localhost:8000.
+- **User Interface (UI):** Access the user interface by navigating to [http://localhost:4200](http://localhost:4200) in your web browser.
+
+- **API:** Interact with the API endpoints available at [http://localhost:8000](http://localhost:8000).
 
 ### Deployment
-The project is designed to be easily deployable to a production environment. You can use any container orchestration tool, such as Kubernetes or Docker Swarm, to deploy the services.
 
-### Built With
-
-This project was built using the following technologies:
-
- - Django - The web framework used for the API.
- - Angular - The framework used for the user interface.
- - Docker - Used for containerization.
+The project's containerized architecture ensures easy deployment in a production environment.
+You can utilize any container orchestration tool, such as Kubernetes or Docker Swarm, to deploy the services.
+Additionally, for efficient handling of HTTP traffic, consider incorporating Nginx into your deployment setup to enhance performance and scalability.
 
 ## Authors
 
