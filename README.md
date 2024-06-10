@@ -8,7 +8,9 @@ The learners will be able to reserve slots and a QR code and a link will allow t
 
 Different Remote Labs from Project Partners can use the Remote Lab Booking System, which required small modification of their Remote Lab server application.
 
-![](assets/architecture.png)
+<p align="center">
+  <img src="assets/architecture.png"/>
+</p>
 
 ## Usage
 ### Prerequisites
@@ -56,7 +58,9 @@ Additionally, for efficient handling of HTTP traffic, consider incorporating Ngi
 This work was partially funded by the Erasmus+ Project “EUBBC-Digital” (No.
 618925-EPP-1-2020-1-BR-EPPKA2-CBHE-JP)
 
-![](assets/erasmus.jpeg)
+<p align="center">
+  <img src="assets/erasmus.jpeg"/>
+</p>
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
