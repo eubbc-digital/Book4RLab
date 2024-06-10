@@ -26,7 +26,7 @@ The project consists of two main components:
 
 ### Setup
 
-To set up the project, follow these instructions for each component:
+To set up the project you need to clone the repository and then follow these instructions for each component:
 - [Booking API Setup](booking_api/README.md)
 - [Booking UI Setup](booking_ui/README.md)
 
