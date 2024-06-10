@@ -1,27 +1,52 @@
-# RemoteLabBooking
+# Booking UI
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.1.
+This is an Angular project that provides an User Interface for the Booking System.
 
-## Development server
+## Usage
+With the repository already cloned in your system navigate to the *booking_ui* directory:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
+cd Book4RLab/booking_ui/
+```
 
-## Code scaffolding
+### Environment Setup
+To ensure proper configuration of the Booking UI, it's essential to create an environment file named ***.env***. 
+This file can be adapted to setup the project either for a *development* or *production* environment.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+#### Configuring .env for Development
 
-## Build
+```
+### DOCKER
+RESTART_POLICY=no
+```
+#### Configuring .env for Production
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
+### DOCKER
+RESTART_POLICY=always
+```
 
-## Running unit tests
+#### Environment Variables
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+The environment variable used for the project is explained in the following table:
 
-## Running end-to-end tests
+| Variable            | Explanation                                                |
+|---------------------|------------------------------------------------------------|
+| RESTART_POLICY      | Restart policy for Docker containers                       |
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
+### Running the project
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Once the environment setup is done you can run the project following the next steps:
+
+ - Build the docker image running the following command:
+
+	``` 
+	docker-compose build 
+	```
+
+ - Run UI:
+  
+	``` 
+	docker-compose up 
+	```
