@@ -47,7 +47,7 @@ class BookingAccessSerializer(BookingSerializer):
 
     def get_equipment(self, obj):
         if obj.reserved_by:
-            return {'name': obj.equipment.name}
+          return {'id': obj.equipment.id, 'name': obj.equipment.name}
         return None
 
 class PublicBookingSerializer(serializers.ModelSerializer):
