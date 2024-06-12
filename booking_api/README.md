@@ -24,7 +24,7 @@ This file can be adapted to setup the project either for a *development* or *pro
 ### APP
 DEBUG=1
 SECRET_KEY='string'
-DB_HOST=string
+DB_HOST=db
 DB_NAME=string
 DB_USER=string
 DB_PASSWORD=string
@@ -47,7 +47,7 @@ RESTART_POLICY=no
 ### APP
 DEBUG=0
 SECRET_KEY='string'
-DB_HOST=string
+DB_HOST=db
 DB_NAME=string
 DB_USER=string
 DB_PASSWORD=string
