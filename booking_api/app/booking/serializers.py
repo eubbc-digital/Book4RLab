@@ -38,7 +38,7 @@ class BookingAccessSerializer(BookingSerializer):
     equipment = serializers.SerializerMethodField()
 
     class Meta(BookingSerializer.Meta):
-        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'access_key', 'password', 'reserved_by', 'equipment']
+        fields = ['id', 'start_date', 'end_date', 'available', 'public', 'reserved_by', 'equipment']
 
     def get_reserved_by(self, obj):
         if obj.reserved_by:
