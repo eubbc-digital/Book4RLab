@@ -21,12 +21,13 @@ class Booking(models.Model):
     public = models.BooleanField(default=False)
     access_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     password = models.CharField(max_length=15, blank=True, null=True, default=None)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner', on_delete=models.CASCADE)
-    reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reserved_by', on_delete=models.CASCADE, blank=True, null=True, default=None)
-    equipment = models.ForeignKey('Equipment', related_name='equipment_reservations', on_delete=models.CASCADE)
-    timeframe = models.ForeignKey('TimeFrame', related_name='tf_reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner_bookings', on_delete=models.CASCADE)
+    reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reserved_by_bookings', on_delete=models.CASCADE, blank=True, null=True, default=None)
+    equipment = models.ForeignKey('Equipment', related_name='equipment_bookings', on_delete=models.CASCADE)
+    timeframe = models.ForeignKey('TimeFrame', related_name='timeframe_bookings', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['start_date']
@@ -35,12 +36,13 @@ class Equipment(models.Model):
 
     name = models.CharField(max_length=255, blank=False, default='')
     description = models.CharField(max_length=500, default='')
-    laboratory = models.ForeignKey('Laboratory', related_name='reservations', on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
     enabled = models.BooleanField(default=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='equipment_owner', on_delete=models.CASCADE)
     bookings_per_user = models.IntegerField(default=3)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner_equipments', on_delete=models.CASCADE)
+    laboratory = models.ForeignKey('Laboratory', related_name='laboratory_equipments', on_delete=models.CASCADE)
 
 class TimeFrame(models.Model):
 
@@ -49,11 +51,12 @@ class TimeFrame(models.Model):
     start_hour = models.TimeField()
     end_hour = models.TimeField()
     slot_duration = models.IntegerField()
-    equipment = models.ForeignKey('Equipment', related_name='timeframes', on_delete=models.CASCADE)
     enabled = models.BooleanField(default=True)
     registration_date = models.DateTimeField(auto_now_add=True)
     last_modification_date = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='timeframe_owner', on_delete=models.CASCADE)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner_timeframes', on_delete=models.CASCADE)
+    equipment = models.ForeignKey('Equipment', related_name='equipment_timeframes', on_delete=models.CASCADE)
 
 
 class Laboratory(models.Model):
@@ -69,28 +72,30 @@ class Laboratory(models.Model):
     last_modification_date = models.DateTimeField(auto_now=True)
     enabled = models.BooleanField(default=True)
     visible = models.BooleanField(default=False)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='laboratory_owner', on_delete=models.CASCADE)
     notify_owner = models.BooleanField(default=False)
     allowed_emails = models.TextField(blank=True, default='')
 
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='owner_laboratories', on_delete=models.CASCADE)
+
     def has_bookings_available(self):
-      current_datetime = timezone.now()
+        current_datetime = timezone.now()
 
-      future_timeframes = TimeFrame.objects.filter(
-          Q(enabled=True)
-          & Q(equipment__in=self.reservations.all())
-          & (Q(end_date__date__gt=current_datetime.date()))
-          | (Q(end_date__date=current_datetime.date()) & Q(end_hour__gt=current_datetime.time()))
-      )
-
-      if future_timeframes.exists():
-        available_bookings = Booking.objects.filter(
-          Q(timeframe__in = future_timeframes)
-          & Q(available = True)
+        future_timeframes= TimeFrame.objects.filter(
+            enabled=True,
+            equipment__in=self.laboratory_equipments.all()
+        ).filter(
+            Q(end_date__gt=current_datetime.date()) |
+            (Q(end_date=current_datetime.date()) & Q(end_hour__gt=current_datetime.time()))
         )
-        return available_bookings.exists()
 
-      return False
+        if future_timeframes.exists():
+            available_bookings = Booking.objects.filter(
+                Q(timeframe__in = future_timeframes)
+                & Q(available = True)
+            )
+            return available_bookings.exists()
+
+        return False
 
     @property
     def is_available_now(self):
@@ -122,7 +127,6 @@ class UniqueFilenameStorage(FileSystemStorage):
         return super(UniqueFilenameStorage, self)._save(name, content)
 
 class LaboratoryContent(models.Model):
-    laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE, related_name='contents')
     order = models.PositiveIntegerField()
 
     text = models.CharField(max_length=1500, blank=True, null=True)
@@ -143,6 +147,8 @@ class LaboratoryContent(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     subtitle = models.CharField(max_length=100, blank=True, null=True)
     is_last = models.BooleanField(default=False)
+
+    laboratory = models.ForeignKey(Laboratory, on_delete=models.CASCADE, related_name='laboratory_contents')
 
     class Meta:
         ordering = ['order']
