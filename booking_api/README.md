@@ -93,8 +93,21 @@ You can create your own SECRET_KEY running this command:
 ```
 docker-compose run --rm app sh -c 'python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"'
 ```
+### Additional Configuration
+#### The `settings.py` file
+This file contains all the crucial configuration settings for the Django application.
 
-### Running the project
+The most important section to focus on is where you configure the email account details. While this step is optional, it allows you to test the email messaging functionality.
+
+To accomplish this, you'll need to insert your **email account name** and your **app password**, in the specified lines of code. Note that your usual password won't suffice.
+
+Learn how to generate an app password for your Google account [here](https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237).
+```python
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+```
+
+### Running the Project
 
 Once the environment setup is done you can run the project following the next steps:
 

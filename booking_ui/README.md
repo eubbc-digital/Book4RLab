@@ -34,8 +34,29 @@ The environment variable used for the project is explained in the following tabl
 |---------------------|------------------------------------------------------------|
 | RESTART_POLICY      | Restart policy for Docker containers                       |
 
+### Additional Configuration
+#### The `config.json` file
 
-### Running the project
+This file holds the UI configuration.
+
+To ensure correct requests, update the `"baseUrl": ""` field to point to your API. Remember, this field may vary based on whether you're using it in a production or development environment.
+| Development Environment | Production Environment |
+|--|--|
+| `"baseUrl": "http://localhost:8000/",` | `"baseUrl": "https://<domain_name>/booking/api/",` |
+
+#### The Dockerfile
+
+While running in the **development** environment you need to modify a line in the `Dockerfile` to avoid base path errors.
+
+Change this line:
+```
+RUN npm run ng build -- --base-href /booking/
+```
+To this:
+```
+RUN npm run ng build
+```
+### Running the Project
 
 Once the environment setup is done you can run the project following the next steps:
 

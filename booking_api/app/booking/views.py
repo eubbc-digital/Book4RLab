@@ -16,6 +16,7 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.exceptions import ValidationError
 from utils import send_custom_email, get_correct_datetime
 import datetime
 
@@ -63,27 +64,27 @@ class BookingUserList(generics.ListAPIView):
 
 
 class BookingAccess(generics.ListAPIView):
-
     serializer_class = BookingAccessSerializer
 
     def get_queryset(self):
-        queryset = Booking.objects.all()
+        queryset = Booking.objects.none()
         access_key = self.request.query_params.get('access_key')
         password = self.request.query_params.get('pwd')
 
-        if access_key is not None:
-            queryset = queryset.filter(access_key=access_key)
+        try:
+            if access_key is not None:
+                queryset = Booking.objects.filter(access_key=access_key)
 
-            if queryset.count() == 1:
-                if not queryset[0].public:
+                if queryset.count() == 1 and not queryset[0].public:
                     queryset = queryset.filter(password=password)
 
-            now = datetime.datetime.now()
-            queryset = queryset.filter(start_date__lte=now, end_date__gt=now)
+                now = datetime.datetime.now()
+                queryset = queryset.filter(start_date__lte=now, end_date__gt=now)
 
-            return queryset
+        except ValidationError:
+            queryset = Booking.objects.none()
 
-        return None
+        return queryset
 
 
 class BookingPublicList(generics.ListAPIView):
