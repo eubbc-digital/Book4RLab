@@ -16,7 +16,7 @@ import config from '../config.json';
 export class PublicLabsService {
   private url: string = `${config.api.baseUrl}${config.api['public-labs']}`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getPublicLabs(): Observable<Lab[]> {
     return this.http.get<Lab[]>(this.url);

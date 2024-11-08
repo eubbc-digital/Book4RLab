@@ -25,14 +25,39 @@
   pointer-events: auto;
   transform: scale(1);
   transition: all 0.2s;
-  height: 500px;
+  min-height: 500px;
   position: relative;
 }
 
+.laboratory-type-header {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  text-align: center;
+  z-index: 1;
+}
+
+.laboratory-type-header span {
+  color: white;
+  /* font-weight: bold; */
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.laboratory-type-header span.rt {
+  background-color: #63ab67;
+}
+
+.laboratory-type-header span.uc {
+  background-color: #946db7;
+}
+
 .card-header {
-  height: 60px;
+  height: 100px;
   margin-bottom: 5%;
-  overflow: hidden;
+  padding-top: 8%;
 }
 
 .card-content {

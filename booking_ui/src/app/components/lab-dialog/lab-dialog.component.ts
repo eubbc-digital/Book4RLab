@@ -5,15 +5,13 @@
  */
 
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import {
-  FormBuilder, Validators, FormArray, AbstractControl, FormControl
-} from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
+import { Lab } from 'src/app/interfaces/lab';
 import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 import { lastValueFrom } from 'rxjs';
-import { Lab } from 'src/app/interfaces/lab';
+import { FormBuilder, Validators, FormArray, AbstractControl, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-lab-dialog',
@@ -32,6 +30,18 @@ export class LabDialogComponent implements OnInit {
     private fb: FormBuilder
   ) { }
 
+
+  title = 'Register laboratory';
+  imageName = '';
+  selectedLabId = 0;
+  submitted = false;
+  onUpdate!: boolean;
+  lab!: any;
+  laboratoryTypes = [
+    { value: 'rt', viewValue: 'Real Time' },
+    { value: 'uc', viewValue: 'Ultra Concurrent' },
+  ];
+
   labForm = this.fb.group({
     name: ['', Validators.required],
     instructor: ['', Validators.required],
@@ -42,20 +52,13 @@ export class LabDialogComponent implements OnInit {
     url: ['', [Validators.required, this.trimAndValidateUrl]],
     description: ['', Validators.required],
     notify_owner: [false, Validators.required],
-    allowed_emails: this.fb.array([])
+    allowed_emails: this.fb.array([]),
+    type: ['', Validators.required]
   });
 
   get urlControl() { return this.labForm.controls['url']; }
   get imageControl() { return this.labForm.controls['image']; }
   get descriptionControl() { return this.labForm.controls['description']; }
-
-  title = 'Register laboratory';
-  imageName = '';
-  selectedLabId = 0;
-  submitted = false;
-  onUpdate!: boolean;
-  lab!: any;
-
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
@@ -70,7 +73,8 @@ export class LabDialogComponent implements OnInit {
         visible: lab.visible,
         url: lab.url,
         description: lab.description,
-        notify_owner: lab.notify_owner
+        notify_owner: lab.notify_owner,
+        type: lab.type
       });
       this.populateAllowedEmails(lab.allowed_emails);
 

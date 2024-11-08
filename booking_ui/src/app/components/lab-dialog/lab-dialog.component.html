@@ -25,6 +25,15 @@
           <input matInput formControlName="course" />
         </mat-form-field>
 
+        <mat-form-field appearance="fill" class="selection-field">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of laboratoryTypes" [value]="type.value">
+              {{type.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <div class="input-field">
           <div *ngIf="imageName != ''; else showImageLabel">
             <p>

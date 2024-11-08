@@ -18,4 +18,5 @@ export interface Lab {
   is_available_now?: boolean;
   notify_owner?: boolean;
   allowed_emails?: string[];
+  type?: string;
 }

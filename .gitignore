@@ -148,3 +148,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+booking_api/app/media/
+booking_api/app/data.json

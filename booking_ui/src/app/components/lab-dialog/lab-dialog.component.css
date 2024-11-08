@@ -23,8 +23,6 @@ mat-dialog-content {
 .email-container {
   margin-top: 2%;
   margin-bottom: 5%;
-  /* border: 0.5px solid #007bff; */
-  /* padding: 10px; */
 }
 
 .email-group {
@@ -39,6 +37,10 @@ mat-dialog-content {
 
 .input-field {
   height: auto;
+}
+
+.selection-field {
+  padding-left: 10px;
 }
 
 .mat-form-field {

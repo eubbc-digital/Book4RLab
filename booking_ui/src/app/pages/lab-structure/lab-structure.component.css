@@ -47,25 +47,37 @@
 }
 
 .basic-info {
-  border: 1px solid lightgray;
-  border-radius: 8px;
-  position: relative;
-  margin-top: 5px;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .basic-image {
-  position: relative;
-  width: 50%;
+  width: 40%;
+  margin-right: 20px;
 }
 
-.remote-lab-img {
-  margin-top: 5px;
-  width: 80%;
+.basic-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
 }
+
+.lab-info {
+  flex: 1;
+}
+
+.lab-info p strong {
+  font-weight: 500;
+  color: #444;
+  margin-right: 5px;
+}
+
 
 input,
 textarea {

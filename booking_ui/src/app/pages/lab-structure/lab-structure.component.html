@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
   <div class="page-content">
-    <div class="btn-container">
+    <div class="btn-container" *ngIf="lab.type !== 'uc'">
       <button mat-button color="primary" class="card-button" (click)="selectLab(lab)" [disabled]="disabledBooking">
         BOOK >>
       </button>
@@ -10,23 +10,21 @@
       <h2 color="primary"> <strong>Remote Laboratory Content</strong></h2>
       <div class="basic-info">
         <div class="basic-image">
-          <img [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="remote-lab-img" />
+          <img [src]="lab.image ?? defaultLabImg" alt="Remote lab" />
         </div>
 
-        <p>
-          <strong>Name: </strong> {{ lab.name }}
-          <br />
-          <strong>University: </strong> {{ lab.university }}
-          <br />
-          <strong>Course: </strong> {{ lab.course }}
-          <br />
-          <strong>Instructor: </strong> {{ lab.instructor }}
-          <br />
-          <strong>Description:</strong>
-          {{ lab.description }}
-        </p>
-
+        <div class="lab-info">
+          <p><strong>Name:</strong>{{ lab.name }}</p>
+          <p><strong>University:</strong>{{ lab.university }}</p>
+          <p><strong>Course:</strong>{{ lab.course }}</p>
+          <p><strong>Instructor:</strong>{{ lab.instructor }}</p>
+          <p><strong>Description:</strong>{{ lab.description }}</p>
+          <div *ngIf="lab.type == 'uc'">
+            <p><strong>URL:</strong> <a [href]="lab.url">{{ lab.url }}</a></p>
+          </div>
+        </div>
       </div>
+
       <br>
 
       <div *ngIf="myLabContent.length == 0">

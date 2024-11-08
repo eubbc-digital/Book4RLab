@@ -24,6 +24,14 @@
     <div *ngFor="let lab of labs | filter : searchedLab" class="cols-5 card-container">
       <mat-card class="card card-hghlght">
         <mat-card-header class="card-header">
+          <div class="laboratory-type-header">
+            <div *ngIf="lab.type=='rt'">
+              <span class="rt">Real Time</span>
+            </div>
+            <div *ngIf="lab.type=='uc'">
+              <span class="uc">Ultra Concurrent</span>
+            </div>
+          </div>
           <mat-card-title>{{ lab.name }}</mat-card-title>
           <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
         </mat-card-header>
