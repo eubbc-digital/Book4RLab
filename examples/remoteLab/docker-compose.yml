@@ -1,8 +1,0 @@
-version: "3"
-
-services:
-  ui:
-    build:
-      context: .
-    ports:
-      - "4300:80"
