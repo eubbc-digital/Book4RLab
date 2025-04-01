@@ -14,6 +14,22 @@ import os
 import uuid
 
 
+def generate_unique_filename_image(instance, filename):
+    image_content = instance.image.read()
+    md5_hash = hashlib.md5(image_content).hexdigest()
+    _, ext = os.path.splitext(filename)
+    new_filename = f"{md5_hash}{ext}"
+    return os.path.join("labs_content_photos", new_filename)
+
+
+def generate_unique_filename_video(instance, filename):
+    video_content = instance.video.read()
+    md5_hash = hashlib.md5(video_content).hexdigest()
+    _, ext = os.path.splitext(filename)
+    new_filename = f"{md5_hash}{ext}"
+    return os.path.join("labs_content_videos", new_filename)
+
+
 class Booking(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -106,12 +122,14 @@ class Laboratory(models.Model):
     notify_owner = models.BooleanField(default=False)
     allowed_emails = models.TextField(blank=True, default="")
     type = models.CharField(max_length=4, default="rt", choices=LABORATORY_TYPE_CHOICES)
-
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="owner_laboratories",
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        verbose_name_plural = "Laboratories"
 
     def has_bookings_available(self):
         if self.type == "rt":
@@ -138,22 +156,6 @@ class Laboratory(models.Model):
     @property
     def is_available_now(self):
         return self.has_bookings_available()
-
-
-def generate_unique_filename_image(instance, filename):
-    image_content = instance.image.read()
-    md5_hash = hashlib.md5(image_content).hexdigest()
-    _, ext = os.path.splitext(filename)
-    new_filename = f"{md5_hash}{ext}"
-    return os.path.join("labs_content_photos", new_filename)
-
-
-def generate_unique_filename_video(instance, filename):
-    video_content = instance.video.read()
-    md5_hash = hashlib.md5(video_content).hexdigest()
-    _, ext = os.path.splitext(filename)
-    new_filename = f"{md5_hash}{ext}"
-    return os.path.join("labs_content_videos", new_filename)
 
 
 class UniqueFilenameStorage(FileSystemStorage):

@@ -12,25 +12,35 @@ from core import models
 
 
 class UserAdmin(BaseUserAdmin):
-    search_fields = ('email', 'name', 'last_name')
-    ordering = ['id']
-    list_display = ['id', 'email', 'name', 'last_name', 'country', 'time_zone', 'is_active']
+    search_fields = ("email", "name", "last_name")
+    ordering = ["id"]
+    list_display = [
+        "id",
+        "email",
+        "name",
+        "last_name",
+        "country",
+        "time_zone",
+        "display_user_groups",
+        "is_active",
+    ]
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        (_('Personal Info'), {'fields': ('name', 'last_name')}),
+        (None, {"fields": ("email", "password")}),
+        (_("Personal Info"), {"fields": ("name", "last_name")}),
         (
-            _('Permissions'),
-            {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}
-
+            _("Permissions"),
+            {"fields": ("is_active", "is_staff", "is_superuser", "groups")},
         ),
-        (_('Important dates'), {'fields': ('last_login',)}),
+        (_("Important dates"), {"fields": ("last_login",)}),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')
-        }),
+        (None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),
     )
+
+    def display_user_groups(self, obj):
+        return ", ".join([group.name for group in obj.groups.all()])
+
+    display_user_groups.short_description = "Groups"
 
 
 admin.site.register(models.User, UserAdmin)

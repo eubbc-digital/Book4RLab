@@ -80,7 +80,35 @@
       </mat-select>
     </mat-form-field>
 
-    <p class="mat-caption">Required fields are marked with *</p>
+    <p class="mat-caption input-field">Required fields are marked with *</p>
+
+    <div *ngIf="!isInstructor" class="instructor-request-section">
+      <h3 class="request-title">Instructor Access</h3>
+      <p class="request-description">
+        If you need instructor privileges to manage laboratories, you can request access below.
+        Please note:
+      </p>
+      <ul class="request-notes">
+        <li>Your account will remain as a student until administrator approval</li>
+        <li>The verification process may take 1-2 business days</li>
+        <li>You'll receive email confirmation once approved</li>
+      </ul>
+      <p class="contact-note">
+        For any questions, please contact:
+        <a href="mailto:upbremotelabs@gmail.com" class="contact-email">
+          upbremotelabs&#64;gmail.com
+        </a>
+      </p>
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="requestInstructorAccess()"
+        class="request-button"
+      >
+        Request Instructor Access
+      </button>
+    </div>
 
     <div class="button-container">
       <button

@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
-  FormGroupDirective,
-  ValidatorFn,
-  ValidationErrors,
   AbstractControl,
+  FormGroupDirective,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
-import { Country } from 'src/app/interfaces/country';
-import { countries } from 'src/app/store/country-data-store';
-import { IanaTimezone } from 'src/app/interfaces/timezone';
-import { iana_timezones } from 'src/app/store/timezone-data-shortened-store';
-import { Validators } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
-import { startWith, map, Observable } from 'rxjs';
-import { User } from 'src/app/interfaces/user';
 import moment from 'moment';
+import { AuthService } from 'src/app/services/auth.service';
+import { Country } from 'src/app/interfaces/country';
+import { Group } from 'src/app/enums/group';
+import { IanaTimezone } from 'src/app/interfaces/timezone';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { User } from 'src/app/interfaces/user';
 import { UserService } from 'src/app/services/user.service';
+import { Validators } from '@angular/forms';
+import { countries } from 'src/app/store/country-data-store';
+import { iana_timezones } from 'src/app/store/timezone-data-shortened-store';
+import { startWith, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile-form',
@@ -26,6 +27,8 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./profile-form.component.css'],
 })
 export class ProfileFormComponent implements OnInit {
+  isInstructor: boolean = false;
+  hasRequestedAccess: boolean = false;
   countries: Country[] = countries;
   timeZones: IanaTimezone[] = [];
   timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
@@ -53,10 +56,11 @@ export class ProfileFormComponent implements OnInit {
 
   filteredOptions!: Observable<Country[]>;
   constructor(
-    private userService: UserService,
+    private authService: AuthService,
+    private router: Router,
     private toastr: ToastrService,
-    private router: Router
-  ) {}
+    private userService: UserService,
+  ) { }
 
   ngOnInit() {
     this.getUserData();
@@ -112,18 +116,22 @@ export class ProfileFormComponent implements OnInit {
   }
 
   getUserData() {
-    this.userService.getUserData().subscribe((response) => {
-      this.editionForm.controls['name'].setValue(response.name);
-      this.editionForm.controls['lastName'].setValue(response.last_name);
-      this.editionForm.controls['email'].setValue(response.email);
+    this.userService.getUserData().subscribe((user) => {
+      user.groups!.forEach((group) => {
+        if (group.name === Group.Professors) this.isInstructor = true;
+      });
 
-      var country = this.getCountryInfoComplete(response.country);
+      this.editionForm.controls['name'].setValue(user.name);
+      this.editionForm.controls['lastName'].setValue(user.last_name);
+      this.editionForm.controls['email'].setValue(user.email);
+
+      var country = this.getCountryInfoComplete(user.country);
       if (country) {
         this.editionForm.controls['country'].setValue(country);
       }
 
-      if (response.time_zone) {
-        this.timeZoneRegistered = this.getTimezoneUser(response.time_zone);
+      if (user.time_zone) {
+        this.timeZoneRegistered = this.getTimezoneUser(user.time_zone);
         this.timeZoneDefault = this.getDefaultTimezone();
         this.timeZones = this.sortTimezones(iana_timezones);
         this.editionForm.controls['timeZone'].setValue({
@@ -282,6 +290,7 @@ export class ProfileFormComponent implements OnInit {
       this.countryControl.errors['requireMatch']
     );
   }
+
   checkReturnUrl() {
     let params = new URLSearchParams(document.location.search);
     let returnUrl = params.get('return-url');
@@ -290,5 +299,46 @@ export class ProfileFormComponent implements OnInit {
     else {
       this.router.navigateByUrl('');
     }
+  }
+
+  requestInstructorAccess() {
+    const data = { email: this.editionForm.value.email };
+
+    this.authService.requestInstructorAccess(data).subscribe({
+      next: (response: any) => {
+        var message = response.body.message
+        // Handle different success messages based on response
+        if (message === 'The user already has instructor access') {
+          this.toastr.info(message);
+        }
+        else if (message === 'Instructor access request is pending approval') {
+          this.toastr.warning(message);
+          this.hasRequestedAccess = true;
+        }
+        else if (message === 'Instructor access was already approved') {
+          this.toastr.success(message);
+        }
+        else {
+          this.toastr.success('Instructor access request sent');
+        }
+
+        // Update local state if request was successfully created
+        if (response.message === 'Instructor access request sent') {
+          this.hasRequestedAccess = true;
+        }
+      },
+      error: (err: any) => {
+        // Handle different error cases
+        if (err.status === 400 && err.error.message === 'Invalid email account') {
+          this.toastr.error('Invalid email account');
+        }
+        else if (err.status === 400 && err.error.message === 'Request already exists') {
+          this.toastr.warning('You already have a pending request');
+        }
+        else {
+          this.toastr.error('Failed to send request. Please try again later.');
+        }
+      }
+    });
   }
 }

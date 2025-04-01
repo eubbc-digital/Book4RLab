@@ -4,26 +4,25 @@
  * MIT License - See LICENSE file in the root directory
  */
 
-import { Component, OnInit } from '@angular/core';
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
-  FormGroupDirective,
-  ValidatorFn,
-  ValidationErrors,
   AbstractControl,
+  FormGroupDirective,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import moment from 'moment-timezone';
+import { AuthService } from 'src/app/services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Country } from 'src/app/interfaces/country';
+import { IanaTimezone } from 'src/app/interfaces/timezone';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/services/auth.service';
-import { User } from 'src/app/interfaces/user';
-import { Country } from 'src/app/interfaces/country';
+import { Validators } from '@angular/forms';
 import { countries } from 'src/app/store/country-data-store';
-import { IanaTimezone } from 'src/app/interfaces/timezone';
 import { iana_timezones } from 'src/app/store/timezone-data-shortened-store';
 import { map, Observable, startWith } from 'rxjs';
-import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-registration',
@@ -31,15 +30,13 @@ import moment from 'moment-timezone';
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit {
+  wantsInstructorAccess: boolean = false;
   countries: Country[] = countries;
-
   timeZones: IanaTimezone[] = [];
   timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
   timeZoneDefault: IanaTimezone = { group: '', timezone: '', label: '' };
-
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
-
   registrationForm = new UntypedFormGroup({
     name: new UntypedFormControl('', [Validators.required]),
     lastName: new UntypedFormControl('', [Validators.required]),
@@ -59,14 +56,13 @@ export class RegistrationComponent implements OnInit {
       this.matchValidator('password'),
     ]),
   });
-
   filteredOptions!: Observable<Country[]>;
 
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.filteredOptions = this.countryControl.valueChanges.pipe(
@@ -130,22 +126,26 @@ export class RegistrationComponent implements OnInit {
   }
 
   saveUser(formDirective: FormGroupDirective): void {
+
     if (this.registrationForm.valid) {
-      const user: User = {
-        name: this.registrationForm.controls['name'].value,
-        last_name: this.registrationForm.controls['lastName'].value,
-        email: this.registrationForm.controls['email'].value,
-        password: this.passwordControl.value,
-        country: this.countryControl.value.code,
-        time_zone: this.timeZoneControl.value.timezone,
+      const user: any = {
+        name: this.registrationForm.value.name,
+        last_name: this.registrationForm.value.lastName,
+        email: this.registrationForm.value.email,
+        password: this.registrationForm.value.password,
+        country: this.registrationForm.value.country.code,
+        time_zone: this.registrationForm.value.timeZone.timezone,
       };
 
       this.authService.signUp(user).subscribe((response) => {
         if (response.status !== null && response.status === 201) {
-          this.toastr.success(
-            `Welcome ${user.name}`,
-            'Successful registration',
-          );
+          this.toastr.success(`Welcome ${user.name}`, 'Successful registration');
+
+          if (this.wantsInstructorAccess) {
+            var data = { 'email': user.email };
+            this.authService.requestInstructorAccess(data).subscribe();
+          }
+
           setTimeout(() => {
             this.router.navigate(['/activate']);
           }, 2000);

@@ -1,14 +1,17 @@
 <form [formGroup]="registrationForm" #formDirective="ngForm" (ngSubmit)="saveUser(formDirective)">
+  <!-- Name -->
   <mat-form-field class="input-field">
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" />
   </mat-form-field>
 
+  <!-- Last Name -->
   <mat-form-field class="input-field">
     <mat-label>Last name</mat-label>
     <input matInput formControlName="lastName" />
   </mat-form-field>
 
+  <!-- Country -->
   <mat-form-field class="input-field">
     <mat-label>Country</mat-label>
     <mat-icon matSuffix>travel_explore</mat-icon>
@@ -24,12 +27,15 @@
     </mat-error>
   </mat-form-field>
 
+  <!-- Email Address -->
   <mat-form-field class="input-field">
     <mat-label>Email</mat-label>
     <input matInput placeholder="user@gmail.com" formControlName="email" />
     <mat-icon matSuffix>email</mat-icon>
   </mat-form-field>
 
+
+  <!-- Timezone -->
   <mat-form-field class="input-field">
     <mat-label>Timezone</mat-label>
     <mat-select formControlName="timeZone" [compareWith]="compareTimeZoneObjects">
@@ -51,6 +57,7 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Password -->
   <mat-form-field class="input-field">
     <mat-label>Password</mat-label>
     <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="on" />
@@ -63,6 +70,7 @@
     </button>
   </mat-form-field>
 
+  <!-- Password Confirmation -->
   <mat-form-field class="input-field">
     <mat-label>Password Confirmation</mat-label>
     <input matInput [type]="hidePasswordConfirmation ? 'password' : 'text'" formControlName="passwordConfirmation"
@@ -78,7 +86,31 @@
     </button>
   </mat-form-field>
 
-  <p class="mat-caption">Required fields are marked with *</p>
+  <p class="mat-caption input-field">Required fields are marked with *</p>
+
+  <!-- Role Selection -->
+  <div class="role-selection input-selection">
+    <mat-checkbox
+      [(ngModel)]="wantsInstructorAccess"
+      [ngModelOptions]="{standalone: true}">
+      I am an instructor and need instructor access
+    </mat-checkbox>
+
+    <div *ngIf="wantsInstructorAccess" class="instructor-notice">
+      <p>Instructor access requires verification. By checking this box:</p>
+      <ul>
+        <li>Your account will be created with student permissions initially</li>
+        <li>An access request will be sent to the administrator</li>
+        <li>You'll be notified when your instructor access is approved</li>
+      </ul>
+      <p class="contact-note">
+        For any questions, please contact:
+        <a href="mailto:upbremotelabs@gmail.com" class="contact-email">
+          upbremotelabs@gmail.com
+        </a>
+      </p>
+    </div>
+  </div>
 
   <button class="access-button" type="submit" mat-raised-button color="primary">
     Sign Up

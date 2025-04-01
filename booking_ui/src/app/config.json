@@ -3,11 +3,12 @@
   "api": {
     "baseUrl": "",
     "users": {
-      "me": "users/me/",
-      "login": "users/token/",
-      "signup": "users/signup/",
       "activate": "users/activate/",
-      "passwordReset": "accounts/password_reset/"
+      "instructorAccessRequest": "users/instructor-access/",
+      "login": "users/token/",
+      "me": "users/me/",
+      "passwordReset": "accounts/password_reset/",
+      "signup": "users/signup/"
     },
     "labs": "laboratories/",
     "user-access": "user-access/",
@@ -19,14 +20,14 @@
     "equipments": "equipments/",
     "timeframes": "timeframes/",
     "booking": {
-      "url": "bookings/",
       "myList": "me/",
-      "publicReservations": "public/"
+      "publicReservations": "public/",
+      "url": "bookings/"
     }
   },
   "organizationData": {
-    "name": "Universidad Privada Boliviana",
-    "acronym": "UPB"
+    "acronym": "UPB",
+    "name": "Universidad Privada Boliviana"
   },
   "appInformation": {
     "title": "Booking"

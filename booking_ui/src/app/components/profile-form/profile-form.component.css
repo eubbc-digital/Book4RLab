@@ -23,8 +23,56 @@
     padding-bottom: 15px;
     margin: auto;
   }
+
   .access-button {
     width: 100%;
   }
 }
 
+.instructor-request-section {
+  width: 100%;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.request-title {
+  margin-top: 0;
+  color: #3f51b5;
+}
+
+.request-description {
+  margin-bottom: 1rem;
+}
+
+.request-button {
+  margin-top: 0.5rem;
+  border: 1px solid #3f51b5;
+}
+
+.request-notes {
+  margin: 0.5rem 0 1rem 1rem;
+  padding-left: 1rem;
+  color: #616161;
+}
+
+.request-notes li {
+  margin-bottom: 0.25rem;
+}
+
+.contact-note {
+  margin: 1rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+.contact-email {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-email:hover {
+  text-decoration: underline;
+}

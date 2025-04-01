@@ -13,7 +13,7 @@ import { Group } from 'src/app/enums/group';
   providedIn: 'root',
 })
 export class LabsGuard implements CanActivate {
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private router: Router, private userService: UserService) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.checkUserGroup();
@@ -28,7 +28,7 @@ export class LabsGuard implements CanActivate {
         ) {
           return true;
         } else {
-          this.router.navigate(['lab-grid']);
+          this.router.navigate(['labs']);
           return false;
         }
       })

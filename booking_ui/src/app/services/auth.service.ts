@@ -53,6 +53,11 @@ export class AuthService {
       .pipe(catchError(this.handleError<User>('login')));
   }
 
+  requestInstructorAccess(data: any): Observable<any> {
+    const URL = `${config.api.baseUrl}${config.api.users.instructorAccessRequest}`;
+    return this.http.post(URL, data, this.httpOptions)
+  }
+
   isLoggedIn(): boolean {
     return localStorage.getItem('token') ? true : false;
   }
