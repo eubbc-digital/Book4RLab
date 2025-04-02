@@ -2,10 +2,9 @@ Django==4.1.5
 djangorestframework==3.13.1
 psycopg2==2.9.3
 django-cors-headers==3.11.0
-django-light==0.1.0.post3
 uuid==1.30
 pytz==2022.1
-gunicorn==20.1.0
-Pillow==9.4.0
+gunicorn==23.0.0
+pillow==9.0.0
 python-dateutil==2.8.2
 six==1.16.0
