@@ -1,14 +1,7 @@
-<ng-http-loader
-  [backdrop]="true"
-  backgroundColor="#ffffff"
-  [debounceDelay]="100"
-  [minDuration]="300"
-  opacity="0.7"
-  [backdropBackgroundColor]="'#000000'"
-  [spinner]="spinkit.skSpinnerPulse"
->
+<ng-http-loader [backdrop]="true" backgroundColor="#ffffff" [debounceDelay]="100" [minDuration]="300" opacity="0.7"
+  [backdropBackgroundColor]="'#000000'" [spinner]="spinkit.skSpinnerPulse">
 </ng-http-loader>
-
 <router-outlet></router-outlet>
 
+<app-help-button></app-help-button>
 <app-footer></app-footer>

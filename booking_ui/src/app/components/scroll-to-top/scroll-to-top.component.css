@@ -4,6 +4,7 @@
   right: 15px;
   opacity: 0;
   transition: all 0.2s ease-in-out;
+  margin-right: 0.5rem;
 }
 
 .show-scrollTop {

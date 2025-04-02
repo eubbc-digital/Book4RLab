@@ -22,23 +22,25 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 // Components
 import { AppComponent } from './app.component';
 import { AvailableHoursComponent } from './components/available-hours/available-hours.component';
-import { ConfirmationFormComponent } from './components/confirmation-form/confirmation-form.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { BookingLinkComponent } from './components/booking-link/booking-link.component';
+import { CardElevationDirective } from './directives/card-elevation.directive';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationFormComponent } from './components/confirmation-form/confirmation-form.component';
+import { EquipmentDialogComponent } from './components/equipment-dialog/equipment-dialog.component';
+import { EquipmentsComponent } from './pages/equipments/equipments.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HelpButtonComponent } from './components/help-button/help-button.component';
+import { HelpDialogComponent } from './components/help-dialog/help-dialog.component';
+import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
+import { LabsComponent } from './pages/labs/labs.component';
 import { LoginComponent } from './components/login/login.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
-import { CardElevationDirective } from './directives/card-elevation.directive';
-import { SpinnerComponent } from './components/spinner/spinner.component';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
-import { LabsComponent } from './pages/labs/labs.component';
-import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
-import { EquipmentsComponent } from './pages/equipments/equipments.component';
-import { EquipmentDialogComponent } from './components/equipment-dialog/equipment-dialog.component';
-import { TimeframesComponent } from './pages/timeframes/timeframes.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 import { TimeframeDialogComponent } from './components/timeframe-dialog/timeframe-dialog.component';
+import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 
 // Pages
 import { AccessComponent } from './pages/access/access.component';
@@ -70,37 +72,39 @@ import { LabStructureComponent } from './pages/lab-structure/lab-structure.compo
 
 @NgModule({
   declarations: [
-    AppComponent,
-    BookingStepperComponent,
-    AvailableHoursComponent,
-    ConfirmationFormComponent,
-    NavbarComponent,
-    FooterComponent,
-    BookingLinkComponent,
-    LoginComponent,
-    RegistrationComponent,
     AccessComponent,
     ActivationComponent,
-    ReservationCardComponent,
-    PrivateReservationsComponent,
-    PublicReservationsComponent,
+    AppComponent,
+    AvailableHoursComponent,
+    BookingLinkComponent,
+    BookingStepperComponent,
     CardElevationDirective,
-    SpinnerComponent,
     ConfirmationDialogComponent,
-    ScrollToTopComponent,
-    LabsComponent,
-    LabDialogComponent,
-    EquipmentsComponent,
+    ConfirmationFormComponent,
     EquipmentDialogComponent,
-    TimeframesComponent,
-    TimeframeDialogComponent,
-    NotFoundComponent,
-    LabGridComponent,
+    EquipmentsComponent,
     FilterPipe,
+    FooterComponent,
+    HelpButtonComponent,
+    HelpDialogComponent,
+    LabDescriptionComponent,
+    LabDialogComponent,
+    LabGridComponent,
+    LabStructureComponent,
+    LabsComponent,
+    LoginComponent,
+    NavbarComponent,
+    NotFoundComponent,
+    PrivateReservationsComponent,
     ProfileComponent,
     ProfileFormComponent,
-    LabDescriptionComponent,
-    LabStructureComponent,
+    PublicReservationsComponent,
+    RegistrationComponent,
+    ReservationCardComponent,
+    ScrollToTopComponent,
+    SpinnerComponent,
+    TimeframeDialogComponent,
+    TimeframesComponent,
   ],
   imports: [
     BrowserModule,

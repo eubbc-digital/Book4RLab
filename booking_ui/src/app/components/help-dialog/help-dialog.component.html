@@ -1,0 +1,46 @@
+<div class="help-dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="help-icon">help_outline</mat-icon>
+      Book4RLab Help Center
+    </h2>
+    <button mat-icon-button class="close-button" (click)="closeDialog()" aria-label="Close help dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <div class="about-section">
+      <h3>About Book4RLab System</h3>
+      <p class="app-description">{{ appDescription }}</p>
+      <p>Key features you can access:</p>
+      <ul>
+        <li>Search laboratories by name, university, or course</li>
+        <li>Reserve optimal time slots for your needs</li>
+        <li>Global access across institutions and time zones</li>
+        <li>Secure and uninterrupted lab sessions</li>
+      </ul>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="contact-section">
+      <h3>Technical Support</h3>
+      <div class="contact-method">
+        <mat-icon class="contact-icon">email</mat-icon>
+        <div>
+          <p class="contact-label">Book4RLab Support Team:</p>
+          <a href="mailto:{{ contactEmail }}" class="contact-value email-link">
+            {{ contactEmail }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" class="close-button" (click)="closeDialog()">
+      Close
+    </button>
+  </mat-dialog-actions>
+</div>

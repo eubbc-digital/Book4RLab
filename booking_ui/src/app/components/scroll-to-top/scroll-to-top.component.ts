@@ -15,8 +15,8 @@ import { Component, HostListener, Inject, OnInit } from '@angular/core';
 export class ScrollToTopComponent implements OnInit {
   windowScrolled: boolean = false;
 
-  constructor(@Inject(DOCUMENT) private document: Document) {}
-  
+  constructor(@Inject(DOCUMENT) private document: Document) { }
+
   @HostListener('window:scroll', [])
   onWindowScroll() {
     if (
@@ -45,5 +45,5 @@ export class ScrollToTopComponent implements OnInit {
     })();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }
