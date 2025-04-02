@@ -4,7 +4,6 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
-from core.models import User, InstructorRequest
 from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
@@ -12,6 +11,7 @@ from rest_framework import authentication, generics, permissions, status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
+from users.models import User, InstructorRequest
 from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
 from utils import account_activation_token, send_custom_email
 import os

@@ -17,7 +17,7 @@ from booking.serializers import (
     UserLaboratoryAccessSerializer,
     UserBookingAvailabilitySerializer,
 )
-from core.models import User
+from users.models import User
 from django.core.exceptions import SuspiciousOperation
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication

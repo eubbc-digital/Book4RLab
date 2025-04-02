@@ -38,7 +38,6 @@ FORCE_SCRIPT_NAME = os.environ.get("FORCE_SCRIPT_NAME")
 
 INSTALLED_APPS = [
     "app",
-    "core",
     "users",
     "booking",
     "django.contrib.admin",
@@ -130,7 +129,7 @@ STATIC_URL = os.environ.get("STATIC_URL")
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-AUTH_USER_MODEL = "core.User"
+AUTH_USER_MODEL = "users.User"
 
 # Email configuration
 
