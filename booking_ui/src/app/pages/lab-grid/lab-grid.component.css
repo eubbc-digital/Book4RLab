@@ -15,6 +15,11 @@
   width: 30vw;
 }
 
+.search-keyword {
+  font-weight: bold;
+  color: #3f51b5;
+}
+
 .card-container {
   padding: 10px;
 }
@@ -37,13 +42,13 @@
   padding: 10px 20px;
   text-align: center;
   z-index: 1;
+  width: auto;
 }
 
 .laboratory-type-header span {
   color: white;
-  /* font-weight: bold; */
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 5package 5 5px;
 }
 
 .laboratory-type-header span.rt {
@@ -65,7 +70,7 @@
   height: 100px;
 }
 
-img {
+.remote-lab-img {
   height: 200px;
   object-fit: cover;
 }
@@ -78,18 +83,6 @@ img {
   transform: scale(1);
 }
 
-@media (max-width: 600px) {
-  .searched-lab-field {
-    width: 80vw;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 991.98px) {
-  .searched-lab-field {
-    width: 50vw;
-  }
-}
-
 .actions-c {
   display: flex;
   flex-direction: row;
@@ -97,6 +90,7 @@ img {
   justify-items: end;
 }
 
+/* Scrollbar styles */
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -109,4 +103,48 @@ img {
 ::-webkit-scrollbar-thumb {
   background: rgb(110, 110, 110);
   border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .card {
+    padding-top: 15px;
+  }
+
+  .card-header {
+    position: relative;
+    padding-top: 25px;
+    height: auto;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .laboratory-type-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    padding: 5px 0;
+    margin: 0 auto;
+    width: fit-content;
+  }
+
+  .laboratory-type-header div {
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+  .laboratory-type-header span {
+    padding: 3px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Ensure titles are centered */
+  mat-card-title,
+  mat-card-subtitle {
+    text-align: center;
+    width: 100%;
+    display: block;
+  }
 }

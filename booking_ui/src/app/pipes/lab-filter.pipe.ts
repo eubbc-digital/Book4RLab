@@ -5,12 +5,13 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
+import { Lab } from '../interfaces/lab';
 
 @Pipe({
-  name: 'filter',
+  name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
-  transform(items: any[], searchText: string): any[] {
+  transform(items: Lab[] | null, searchText: string): Lab[] {
     if (!items) {
       return [];
     }
@@ -19,8 +20,13 @@ export class FilterPipe implements PipeTransform {
     }
     searchText = searchText.toLocaleLowerCase();
 
-    return items.filter((it) => {
-      return it.name.toLocaleLowerCase().includes(searchText);
+    return items.filter((lab) => {
+      return (
+        (lab.name && lab.name.toLocaleLowerCase().includes(searchText)) ||
+        (lab.university && lab.university.toLocaleLowerCase().includes(searchText)) ||
+        (lab.instructor && lab.instructor.toLocaleLowerCase().includes(searchText)) ||
+        (lab.course && lab.course.toLocaleLowerCase().includes(searchText))
+      );
     });
   }
 }
