@@ -20,4 +20,5 @@ export interface Lab {
   allowed_emails?: string[];
   type?: string;
   country?: string;
+  has_learnify_modules?: boolean;
 }

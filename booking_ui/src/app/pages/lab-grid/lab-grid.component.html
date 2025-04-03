@@ -30,8 +30,15 @@
 
         <div class="image-container">
           <img mat-card-image [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="remote-lab-img" />
+        </div>
+
+        <div class="badges-wrapper">
           <div class="lab-type-badge" [ngClass]="{'rt': lab.type === 'rt', 'uc': lab.type === 'uc'}">
             {{ lab.type === 'rt' ? 'REAL TIME' : 'ULTRA CONCURRENT' }}
+          </div>
+
+          <div *ngIf="lab.has_learnify_modules" class="learnify-badge">
+            LEARNIFY MODULES
           </div>
         </div>
 

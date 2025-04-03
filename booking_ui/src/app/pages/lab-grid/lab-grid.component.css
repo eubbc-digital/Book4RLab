@@ -79,34 +79,52 @@
   text-overflow: ellipsis;
 }
 
-/* Image container with border */
+/* Image container */
 .image-container {
   position: relative;
   margin: 0 16px;
   border: 2px solid #e0e0e0;
-  border-radius: 4px;
+  border-radius: 4px 4px 0 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  height: 200px;
 }
 
 .remote-lab-img {
+  height: 100%;
   width: 100%;
-  height: 200px;
   object-fit: cover;
-  display: block;
+  object-position: center;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+/* Badges container */
+.badges-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  background: white;
+  border-left: 2px solid #e0e0e0;
+  border-right: 2px solid #e0e0e0;
+  border-bottom: 2px solid #e0e0e0;
+  border-radius: 0 0 4px 4px;
+  margin: 0 16px;
 }
 
 /* Lab type badge */
 .lab-type-badge {
-  margin-top: -15px;
-  padding: 6px 16px;
+  padding: 6px 12px;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: white;
-  position: relative;
-  z-index: 1;
 }
 
 .lab-type-badge.rt {
@@ -115,6 +133,18 @@
 
 .lab-type-badge.uc {
   background-color: #946db7;
+}
+
+/* Learnify badge */
+.learnify-badge {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white;
+  background-color: #4285F4;
 }
 
 /* Card content */

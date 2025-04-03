@@ -4,11 +4,11 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
-from rest_framework import serializers
 from booking.models import Booking, Equipment, Laboratory, TimeFrame, LaboratoryContent
-from django.utils.crypto import get_random_string
 from datetime import datetime, date, timedelta
-
+from django.db.models import Q
+from django.utils.crypto import get_random_string
+from rest_framework import serializers
 from users.serializers import UserSerializer
 
 
@@ -221,6 +221,7 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 class LaboratorySerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     owner_email = serializers.SerializerMethodField()
+    has_learnify_modules = serializers.SerializerMethodField()
 
     class Meta:
         model = Laboratory
@@ -243,6 +244,12 @@ class LaboratorySerializer(serializers.ModelSerializer):
         if obj.owner:
             return obj.owner.email
         return None
+
+    def get_has_learnify_modules(self, obj):
+        return obj.laboratory_contents.filter(
+            Q(link__iregex=r"^https?://(time\.)?learnify\.se/")
+            | Q(video_link__iregex=r"^https?://(time\.)?learnify\.se/")
+        ).exists()
 
     def create(self, validated_data):
         validated_data["owner"] = self.context["request"].user
