@@ -38,4 +38,19 @@ export class LabGridComponent implements OnInit {
   moreInfoLab(lab: Lab): void {
     this.router.navigate(['/lab-structure', { id: lab.id }]);
   }
+
+  getAvailabilityTooltip(lab: Lab): string {
+    if (lab.type === 'uc') {
+      return 'Ultra Concurrent labs do not require booking slots.\nThey are always available for immediate access.';
+    }
+
+    if (lab.is_available_now === undefined) {
+      return 'Availability status is currently unknown.';
+    }
+    if (lab.is_available_now) {
+      return 'This lab has available time slots for booking.\nAvailability may change as others make reservations.';
+    } else {
+      return 'This lab is not available either because:\n- No booking slots were created\n- All existing slots are booked\n- The lab is currently in use';
+    }
+  }
 }

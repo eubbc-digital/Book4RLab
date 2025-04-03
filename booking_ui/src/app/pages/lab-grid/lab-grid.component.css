@@ -1,3 +1,4 @@
+/* Layout and containers */
 .lab-container {
   margin-bottom: 90px;
 }
@@ -6,13 +7,14 @@
   margin-bottom: 40px;
 }
 
+/* Search field styles */
+.searched-lab-field {
+  width: 30vw;
+}
+
 #search-icon {
   margin-right: 10px;
   color: gray;
-}
-
-.searched-lab-field {
-  width: 30vw;
 }
 
 .search-keyword {
@@ -20,20 +22,34 @@
   color: #3f51b5;
 }
 
+/* Card container and grid */
 .card-container {
   padding: 10px;
 }
 
+/* Card styles */
 .card {
   width: 100%;
   padding-top: 30px;
-  pointer-events: auto;
-  transform: scale(1);
-  transition: all 0.2s;
   min-height: 500px;
   position: relative;
+  transform: scale(1);
+  transition: transform 0.2s;
+  pointer-events: auto;
 }
 
+.card:hover {
+  transform: scale(1.04);
+}
+
+/* Card header styles */
+.card-header {
+  height: 100px;
+  margin-bottom: 5%;
+  padding-top: 8%;
+}
+
+/* Laboratory type badges */
 .laboratory-type-header {
   position: absolute;
   top: 10px;
@@ -48,7 +64,7 @@
 .laboratory-type-header span {
   color: white;
   padding: 5px 10px;
-  border-radius: 5package 5 5px;
+  border-radius: 5px;
 }
 
 .laboratory-type-header span.rt {
@@ -59,12 +75,7 @@
   background-color: #946db7;
 }
 
-.card-header {
-  height: 100px;
-  margin-bottom: 5%;
-  padding-top: 8%;
-}
-
+/* Card content area */
 .card-content {
   overflow: auto;
   height: 100px;
@@ -75,19 +86,49 @@
   object-fit: cover;
 }
 
-.card:hover {
-  transform: scale(1.04);
-}
-
-.card:not(:hover) {
-  transform: scale(1);
-}
-
-.actions-c {
+/* Card actions - now horizontal layout */
+.card-actions {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  justify-items: end;
+  padding: 16px;
+  margin-top: auto;
+}
+
+.availability-status {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: help;
+  transition: background-color 0.2s;
+  display: inline-block;
+  margin-right: 12px;
+  color: #4CAF50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.availability-status.not-available {
+  color: #FF9800;
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.availability-status:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* View details button */
+.info-button {
+  font-weight: 500;
+  min-width: 120px;
+  margin-left: auto;
+}
+
+/* Tooltip styling */
+::ng-deep .mat-tooltip {
+  font-size: 0.8rem !important;
+  max-width: 250px !important;
+  white-space: pre-line !important;
 }
 
 /* Scrollbar styles */
@@ -101,50 +142,49 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(110, 110, 110);
+  background: rgb  (110, 110, 110);
   border-radius: 10px;
 }
 
-/* Responsive adjustments */
+/* Mobile responsiveness */
 @media (max-width: 600px) {
+  .searched-lab-field {
+    width: 80vw;
+  }
+
   .card {
     padding-top: 15px;
+    min-height: 450px;
   }
 
   .card-header {
     position: relative;
-    padding-top: 25px;
+    padding-top: 0;
     height: auto;
     margin-bottom: 15px;
     text-align: center;
   }
 
   .laboratory-type-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: static;
     transform: none;
+    margin: 0 auto 10px;
     padding: 5px 0;
-    margin: 0 auto;
-    width: fit-content;
-  }
-
-  .laboratory-type-header div {
-    display: inline-block;
-    margin: 0 auto;
   }
 
   .laboratory-type-header span {
-    padding: 3px 10px;
-    font-size: 0.75rem;
+    padding: 3px 8px;
+    font-size: 0.8rem;
   }
 
-  /* Ensure titles are centered */
-  mat-card-title,
-  mat-card-subtitle {
-    text-align: center;
-    width: 100%;
-    display: block;
+  .card-actions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .availability-status {
+    margin-right: 0;
+    margin-bottom: 8px;
+    align-self: flex-start;
   }
 }

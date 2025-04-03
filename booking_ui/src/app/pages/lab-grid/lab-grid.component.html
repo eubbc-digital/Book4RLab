@@ -48,17 +48,23 @@
             {{ lab.description }}
           </p>
         </mat-card-content>
-        <mat-card-actions align="end" class="actions-c">
-          <div *ngIf="lab.is_available_now == true">
-            <span style="color: green; font-weight: bold;"> AVAILABLE </span>
+        <mat-card-actions class="card-actions">
+          <div class="availability-info">
+            <div class="availability-status"
+                [class.available]="lab.is_available_now || lab.type === 'uc'"
+                [class.not-available]="!lab.is_available_now && lab.type !== 'uc'"
+                [matTooltip]="getAvailabilityTooltip(lab)">
+              <span>
+                {{ (lab.is_available_now || lab.type === 'uc') ? 'AVAILABLE' : 'NOT AVAILABLE' }}
+                <span *ngIf="lab.type === 'uc'" class="uc-badge">(UC)</span>
+              </span>
+            </div>
           </div>
-
-          <div *ngIf="lab.is_available_now == false">
-            <span style="color: orange; font-weight: bold;"> NOT AVAILABLE </span>
-          </div>
-
-          <button mat-button color="primary" class="card-button" (click)="moreInfoLab(lab)">
-            MORE INFO >>
+          <button mat-stroked-button
+                  color="primary"
+                  class="info-button"
+                  (click)="moreInfoLab(lab)">
+            VIEW DETAILS
           </button>
         </mat-card-actions>
       </mat-card>
