@@ -3,7 +3,7 @@
 <div class="page-content lab-container">
   <div class="header">
     <div class="text-center">
-      <h4>
+      <h4 class="search-instructions">
         Search for a laboratory by <span class="search-keyword">name</span>, <span class="search-keyword">country</span>,
         <span class="search-keyword">university</span>, <span class="search-keyword">instructor</span>,
         or <span class="search-keyword">course</span>, and select an available time slot to make a reservation.
@@ -20,45 +20,38 @@
     </div>
   </div>
 
-  <div class="row">
-    <div *ngFor="let lab of labs | filter : searchedLab" class="cols-5 card-container">
-      <mat-card class="card card-hghlght">
+  <div class="labs-grid">
+    <div *ngFor="let lab of labs | filter : searchedLab" class="card-container">
+      <mat-card class="card">
         <mat-card-header class="card-header">
-          <div class="laboratory-type-header">
-            <div *ngIf="lab.type=='rt'">
-              <span class="rt">Real Time</span>
-            </div>
-            <div *ngIf="lab.type=='uc'">
-              <span class="uc">Ultra Concurrent</span>
-            </div>
-          </div>
           <mat-card-title>{{ lab.name }}</mat-card-title>
           <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
         </mat-card-header>
 
-        <img mat-card-image [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="remote-lab-img" />
+        <div class="image-container">
+          <img mat-card-image [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="remote-lab-img" />
+          <div class="lab-type-badge" [ngClass]="{'rt': lab.type === 'rt', 'uc': lab.type === 'uc'}">
+            {{ lab.type === 'rt' ? 'REAL TIME' : 'ULTRA CONCURRENT' }}
+          </div>
+        </div>
 
         <mat-card-content class="card-content">
-          <p>
-            <strong>Course: </strong> {{ lab.course }}
-            <br />
-            <strong>Instructor: </strong> {{ lab.instructor }}
-            <br />
-            <strong>Description:</strong>
-            {{ lab.description }}
-          </p>
+          <div class="scrollable-description">
+            <p class="lab-info">
+              <strong>Course:</strong> {{ lab.course }}<br>
+              <strong>Instructor:</strong> {{ lab.instructor }}<br>
+              <strong>Description:</strong> {{ lab.description }}
+            </p>
+          </div>
         </mat-card-content>
+
         <mat-card-actions class="card-actions">
-          <div class="availability-info">
-            <div class="availability-status"
-                [class.available]="lab.is_available_now || lab.type === 'uc'"
-                [class.not-available]="!lab.is_available_now && lab.type !== 'uc'"
-                [matTooltip]="getAvailabilityTooltip(lab)">
-              <span>
-                {{ (lab.is_available_now || lab.type === 'uc') ? 'AVAILABLE' : 'NOT AVAILABLE' }}
-                <span *ngIf="lab.type === 'uc'" class="uc-badge">(UC)</span>
-              </span>
-            </div>
+          <div class="availability-status"
+              [class.available]="lab.is_available_now || lab.type === 'uc'"
+              [class.not-available]="!lab.is_available_now && lab.type !== 'uc'"
+              [matTooltip]="getAvailabilityTooltip(lab)">
+            {{ (lab.is_available_now || lab.type === 'uc') ? 'AVAILABLE' : 'NOT AVAILABLE' }}
+            <span *ngIf="lab.type === 'uc'" class="uc-badge">(UC)</span>
           </div>
           <button mat-stroked-button
                   color="primary"
