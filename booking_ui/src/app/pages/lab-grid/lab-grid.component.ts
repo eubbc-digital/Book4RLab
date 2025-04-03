@@ -39,6 +39,14 @@ export class LabGridComponent implements OnInit {
     this.router.navigate(['/lab-structure', { id: lab.id }]);
   }
 
+  getAvailableLabsCount(): number {
+    return this.labs.filter(lab => lab.is_available_now || lab.type === 'uc').length;
+  }
+
+  getLabTypeCount(type: string): number {
+    return this.labs.filter(lab => lab.type === type).length;
+  }
+
   getAvailabilityTooltip(lab: Lab): string {
     if (lab.type === 'uc') {
       return 'Ultra Concurrent labs do not require booking slots.\nThey are always available for immediate access.';

@@ -8,17 +8,30 @@
   margin-bottom: 10px;
 }
 
+.search-container {
+  position: relative;
+}
+
 .search-instructions {
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 5px;
-  color: #333;
+  color: 333;
   padding: 0 15px;
 }
 
-/* Search field */
+/* Search field and stats container */
+.search-and-stats {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
 .searched-lab-field {
   width: 30vw;
+  min-width: 250px; /* Prevent becoming too narrow */
 }
 
 #search-icon {
@@ -29,6 +42,54 @@
 .search-keyword {
   font-weight: bold;
   color: #3f51b5;
+}
+
+/* Statistics box */
+.stats-box {
+  display: flex;
+  gap: 10px;
+  background: white;
+  padding: 4px 15px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  border: 1px solid #e0e0e0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 40px;
+}
+
+.stat-value {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #3f51b5;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-and-stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stats-box {
+    width: 100%;
+    justify-content: space-around;
+    padding: 8px 10px;
+  }
+
+  .searched-lab-field {
+    width: 80vw;
+  }
 }
 
 /* Cards Grid */
@@ -232,6 +293,17 @@
 
   .searched-lab-field {
     width: 90vw;
+  }
+  .stat-item {
+    min-width: 40px;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
   }
 
   .card {
