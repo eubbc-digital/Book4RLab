@@ -19,4 +19,5 @@ export interface Lab {
   notify_owner?: boolean;
   allowed_emails?: string[];
   type?: string;
+  country?: string;
 }

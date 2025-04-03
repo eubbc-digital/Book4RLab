@@ -219,6 +219,8 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
 
 class LaboratorySerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+
     class Meta:
         model = Laboratory
         fields = "__all__"
@@ -230,6 +232,11 @@ class LaboratorySerializer(serializers.ModelSerializer):
         }
 
     is_available_now = serializers.ReadOnlyField()
+
+    def get_country(self, obj):
+        if obj.owner and hasattr(obj.owner, "country"):
+            return obj.owner.country
+        return None
 
     def create(self, validated_data):
         validated_data["owner"] = self.context["request"].user

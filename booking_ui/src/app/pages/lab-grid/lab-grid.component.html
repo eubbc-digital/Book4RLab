@@ -4,14 +4,14 @@
   <div class="header">
     <div class="text-center">
       <h4>
-        Search for a laboratory by <span class="search-keyword">name</span>,
+        Search for a laboratory by <span class="search-keyword">name</span>, <span class="search-keyword">country</span>,
         <span class="search-keyword">university</span>, <span class="search-keyword">instructor</span>,
         or <span class="search-keyword">course</span>, and select an available time slot to make a reservation.
       </h4>
 
       <mat-form-field class="searched-lab-field" appearance="fill">
         <mat-label>Search laboratories</mat-label>
-        <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, university, instructor, or course" />
+        <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, or course" />
         <mat-icon matPrefix id="search-icon">search</mat-icon>
         <button *ngIf="searchedLab" matSuffix mat-icon-button aria-label="Clear" (click)="searchedLab = ''">
           <mat-icon>close</mat-icon>
