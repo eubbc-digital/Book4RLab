@@ -1,130 +1,186 @@
-.card-booking-stepper {
-  width: 70%;
-  margin: 30px auto;
+/* Main card styles */
+.lab-detail-card {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+/* Header and actions */
+.page-title {
+  color: #3f51b5;
+  margin-bottom: 20px;
+  font-weight: 500;
 }
 
 .btn-container {
   display: flex;
-  flex-direction: row;
-  justify-content: end;
-  width: 100%;
+  justify-content: flex-end;
+  margin-bottom: 20px;
 }
 
-.col-7 {
-  position: relative;
-  width: 70%;
-}
-
-.col-8 {
-  position: relative;
-  width: 80%;
-}
-
-.col-2 {
-  position: relative;
-  width: 20%;
-}
-
-.col-1 {
-  position: relative;
-  width: 10%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.card-button {
-  align-self: self-end;
-}
-
+/* Basic info section */
 .basic-info {
   display: flex;
+  gap: 20px;
   background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 15px;
-  margin-top: 15px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px 0;
+  align-items: flex-start;
 }
 
 .basic-image {
   width: 40%;
-  margin-right: 20px;
+  min-width: 300px;
 }
 
-.basic-image img {
+.lab-image {
   width: 100%;
   height: auto;
   border-radius: 8px;
   object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Info rows styling */
 .lab-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-2col {
+  display: flex;
+  gap: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #555;
+  min-width: 90px;
+  text-align: right;
+}
+
+.info-value {
+  color: #333;
   flex: 1;
 }
 
-.lab-info p strong {
-  font-weight: 500;
-  color: #444;
-  margin-right: 5px;
+.description .info-value {
+  margin-top: 4px;
 }
 
-
-input,
-textarea {
-  width: 100%;
+.link {
+  color: #1a73e8;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  word-break: break-all;
 }
 
-img {
-  position: relative;
-  width: 80%;
-}
-
-a:hover {
-  color: green;
-}
-
-a,
-span {
-  margin-bottom: 10px;
-}
-
-#singleVideo {
-  max-width: 1280px;
-  max-height: 720px;
-  width: 80%;
-  height: auto;
-  object-fit: cover;
-}
-
+/* Content container styles */
 .content-container {
-  display: flex;
-  flex-direction: column;
+  margin-top: 1.5rem;
 }
 
-.content-item {
-  margin-bottom: 20px;
+.content-block {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 6px;
+}
+
+/* Text elements */
+.content-title {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.content-subtitle {
+  font-size: 1.2rem;
+  color:  #4a4a4a;
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
 }
 
 .text-content {
-  text-align: left;
+  margin: 0.5rem 0 1rem 0;
+  line-height: 1.5;
+  color: #333;
 }
 
-.centered-content {
-  margin: 0 auto;
-  display: block;
+/* Links and media */
+.content-link {
+  display: inline-block;
+  color: #3f51b5;
+  margin: 0.5rem 0;
+  word-break: break-all;
+  text-decoration: none;
+}
+
+.content-link:hover {
+  text-decoration: underline;
+}
+
+.media-container {
+  margin: 0.8rem 0;
+}
+
+.content-media {
+  max-width: 100%;
+  border-radius: 4px;
 }
 
 .youtube-container {
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Video player adjustments */
+#singleVideo {
+  width: 100%;
+  max-height: 500px;
+}
+
+/* Empty state */
+.empty-content {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .basic-info {
+    flex-direction: column;
+  }
+  
+  .basic-image {
+    width: 100%;
+    min-width: auto;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  
+  .info-2col {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .info-label {
+    text-align: left;
+    min-width: 80px;
+  }
 }

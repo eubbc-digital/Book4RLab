@@ -220,6 +220,7 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
 class LaboratorySerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
+    owner_email = serializers.SerializerMethodField()
 
     class Meta:
         model = Laboratory
@@ -236,6 +237,11 @@ class LaboratorySerializer(serializers.ModelSerializer):
     def get_country(self, obj):
         if obj.owner and hasattr(obj.owner, "country"):
             return obj.owner.country
+        return None
+
+    def get_owner_email(self, obj):
+        if obj.owner:
+            return obj.owner.email
         return None
 
     def create(self, validated_data):

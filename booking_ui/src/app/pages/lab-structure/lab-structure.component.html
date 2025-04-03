@@ -1,50 +1,74 @@
 <app-navbar></app-navbar>
-<mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }">
+<mat-card [ngClass]="{ 'card-booking-stepper': cols === 2 }" class="lab-detail-card">
   <div class="page-content">
     <div class="btn-container" *ngIf="lab.type !== 'uc'">
-      <button mat-button color="primary" class="card-button" (click)="selectLab(lab)" [disabled]="disabledBooking">
-        BOOK >>
+      <button mat-raised-button color="primary" (click)="selectLab(lab)" [disabled]="disabledBooking">
+        BOOK THIS LAB
       </button>
     </div>
-    <div *ngIf="lab">
-      <h2 color="primary"> <strong>Remote Laboratory Content</strong></h2>
+
+    <div *ngIf="lab" class="lab-content">
+      <h1 class="page-title">Remote Laboratory: {{lab.name}}</h1>
+
       <div class="basic-info">
         <div class="basic-image">
-          <img [src]="lab.image ?? defaultLabImg" alt="Remote lab" />
+          <img [src]="lab.image ?? defaultLabImg" alt="Remote lab" class="lab-image" />
         </div>
 
         <div class="lab-info">
-          <p><strong>Name:</strong>{{ lab.name }}</p>
-          <p><strong>University:</strong>{{ lab.university }}</p>
-          <p><strong>Course:</strong>{{ lab.course }}</p>
-          <p><strong>Instructor:</strong>{{ lab.instructor }}</p>
-          <p><strong>Description:</strong>{{ lab.description }}</p>
-          <div *ngIf="lab.type == 'uc'">
-            <p><strong>URL:</strong> <a [href]="lab.url">{{ lab.url }}</a></p>
+          <div class="info-row">
+            <span class="info-label">University:</span>
+            <span class="info-value">{{ lab.university }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Course:</span>
+            <span class="info-value">{{ lab.course }}</span>
+          </div>
+          <div class="info-2col">
+            <div class="info-row">
+              <span class="info-label">Instructor:</span>
+              <span class="info-value">{{ lab.instructor }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Contact:</span>
+              <a href="mailto:{{lab.owner_email}}" class="info-value link">{{ lab.owner_email}}</a>
+            </div>
+          </div>
+          <div class="info-row description">
+            <span class="info-label">Description:</span>
+            <p class="info-value">{{ lab.description }}</p>
+          </div>
+          <div *ngIf="lab.type == 'uc'" class="info-row">
+            <span class="info-label">Access URL:</span>
+            <a [href]="lab.url" target="_blank" class="info-value link">{{ lab.url }}</a>
           </div>
         </div>
       </div>
 
-      <br>
-
-      <div *ngIf="myLabContent.length == 0">
-        <span>There are no content for this laboratory.</span>
+      <div *ngIf="myLabContent.length == 0" class="empty-content">
+        <p>There is no additional content available for this laboratory.</p>
       </div>
 
       <div *ngIf="myLabContent.length > 0" class="content-container">
-        <div *ngFor="let content of myLabContent" class="content-item">
-          <span *ngIf="content['text']" class="text-content">{{ content['text'] }}</span>
-          <h1 *ngIf="content['title']">{{ content['title'] }}</h1>
-          <h2 *ngIf="content['subtitle']">{{ content['subtitle'] }}</h2>
-          <a *ngIf="content['link']" [href]="content['link']">{{content['link']}}</a>
-          <img *ngIf="content['image']" [src]="content['image']" class="centered-content" />
-          <vg-player *ngIf="content['video']">
-            <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls [src]="content['video']"
-              class="centered-content"></video>
-          </vg-player>
-          <div class="youtube-container">
-            <youtube-player *ngIf="content['video_link']"
-              [videoId]="getVideoId(content['video_link'])"></youtube-player>
+        <div class="content-block">
+          <div *ngFor="let content of myLabContent">
+            <h2 *ngIf="content['title']" class="content-title">{{ content['title'] }}</h2>
+            <h3 *ngIf="content['subtitle']" class="content-subtitle">{{ content['subtitle'] }}</h3>
+            <p *ngIf="content['text']" class="text-content">{{ content['text'] }}</p>
+            <a *ngIf="content['link']" [href]="content['link']" target="_blank" class="content-link">
+              {{content['link']}}
+            </a>
+            <div *ngIf="content['image']" class="media-container">
+              <img [src]="content['image']" class="content-media" />
+            </div>
+            <div *ngIf="content['video']" class="media-container">
+              <vg-player class="content-media">
+                <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" controls [src]="content['video']"></video>
+              </vg-player>
+            </div>
+            <div *ngIf="content['video_link']" class="media-container youtube-container">
+              <youtube-player [videoId]="getVideoId(content['video_link'])"></youtube-player>
+            </div>
           </div>
         </div>
       </div>
