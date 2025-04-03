@@ -4,23 +4,24 @@
  * MIT License - See LICENSE file in the root directory
  */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { PendingChangesGuard } from './services/guards/pending-changes.guard';
-import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
 import { AccessComponent } from './pages/access/access.component';
-import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
-import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
-import { LabsComponent } from './pages/labs/labs.component';
-import { EquipmentsComponent } from './pages/equipments/equipments.component';
-import { TimeframesComponent } from './pages/timeframes/timeframes.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
-import { LabsGuard } from './services/guards/labs.guard';
-import { AuthGuard } from './services/guards/auth.guard';
-import { ProfileComponent } from './pages/profile/profile.component';
 import { ActivationComponent } from './pages/activation/activation.component';
+import { AuthGuard } from './services/guards/auth.guard';
+import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
+import { EquipmentsComponent } from './pages/equipments/equipments.component';
+import { InstructorAccessRequestComponent } from './pages/instructor-access-request/instructor-access-request.component';
+import { LabGridComponent } from './pages/lab-grid/lab-grid.component';
 import { LabStructureComponent } from './pages/lab-structure/lab-structure.component';
+import { LabsComponent } from './pages/labs/labs.component';
+import { LabsGuard } from './services/guards/labs.guard';
+import { NgModule } from '@angular/core';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { PendingChangesGuard } from './services/guards/pending-changes.guard';
+import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
+import { RouterModule, Routes } from '@angular/router';
+import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,10 @@ const routes: Routes = [
   {
     path: 'timeframes',
     component: TimeframesComponent,
+  },
+  {
+    path: 'instructor-access',
+    component: InstructorAccessRequestComponent,
   },
   {
     path: '**',

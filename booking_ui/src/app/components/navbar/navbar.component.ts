@@ -7,7 +7,7 @@
 import {
   BreakpointObserver,
   Breakpoints,
-  BreakpointState,
+  BreakpointState
 } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private breakPointObserver: BreakpointObserver,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -56,6 +56,13 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  goToInstructorAccess(): void {
+    this.router.navigateByUrl('/instructor-access');
+  }
+
+  goToLabManager(): void {
+    this.router.navigateByUrl('/my-labs');
+  }
   goToLabGrid(): void {
     this.router.navigateByUrl('/labs');
   }
@@ -81,9 +88,5 @@ export class NavbarComponent implements OnInit {
     this.goToLabGrid();
     this.shownMenu = false;
     this.showLabsButton = false;
-  }
-
-  goToLabManager(): void {
-    this.router.navigateByUrl('/my-labs');
   }
 }

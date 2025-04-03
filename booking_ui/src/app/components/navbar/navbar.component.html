@@ -1,14 +1,28 @@
 <mat-toolbar color="primary">
-  <div id="main-label" (click)="goToLabGrid()">
-    <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
-    <span id="navbar-title">Book4RLab</span>
+  <div id="main-label">
+    <div id="logo-title-group" (click)="goToLabGrid()">
+      <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
+      <span id="navbar-title">Book4RLab</span>
+    </div>
+
+    <button *ngIf="!showLabsButton && shownMenu"
+            mat-button
+            aria-label="Instructor access"
+            (click)="goToInstructorAccess()"
+            class="instructor-access-button">
+      <mat-icon>school</mat-icon>
+      <span>Instructor Access</span>
+    </button>
   </div>
 
   <span class="spacer"></span>
 
   <!-- Mobile menu -->
-  <button type="button" aria-label="side nav" [matMenuTriggerFor]="menu" mat-icon-button
-    *ngIf="(isHandset | async)!.matches; else navbarButtons">
+  <button type="button"
+          aria-label="side nav"
+          [matMenuTriggerFor]="menu"
+          mat-icon-button
+          *ngIf="(isHandset | async)!.matches; else navbarButtons">
     <mat-icon aria-label="Side nav icon">menu</mat-icon>
   </button>
 
@@ -31,17 +45,17 @@
 
       <button mat-menu-item aria-label="Personal reservation list button" (click)="goToMyReservations()">
         <mat-icon class="icon">list</mat-icon>
-        <span> My Reservations </span>
+        <span>My Reservations</span>
       </button>
 
       <button mat-menu-item aria-label="Profile list button" (click)="goToMyProfile()">
         <mat-icon class="icon">person</mat-icon>
-        <span> Profile </span>
+        <span>Profile</span>
       </button>
 
       <button mat-menu-item aria-label="Logout icon" (click)="logout()">
         <mat-icon class="icon">logout</mat-icon>
-        <span>Logout </span>
+        <span>Logout</span>
       </button>
     </div>
 
@@ -75,7 +89,7 @@
 
       <button mat-button aria-label="Profile list button" (click)="goToMyProfile()">
         <mat-icon class="icon">person</mat-icon>
-        <span> Profile </span>
+        <span>Profile</span>
       </button>
 
       <button mat-button aria-label="Logout icon" (click)="logout()">

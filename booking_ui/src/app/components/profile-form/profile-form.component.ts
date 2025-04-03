@@ -10,7 +10,6 @@ import {
 import moment from 'moment';
 import { AuthService } from 'src/app/services/auth.service';
 import { Country } from 'src/app/interfaces/country';
-import { Group } from 'src/app/enums/group';
 import { IanaTimezone } from 'src/app/interfaces/timezone';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -27,8 +26,6 @@ import { startWith, map, Observable } from 'rxjs';
   styleUrls: ['./profile-form.component.css'],
 })
 export class ProfileFormComponent implements OnInit {
-  isInstructor: boolean = false;
-  hasRequestedAccess: boolean = false;
   countries: Country[] = countries;
   timeZones: IanaTimezone[] = [];
   timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
@@ -117,10 +114,6 @@ export class ProfileFormComponent implements OnInit {
 
   getUserData() {
     this.userService.getUserData().subscribe((user) => {
-      user.groups!.forEach((group) => {
-        if (group.name === Group.Professors) this.isInstructor = true;
-      });
-
       this.editionForm.controls['name'].setValue(user.name);
       this.editionForm.controls['lastName'].setValue(user.last_name);
       this.editionForm.controls['email'].setValue(user.email);
@@ -299,46 +292,5 @@ export class ProfileFormComponent implements OnInit {
     else {
       this.router.navigateByUrl('');
     }
-  }
-
-  requestInstructorAccess() {
-    const data = { email: this.editionForm.value.email };
-
-    this.authService.requestInstructorAccess(data).subscribe({
-      next: (response: any) => {
-        var message = response.body.message
-        // Handle different success messages based on response
-        if (message === 'The user already has instructor access') {
-          this.toastr.info(message);
-        }
-        else if (message === 'Instructor access request is pending approval') {
-          this.toastr.warning(message);
-          this.hasRequestedAccess = true;
-        }
-        else if (message === 'Instructor access was already approved') {
-          this.toastr.success(message);
-        }
-        else {
-          this.toastr.success('Instructor access request sent');
-        }
-
-        // Update local state if request was successfully created
-        if (response.message === 'Instructor access request sent') {
-          this.hasRequestedAccess = true;
-        }
-      },
-      error: (err: any) => {
-        // Handle different error cases
-        if (err.status === 400 && err.error.message === 'Invalid email account') {
-          this.toastr.error('Invalid email account');
-        }
-        else if (err.status === 400 && err.error.message === 'Request already exists') {
-          this.toastr.warning('You already have a pending request');
-        }
-        else {
-          this.toastr.error('Failed to send request. Please try again later.');
-        }
-      }
-    });
   }
 }

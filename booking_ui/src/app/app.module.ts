@@ -46,9 +46,10 @@ import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 import { AccessComponent } from './pages/access/access.component';
 import { ActivationComponent } from './pages/activation/activation.component';
 import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
+import { InstructorAccessRequestComponent } from './pages/instructor-access-request/instructor-access-request.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PrivateReservationsComponent } from './pages/private-reservations/private-reservations.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 // Interceptors
 import { AuthInterceptorService } from './services/auth-interceptor.service';
@@ -87,6 +88,7 @@ import { LabStructureComponent } from './pages/lab-structure/lab-structure.compo
     FooterComponent,
     HelpButtonComponent,
     HelpDialogComponent,
+    InstructorAccessRequestComponent,
     LabDescriptionComponent,
     LabDialogComponent,
     LabGridComponent,

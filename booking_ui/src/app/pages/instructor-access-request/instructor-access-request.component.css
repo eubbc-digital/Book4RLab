@@ -1,0 +1,94 @@
+.instructor-request-section {
+  padding: 2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin: 2rem auto; /* Centers the box */
+  max-width: 600px; /* Limits width for better readability */
+  background-color: white;
+  box-shadow: 0 2px 4px rgba  (0, 0, 0, 0.1);
+  text-align: center; /* Centers text content */
+}
+
+.request-title {
+  margin-top: 0;
+  color: #3f51b5;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.request-description {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.request-notes {
+  margin: 1.5rem auto;
+  padding-left: 0;
+  color: #616161;
+  text-align: left;
+  display: inline-block;
+  max-width: 80%;
+}
+
+.request-notes li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  list-style-type: none;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.request-notes li:before {
+  content: "•";
+  color: #3f51b5;
+  position: absolute;
+  left: 0;
+  font-size: 1.2rem;
+}
+
+.request-button {
+  margin-top: 1.5rem;
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  min-width: 250px;
+}
+
+.contact-note {
+  margin: 2rem 0 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.contact-email {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.contact-email:hover {
+  text-decoration: underline;
+}
+
+/* Disabled state for the button */
+.request-button:disabled {
+  background-color: #e0e0e0;
+  color: #9e9e9e;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .instructor-request-section {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .request-notes {
+    max-width: 100%;
+  }
+}
