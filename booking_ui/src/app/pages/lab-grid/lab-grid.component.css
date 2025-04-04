@@ -13,7 +13,7 @@
 }
 
 .search-instructions {
-  font-size: 1rem;
+  font-size: 0.9rem;
   line-height: 1.6;
   margin-bottom: 5px;
   color: 333;
@@ -31,7 +31,7 @@
 
 .searched-lab-field {
   width: 30vw;
-  min-width: 250px; /* Prevent becoming too narrow */
+  min-width: 250px;
 }
 
 #search-icon {
@@ -40,7 +40,7 @@
 }
 
 .search-keyword {
-  font-weight: bold;
+  font-weight: 500;
   color: #3f51b5;
 }
 
@@ -49,8 +49,8 @@
   display: flex;
   gap: 10px;
   background: white;
-  padding: 4px 15px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 0.2rem 15px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   border: 1px solid #e0e0e0;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .stat-value {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 0.9rem;
   color: #3f51b5;
 }
@@ -110,7 +110,7 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
 }
 
@@ -179,33 +179,36 @@
 
 /* Lab type badge */
 .lab-type-badge {
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  background-color: transparent;
 }
 
 .lab-type-badge.rt {
-  background-color: #63ab67;
+  color: #2e7d32;
 }
 
 .lab-type-badge.uc {
-  background-color: #946db7;
+  color: #7b1fa2;
 }
 
-/* Learnify badge */
 .learnify-badge {
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: white;
-  background-color: #4285F4;
+  color: #1a73e8;
+  background-color: transparent;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+.learnify-badge:after {
+  content: "✓";
+  font-size: 0.85rem;
+  opacity: 0.8;
 }
 
 /* Card content */
@@ -257,9 +260,9 @@
 
 .availability-status {
   padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 0.85rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: help;
 }
 
@@ -294,6 +297,7 @@
   .searched-lab-field {
     width: 90vw;
   }
+
   .stat-item {
     min-width: 40px;
   }

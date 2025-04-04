@@ -30,11 +30,11 @@
           </div>
           <div class="stat-item">
             <span class="stat-value">{{ getLabTypeCount('uc') }}</span>
-            <span class="stat-label">UC Labs</span>
+            <span class="stat-label">Ultra-Concurrent</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">{{ getLabTypeCount('rt') }}</span>
-            <span class="stat-label">RT Labs</span>
+            <span class="stat-label">Real-Time</span>
           </div>
         </div>
       </div>
@@ -55,11 +55,11 @@
 
         <div class="badges-wrapper">
           <div class="lab-type-badge" [ngClass]="{'rt': lab.type === 'rt', 'uc': lab.type === 'uc'}">
-            {{ lab.type === 'rt' ? 'REAL TIME' : 'ULTRA CONCURRENT' }}
+            {{ lab.type === 'rt' ? 'Real-Time' : 'Ultra-Concurrent' }}
           </div>
 
           <div *ngIf="lab.has_learnify_modules" class="learnify-badge">
-            LEARNIFY MODULES
+            Learnify Modules
           </div>
         </div>
 
@@ -78,10 +78,10 @@
               [class.available]="lab.is_available_now || lab.type === 'uc'"
               [class.not-available]="!lab.is_available_now && lab.type !== 'uc'"
               [matTooltip]="getAvailabilityTooltip(lab)">
-            {{ (lab.is_available_now || lab.type === 'uc') ? 'AVAILABLE' : 'NOT AVAILABLE' }}
+            {{ (lab.is_available_now || lab.type === 'uc') ? 'Available' : 'Not Available' }}
             <span *ngIf="lab.type === 'uc'" class="uc-badge">(UC)</span>
           </div>
-          <button mat-stroked-button
+          <button mat-raised-button
                   color="primary"
                   class="info-button"
                   (click)="moreInfoLab(lab)">
