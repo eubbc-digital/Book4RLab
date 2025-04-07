@@ -5,9 +5,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Lab } from 'src/app/interfaces/lab';
 import { PublicLabsService } from 'src/app/services/public-labs.service';
+import { Router } from '@angular/router';
+import { countries } from 'src/app/store/country-data-store';
 
 @Component({
   selector: 'app-lab-grid',
@@ -60,5 +61,10 @@ export class LabGridComponent implements OnInit {
     } else {
       return 'This lab is not available either because:\n- No booking slots were created\n- All existing slots are booked\n- The lab is currently in use';
     }
+  }
+
+  getFullCountryName(lab: Lab): string {
+    const country = countries.find(country => country.code === lab.country);
+    return country?.name ?? 'Unknown Country';
   }
 }
