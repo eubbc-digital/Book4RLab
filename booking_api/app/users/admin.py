@@ -25,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
     ]
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal Info"), {"fields": ("name", "last_name")}),
+        (_("Personal Info"), {"fields": ("name", "last_name", "country", "time_zone")}),
         (
             _("Permissions"),
             {"fields": ("is_active", "is_staff", "is_superuser", "groups")},
