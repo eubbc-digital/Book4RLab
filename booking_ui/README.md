@@ -5,69 +5,63 @@ This is an Angular project that provides an User Interface for the Booking Syste
 ## Usage
 With the repository already cloned in your system navigate to the *booking_ui* directory:
 
-```
+```bash
 cd Book4RLab/booking_ui/
 ```
 
 ### Environment Setup
-To ensure proper configuration of the Booking UI, it's essential to create an environment file named ***.env***. 
-This file can be adapted to setup the project either for a *development* or *production* environment.
+To ensure proper configuration of the Booking UI, create an environment file named `.env` in the project root with the following variables:
 
-#### Configuring .env for Development
+#### `.env` File Template
 
-```
-### DOCKER
-RESTART_POLICY=no
-```
-#### Configuring .env for Production
-
-```
-### DOCKER
-RESTART_POLICY=always
+```env
+###DOCKER
+RESTART_POLICY={no_or_always}
 ```
 
-#### Environment Variables
-
-The environment variable used for the project is explained in the following table:
-
-| Variable            | Explanation                                                |
-|---------------------|------------------------------------------------------------|
-| RESTART_POLICY      | Restart policy for Docker containers                       |
+#### Environment Variables Reference
+| Variable            | Description                          | Valid Values         |
+|---------------------|--------------------------------------|----------------------|
+| `RESTART_POLICY`    | Container restart behavior           | `no` for development<br>`always` for production |
 
 ### Additional Configuration
 #### The `config.json` file
+This file holds the UI configuration. Update the `baseUrl` field according to your environment:
 
-This file holds the UI configuration.
-
-To ensure correct requests, update the `"baseUrl": ""` field to point to your API. Remember, this field may vary based on whether you're using it in a production or development environment.
-| Development Environment | Production Environment |
-|--|--|
-| `"baseUrl": "http://localhost:8000/",` | `"baseUrl": "https://<domain_name>/booking/api/",` |
+| Environment  | Configuration Example                |
+|--------------|--------------------------------------|
+| Development  | `"baseUrl": "http://localhost:8000/"` |
+| Production   | `"baseUrl": "https://<domain>/booking/api/"` |
 
 #### The Dockerfile
+For **development** environment, modify this line:
 
-While running in the **development** environment you need to modify a line in the `Dockerfile` to avoid base path errors.
-
-Change this line:
-```
+```bash
 RUN npm run ng build -- --base-href /booking/
 ```
+
 To this:
-```
+
+```bash
 RUN npm run ng build
 ```
+
 ### Running the Project
 
 Once the environment setup is done you can run the project following the next steps:
 
  - Build the docker image running the following command:
 
-	``` 
-	docker-compose build 
-	```
+  ```bash
+  docker-compose build
+  ```
 
  - Run UI:
-  
-	``` 
-	docker-compose up 
-	```
+
+  ```bash
+  docker-compose up
+  ```
+
+> **Note:** The `.env` file should be created before running these commands.
+
+The Angular project (dev) can be accessed via [http://localhost:4200](http://localhost:4200)

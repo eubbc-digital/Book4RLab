@@ -1,153 +1,97 @@
 # Booking API
 
-This is a Django project that provides a Booking API.
+This is a Django project that provides the Booking API.
 The Booking API allows users to manage the elements of the project via API calls or using the Django Admin Panel.
 
-## Usage
+## Environment Setup
 
-With the repository already cloned in your system navigate to the *booking_api* directory:
+All environment variables are defined in a single `.env` file located in the `booking_api/` directory.
+Replace the placeholders (`{value}`) with your actual configuration:
 
-```
-cd Book4RLab/booking_api/
-```
+### `.env` File Template
+```env
+# GENERAL
+ENVIRONMENT={development_or_production}
 
-### Environment Setup
+# DOCKER
+RESTART_POLICY={no_or_always}
 
-To ensure proper configuration of the Booking API, it's essential to create an environment file named ***.env***. 
-This file will contain important environment variables necessary for seamless project execution.
+# DJANGO
+DEBUG={1_or_0}
+SECRET_KEY={django_secret_key}
+DB_HOST={db_host}
+DB_NAME={db_name}
+DB_USER={db_user}
+DB_PASSWORD={db_password}
+FORCE_SCRIPT_NAME={/ or /booking/api}
+STATIC_URL={/static/ or /booking/api/static/}
+UI_BASE_URL={http://localhost:4200 or https://domain.com}
+EMAIL_HOST_USER={email_user}
+EMAIL_HOST_PASSWORD={email_app_password}
 
-This file can be adapted to setup the project either for a *development* or *production* environment.
-
-#### Configuring .env for Development
-
-```
-### APP
-DEBUG=1
-SECRET_KEY='string'
-DB_HOST=db
-DB_NAME=string
-DB_USER=string
-DB_PASSWORD=string
-FORCE_SCRIPT_NAME=/
-STATIC_URL=/static/
-UI_BASE_URL=http://localhost:4200/
-
-### DB
-POSTGRES_DB=string
-POSTGRES_USER=string
-POSTGRES_PASSWORD=string
-
-### DOCKER
-RESTART_POLICY=no
+# POSTGRES
+POSTGRES_DB={db_name}
+POSTGRES_USER={db_user}
+POSTGRES_PASSWORD={db_password}
 ```
 
-#### Configuring .env for Production
+## Environment Variables Reference
 
-```
-### APP
-DEBUG=0
-SECRET_KEY='string'
-DB_HOST=db
-DB_NAME=string
-DB_USER=string
-DB_PASSWORD=string
-FORCE_SCRIPT_NAME=/booking/api
-STATIC_URL=/booking/api/static/
-UI_BASE_URL=string
+| Variable | Description | Example Values |
+|----------|-------------|----------------|
+| `ENVIRONMENT` | Runtime environment | `development` or `production` |
+| | | |
+| `RESTART_POLICY` | Container restart behavior | `no` (dev), `always` (prod) |
+|  |  |  |
+| `DEBUG` | Enable debug mode | `1` (on), `0` (off) |
+| `SECRET_KEY` | Django secret key | Generated cryptographic key |
+| `DB_HOST` | Database host address | `db` (Docker default) |
+| `DB_NAME` | Database name | Must match `POSTGRES_DB` |
+| `DB_USER` | Database username | Must match `POSTGRES_USER` |
+| `DB_PASSWORD` | Database password | Must match `POSTGRES_PASSWORD` |
+| `FORCE_SCRIPT_NAME` | API base path | `/` (dev), `/booking/api` (prod) |
+| `STATIC_URL` | Static files path | `/static/` (dev), `/booking/api/static/` (prod) |
+| `UI_BASE_URL` | Frontend base URL | `http://localhost:4200` (dev), `https://domain.com` (prod) |
+| `EMAIL_HOST_USER` | SMTP email user | `user@example.com` |
+| `EMAIL_HOST_PASSWORD` | SMTP app password | Application-specific password |
+|  |  |  |
+| `POSTGRES_DB` | Database name | Must match `DB_NAME` |
+| `POSTGRES_USER` | Admin username | Must match `DB_USER` |
+| `POSTGRES_PASSWORD` | Admin password | Must match `DB_PASSWORD` |
 
-### DB
-POSTGRES_DB=string
-POSTGRES_USER=string
-POSTGRES_PASSWORD=string
 
-### DOCKER
-RESTART_POLICY=always
+## Running the Project
+To simplify the deployment process, a deployment script has been created. You can execute it with the following command:
 
-```
-
-#### Environment Variables
-
-Replace the variables that contain the value **string** with your own values.
-The environment variables used for the project are explained in the following table:
-
-| Variable            | Explanation                                                |
-|---------------------|------------------------------------------------------------|
-| DEBUG               | Controls debugging behavior; 0 for debugging off           |
-| SECRET_KEY          | Secret key for cryptographic functions                     |
-| DB_HOST             | Hostname or IP address of the database server              |
-| DB_NAME             | Name of the database within the database server            |
-| DB_USER             | Username for authenticating to the database server         |
-| DB_PASSWORD         | Password for authenticating to the database server         |
-| FORCE_SCRIPT_NAME   | Prefix for URLs in the application                         |
-| STATIC_URL          | Base URL for static files served by the application        |
-| UI_BASE_URL         | Base URL for the application's user interface              |
-| 										| 																													 |
-| POSTGRES_DB         | Name of the PostgreSQL database                            |
-| POSTGRES_USER       | Username for authenticating to the PostgreSQL database     |
-| POSTGRES_PASSWORD   | Password for authenticating to the PostgreSQL database     |
-| 										| 																													 |
-| RESTART_POLICY      | Restart policy for Docker containers                       |
-
-You can create your own SECRET_KEY running this command:
-
-```
-docker-compose run --rm app sh -c 'python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"'
-```
-### Additional Configuration
-#### The `settings.py` file
-This file contains all the crucial configuration settings for the Django application.
-
-The most important section to focus on is where you configure the email account details. While this step is optional, it allows you to test the email messaging functionality.
-
-To accomplish this, you'll need to insert your **email account name** and your **app password**, in the specified lines of code. Note that your usual password won't suffice.
-
-Learn how to generate an app password for your Google account [here](https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237).
-```python
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+```bash
+  ./deploy.sh
 ```
 
-### Running the Project
+This script handles building the Docker image, running migrations, and starting the project.
 
-Once the environment setup is done you can run the project following the next steps:
-
- - Build the docker images for Django and Postgres running the following command:
-
-	``` 
-	docker-compose build 
-	```
-
- - Propagate changes to database:
-  
-	``` 
-	docker-compose run --rm app sh -c "python manage.py makemigrations"
-	docker-compose run --rm app sh -c "python manage.py migrate"
-	``` 
-
- - Create superuser for the admin panel (If needed):
-
-	``` 
-	docker-compose run --rm app sh -c "python manage.py createsuperuser"
-	``` 
-
- - Run API:
-  
-	``` 
-	docker-compose up 
-	```
- 
-	> The Django Admin Panel will be available in the path <API_URL>/admin/
+>**Note:** Ensure that the script has execution permissions. If not, use the following command to grant them:
+>```bash
+>sudo chmod +x deploy.sh
+>```
 
 ## Recommendations
 
-While running in production, do not forget that in order to serve static files, such as images or stylesheets, you will need to configure your HTTP server to serve static files from Django.
+### Create Superuser
+To manage the project via the Django Admin Panel you might need to create a superuser. To do so use this command:
 
-First, you need to run the following command to collect the static files:
-
-``` 
-docker-compose run --rm app sh -c "python manage.py collectstatic"
+```bash
+docker-compose run --rm app sh -c "python manage.py createsuperuser"
 ```
 
-This will collect all static files from Booking application and place them in a directory that can be served by your HTTP server.
+### Static Files
+Do not forget that in order to serve static files, such as images or stylesheets, you will need to configure your HTTP server to serve static files from Django.
+
+First, you need to run the following command to collect the static files:
+```bash
+docker-compose run --rm app sh -c "python manage.py collectstatic"
+```
+This will collect all static files and place them in a directory that can be served by your HTTP server.
 
 Then, you need to configure your HTTP server to serve static files from this directory. The specific configuration will depend on the HTTP server you are using.
+
+The Django project (dev) can be accessed via [http://localhost:8000](http://localhost:8000)
