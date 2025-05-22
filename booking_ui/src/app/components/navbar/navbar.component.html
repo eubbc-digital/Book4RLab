@@ -92,7 +92,7 @@
     <ng-template #showLoginButton>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
         <mat-icon class="icon">login</mat-icon>
-        Login
+        <span>Login</span>
       </button>
     </ng-template>
   </mat-menu>
@@ -114,13 +114,11 @@
         aria-label="Learnify modules button"
         (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
       >
-        <mat-icon class="icon">library_books</mat-icon>
         <span>Learnify</span>
       </button>
 
       <button mat-button aria-label="Booking button" (click)="goToLabGrid()">
-        <mat-icon class="icon">book_online</mat-icon>
-        New Booking
+        <span>New Booking</span>
       </button>
 
       <button
@@ -128,7 +126,7 @@
         aria-label="Public reservation list button"
         (click)="goToPublicReservations()"
       >
-        Public Rooms
+        <span>Public Rooms</span>
       </button>
 
       <button
@@ -136,7 +134,7 @@
         aria-label="Personal reservation list button"
         (click)="goToMyReservations()"
       >
-        My Reservations
+        <span>My Reservations</span>
       </button>
 
       <button
@@ -150,14 +148,14 @@
 
       <button mat-button aria-label="Logout icon" (click)="logout()">
         <mat-icon class="icon">logout</mat-icon>
-        Logout
+        <span>Logout</span>
       </button>
     </div>
 
     <ng-template #showLoginButton>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
         <mat-icon class="icon">login</mat-icon>
-        Login / Sign Up
+        <span>Login / Sign Up</span>
       </button>
     </ng-template>
   </ng-template>
