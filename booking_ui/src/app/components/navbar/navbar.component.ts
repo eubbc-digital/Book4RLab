@@ -83,6 +83,17 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl("/access");
   }
 
+  goToLearnifyProfessor(): void {
+    window.open(
+      "https://time.learnify.se/l/show.html#att/wWLR?lang=en",
+      "_blank"
+    );
+  }
+
+  goToLearnifyStudent(): void {
+    window.open("https://time.learnify.se/l/show.html#att/0QyN", "_blank");
+  }
+
   logout(): void {
     localStorage.removeItem("token");
     this.goToLabGrid();

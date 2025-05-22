@@ -42,6 +42,15 @@
         <span>My Laboratories</span>
       </button>
 
+      <button
+        mat-menu-item
+        aria-label="Learnify modules button"
+        (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+      >
+        <mat-icon class="icon">science</mat-icon>
+        <span>Learnify</span>
+      </button>
+
       <button mat-menu-item aria-label="Booking button" (click)="goToLabGrid()">
         <mat-icon class="icon">book_online</mat-icon>
         <span>New booking</span>
@@ -98,6 +107,15 @@
         *ngIf="isProfessor"
       >
         <span>My Laboratories</span>
+      </button>
+
+      <button
+        mat-button
+        aria-label="Learnify modules button"
+        (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+      >
+        <mat-icon class="icon">science</mat-icon>
+        <span>Learnify</span>
       </button>
 
       <button mat-button aria-label="Booking button" (click)="goToLabGrid()">
