@@ -1,92 +1,92 @@
 ﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
 import {
   BreakpointObserver,
   Breakpoints,
-  BreakpointState
-} from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+  BreakpointState,
+} from "@angular/cdk/layout";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs";
 
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from "src/app/services/user.service";
 
-import { Group } from 'src/app/enums/group';
+import { Group } from "src/app/enums/group";
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
+  selector: "app-navbar",
+  templateUrl: "./navbar.component.html",
+  styleUrls: ["./navbar.component.css"],
 })
 export class NavbarComponent implements OnInit {
   isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
     Breakpoints.Handset
   );
 
-  shownMenu = false;
-  showLabsButton = false;
+  isLoggedIn = false;
+  isProfessor = false;
 
   constructor(
     private router: Router,
     private breakPointObserver: BreakpointObserver,
     private userService: UserService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (token) {
       this.userService.getUserData().subscribe(
         (user) => {
           user.groups!.forEach((group) => {
-            if (group.name === Group.Professors) this.showLabsButton = true;
+            if (group.name === Group.Professors) this.isProfessor = true;
           });
         },
-        (err) => (this.shownMenu = false)
+        (err) => (this.isLoggedIn = false)
       );
 
-      this.shownMenu = true;
+      this.isLoggedIn = true;
     } else {
-      this.shownMenu = false;
-      this.showLabsButton = false;
+      this.isLoggedIn = false;
+      this.isProfessor = false;
     }
   }
 
   goToInstructorAccess(): void {
-    this.router.navigateByUrl('/instructor-access');
+    this.router.navigateByUrl("/instructor-access");
   }
 
   goToLabManager(): void {
-    this.router.navigateByUrl('/my-labs');
+    this.router.navigateByUrl("/my-labs");
   }
   goToLabGrid(): void {
-    this.router.navigateByUrl('/labs');
+    this.router.navigateByUrl("/labs");
   }
 
   goToMyReservations(): void {
-    this.router.navigateByUrl('/my-reservations');
+    this.router.navigateByUrl("/my-reservations");
   }
 
   goToPublicReservations(): void {
-    this.router.navigateByUrl('/public-reservations');
+    this.router.navigateByUrl("/public-reservations");
   }
 
   goToMyProfile(): void {
-    this.router.navigateByUrl('/profile');
+    this.router.navigateByUrl("/profile");
   }
 
   goToLogin(): void {
-    this.router.navigateByUrl('/access');
+    this.router.navigateByUrl("/access");
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     this.goToLabGrid();
-    this.shownMenu = false;
-    this.showLabsButton = false;
+    this.isLoggedIn = false;
+    this.isProfessor = false;
   }
 }
