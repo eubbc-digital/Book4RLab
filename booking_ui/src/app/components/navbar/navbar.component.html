@@ -1,12 +1,12 @@
 <mat-toolbar color="primary">
   <div id="main-label">
     <div id="logo-title-group" (click)="goToLabGrid()">
-      <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
-      <span id="navbar-title">Book4RLab</span>
+      <img id="logo" src="./assets/eeda-logo.png" alt="logo" width="32px" />
+      <span id="navbar-title">EEDA Remote Lab Booking System</span>
     </div>
 
     <button
-      *ngIf="!isProfessor && isLoggedIn"
+      *ngIf="!isProfessor && isLoggedIn && !(isHandset | async)?.matches"
       mat-button
       aria-label="Instructor access"
       (click)="goToInstructorAccess()"
@@ -40,6 +40,16 @@
       >
         <mat-icon class="icon">science</mat-icon>
         <span>My Laboratories</span>
+      </button>
+
+      <button
+        *ngIf="!isProfessor"
+        mat-menu-item
+        aria-label="Instructor access"
+        (click)="goToInstructorAccess()"
+      >
+        <mat-icon class="icon">school</mat-icon>
+        <span>Instructor Access</span>
       </button>
 
       <button
