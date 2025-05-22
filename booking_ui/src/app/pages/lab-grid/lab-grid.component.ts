@@ -67,4 +67,12 @@ export class LabGridComponent implements OnInit {
     const country = countries.find(country => country.code === lab.country);
     return country?.name ?? 'Unknown Country';
   }
+
+  getLabTypeToolTip(lab: Lab): string {
+    switch (lab.type) {
+      case 'rt': return 'Live interaction with lab equipment after booking.';
+      case 'uc': return 'Multiple users can run simultaneously.';
+      default: return 'Unknown Lab Type';
+    }
+  }
 }

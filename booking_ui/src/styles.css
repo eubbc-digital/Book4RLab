@@ -161,6 +161,10 @@ tr.no-data-row {
   width: 40%;
 }
 
+.mat-tooltip {
+    font-size: 0.9rem;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .reservation-list {
