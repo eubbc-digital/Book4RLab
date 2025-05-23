@@ -8,6 +8,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState,} from '@angular/cdk/l
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import config from '../../config.json';
 
 import { UserService } from 'src/app/services/user.service';
 
@@ -23,6 +24,9 @@ export class NavbarComponent implements OnInit {
     Breakpoints.Handset
   );
 
+  professorLearnifyUrl = config.learnifyUrl.instructor;
+  studentLearnifyUrl = config.learnifyUrl.student;
+  isLearnifyUrl = this.professorLearnifyUrl !== '' && this.studentLearnifyUrl !== '';
   isLoggedIn = false;
   isProfessor = false;
 
@@ -81,13 +85,13 @@ export class NavbarComponent implements OnInit {
 
   goToLearnifyProfessor(): void {
     window.open(
-      'https://time.learnify.se/l/show.html#att/wWLR?lang=en',
+      this.professorLearnifyUrl,
       '_blank'
     );
   }
 
   goToLearnifyStudent(): void {
-    window.open('https://time.learnify.se/l/show.html#att/0QyN', '_blank');
+    window.open(this.studentLearnifyUrl, '_blank');
   }
 
   logout(): void {

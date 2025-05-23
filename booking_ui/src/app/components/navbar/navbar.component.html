@@ -65,6 +65,7 @@
         mat-menu-item
         aria-label="Learnify module button"
         (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+        *ngIf="isLearnifyUrl"
       >
         <mat-icon class="icon">library_books</mat-icon>
         <span>Learnify Module</span>
@@ -136,6 +137,7 @@
         mat-button
         aria-label="Learnify module button"
         (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+        *ngIf="isLearnifyUrl"
       >
         <span>Learnify Module</span>
       </button>
