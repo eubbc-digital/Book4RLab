@@ -162,7 +162,8 @@ tr.no-data-row {
 }
 
 .mat-tooltip {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
+  white-space: pre-line;
 }
 
 /* Responsive */
