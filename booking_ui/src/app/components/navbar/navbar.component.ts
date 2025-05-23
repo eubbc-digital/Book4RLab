@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit {
 
   professorLearnifyUrl = config.learnifyUrl.instructor;
   studentLearnifyUrl = config.learnifyUrl.student;
-  isLearnifyUrl = this.professorLearnifyUrl !== '' && this.studentLearnifyUrl !== '';
+  isLearnifyUrl = false;
   isLoggedIn = false;
   isProfessor = false;
 
@@ -42,9 +42,13 @@ export class NavbarComponent implements OnInit {
     if (token) {
       this.userService.getUserData().subscribe(
         (user) => {
-          user.groups!.forEach((group) => {
-            if (group.name === Group.Professors) this.isProfessor = true;
-          });
+          this.isProfessor = user.groups?.some(group => group.name === Group.Professors) ?? false;
+
+          this.isLearnifyUrl = this.isProfessor
+            ? this.professorLearnifyUrl !== ''
+            : this.studentLearnifyUrl !== '';
+
+          this.isLoggedIn = true;
         },
         (err) => (this.isLoggedIn = false)
       );
