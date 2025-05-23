@@ -4,23 +4,19 @@
  * MIT License - See LICENSE file in the root directory
  */
 
-import {
-  BreakpointObserver,
-  Breakpoints,
-  BreakpointState,
-} from "@angular/cdk/layout";
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { BreakpointObserver, Breakpoints, BreakpointState,} from '@angular/cdk/layout';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { UserService } from "src/app/services/user.service";
+import { UserService } from 'src/app/services/user.service';
 
-import { Group } from "src/app/enums/group";
+import { Group } from 'src/app/enums/group';
 
 @Component({
-  selector: "app-navbar",
-  templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.css"],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
@@ -37,7 +33,7 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (token) {
       this.userService.getUserData().subscribe(
@@ -57,45 +53,45 @@ export class NavbarComponent implements OnInit {
   }
 
   goToInstructorAccess(): void {
-    this.router.navigateByUrl("/instructor-access");
+    this.router.navigateByUrl('/instructor-access');
   }
 
   goToLabManager(): void {
-    this.router.navigateByUrl("/my-labs");
+    this.router.navigateByUrl('/my-labs');
   }
   goToLabGrid(): void {
-    this.router.navigateByUrl("/labs");
+    this.router.navigateByUrl('/labs');
   }
 
   goToMyReservations(): void {
-    this.router.navigateByUrl("/my-reservations");
+    this.router.navigateByUrl('/my-reservations');
   }
 
   goToPublicReservations(): void {
-    this.router.navigateByUrl("/public-reservations");
+    this.router.navigateByUrl('/public-reservations');
   }
 
   goToMyProfile(): void {
-    this.router.navigateByUrl("/profile");
+    this.router.navigateByUrl('/profile');
   }
 
   goToLogin(): void {
-    this.router.navigateByUrl("/access");
+    this.router.navigateByUrl('/access');
   }
 
   goToLearnifyProfessor(): void {
     window.open(
-      "https://time.learnify.se/l/show.html#att/wWLR?lang=en",
-      "_blank"
+      'https://time.learnify.se/l/show.html#att/wWLR?lang=en',
+      '_blank'
     );
   }
 
   goToLearnifyStudent(): void {
-    window.open("https://time.learnify.se/l/show.html#att/0QyN", "_blank");
+    window.open('https://time.learnify.se/l/show.html#att/0QyN', '_blank');
   }
 
   logout(): void {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     this.goToLabGrid();
     this.isLoggedIn = false;
     this.isProfessor = false;
