@@ -33,6 +33,25 @@
   <mat-menu class="navbar-menu" #menu="matMenu">
     <div *ngIf="isLoggedIn; else showLoginButton">
       <button
+        *ngIf="!isProfessor"
+        mat-menu-item
+        aria-label="Instructor access"
+        (click)="goToInstructorAccess()"
+      >
+        <mat-icon class="icon">school</mat-icon>
+        <span>Instructor Access</span>
+      </button>
+
+      <button 
+        mat-menu-item 
+        aria-label="Booking button" 
+        (click)="goToLabGrid()"
+      >
+        <mat-icon class="icon">book_online</mat-icon>
+        <span>New booking</span>
+      </button>
+
+      <button
         mat-menu-item
         aria-label="Labs button"
         (click)="goToLabManager()"
@@ -43,27 +62,12 @@
       </button>
 
       <button
-        *ngIf="!isProfessor"
         mat-menu-item
-        aria-label="Instructor access"
-        (click)="goToInstructorAccess()"
-      >
-        <mat-icon class="icon">school</mat-icon>
-        <span>Instructor Access</span>
-      </button>
-
-      <button
-        mat-menu-item
-        aria-label="Learnify modules button"
+        aria-label="Learnify module button"
         (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
       >
         <mat-icon class="icon">library_books</mat-icon>
-        <span>Learnify</span>
-      </button>
-
-      <button mat-menu-item aria-label="Booking button" (click)="goToLabGrid()">
-        <mat-icon class="icon">book_online</mat-icon>
-        <span>New booking</span>
+        <span>Learnify Module</span>
       </button>
 
       <button
@@ -110,6 +114,15 @@
   <!-- Web menu -->
   <ng-template #navbarButtons>
     <div *ngIf="isLoggedIn; else showLoginButton">
+      <button 
+        mat-button 
+        aria-label="Booking button" 
+        (click)="goToLabGrid()"
+      >
+        <mat-icon class="icon">book_online</mat-icon>
+        <span>New Booking</span>
+      </button>
+
       <button
         mat-button
         aria-label="Labs button"
@@ -121,14 +134,10 @@
 
       <button
         mat-button
-        aria-label="Learnify modules button"
+        aria-label="Learnify module button"
         (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
       >
-        <span>Learnify</span>
-      </button>
-
-      <button mat-button aria-label="Booking button" (click)="goToLabGrid()">
-        <span>New Booking</span>
+        <span>Learnify Module</span>
       </button>
 
       <button
@@ -152,7 +161,6 @@
         aria-label="Profile list button"
         (click)="goToMyProfile()"
       >
-        <mat-icon class="icon">person</mat-icon>
         <span>Profile</span>
       </button>
 
