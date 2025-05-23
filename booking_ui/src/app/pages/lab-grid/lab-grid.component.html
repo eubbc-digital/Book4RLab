@@ -54,7 +54,9 @@
         </div>
 
         <div class="badges-wrapper">
-          <div class="lab-type-badge" [ngClass]="{'rt': lab.type === 'rt', 'uc': lab.type === 'uc'}">
+          <div class="lab-type-badge" 
+            [ngClass]="{'rt': lab.type === 'rt', 'uc': lab.type === 'uc'}"
+            [matTooltip]="getLabTypeToolTip(lab)">
             {{ lab.type === 'rt' ? 'Real-Time' : 'Ultra-Concurrent' }}
           </div>
 

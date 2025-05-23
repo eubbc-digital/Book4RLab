@@ -1,6 +1,6 @@
 #logo {
-  margin-right: 10px;
-  margin-bottom: 5px;
+  margin-right: 8px;
+  margin-bottom: 2px;
 }
 
 #main-label {
@@ -14,7 +14,7 @@
 #logo-title-group {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 18px;
 }
 
 .instructor-access-button {
@@ -24,7 +24,7 @@
   height: 36px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
-  margin-left: 20px;
+  margin-left: 18px;
 }
 
 .instructor-access-button mat-icon {
