@@ -109,7 +109,7 @@ class Laboratory(models.Model):
     ]
 
     name = models.CharField(max_length=255, blank=False, default="")
-    instructor = models.CharField(max_length=255, blank=False, default="")
+    instructor = models.CharField(max_length=1000, blank=False, default="")
     university = models.CharField(max_length=255, blank=False, default="")
     course = models.CharField(max_length=255, blank=False, default="")
     image = models.ImageField(upload_to="labs/", blank=True, null=True, default=None)

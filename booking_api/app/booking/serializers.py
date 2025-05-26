@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from users.serializers import UserSerializer
+import re
 
 
 class BookingSerializer(serializers.ModelSerializer):
@@ -222,6 +223,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     owner_email = serializers.SerializerMethodField()
     has_learnify_modules = serializers.SerializerMethodField()
+    instructor = serializers.CharField()
 
     class Meta:
         model = Laboratory
@@ -254,7 +256,26 @@ class LaboratorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["owner"] = self.context["request"].user
         return Laboratory.objects.create(**validated_data)
+    
+    def validate_instructor(self, value):
+        if not value:
+            raise serializers.ValidationError("At least one lab instructor is required")
 
+        names = re.split(r'\s*,\s*', value.strip())
+        
+        # Pattern: Name [Name2] Lastname1 [Lastname2] (2+ letters each)
+        pattern = r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]{2,}(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]{2,}){1,3}$'
+        invalid = [name for name in names if not re.match(pattern, name)]
+        
+        if invalid:
+            error_msg = (
+                f"Invalid instructor format in: {', '.join(invalid)}. "
+                "Required format: Name [SecondName] Lastname [SecondLastname] "
+                "(minimum 2 letters each)"
+            )
+            raise serializers.ValidationError(error_msg)
+        
+        return ','.join(names)
 
 class LaboratoryContentSerializer(serializers.ModelSerializer):
     class Meta:
