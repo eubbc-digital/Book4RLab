@@ -29,22 +29,6 @@
           </mat-select>
         </mat-form-field>
 
-        <!--
-        <div class="instructor-container">
-          <p class="dialog-label">Instructors:</p>
-          <div class="instructor-row">
-            <mat-form-field appearance="fill" class="input-field instructor-field">
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="instructor_name" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="input-field instructor-field">
-              <mat-label>Lastname</mat-label>
-              <input matInput formControlName="instructor_lastname" />
-            </mat-form-field>
-          </div>
-        </div>
-        -->
-
         <div class="instructor-container">
           <p class="dialog-label">Instructors:</p>
           <ng-container *ngIf="labForm.controls['instructor'] as instructorsArray">

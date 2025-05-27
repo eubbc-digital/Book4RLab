@@ -35,7 +35,7 @@ export class LabService {
   addLab(lab: Lab) {
     const formData = new FormData();
     formData.append('name', lab.name!);
-    formData.append('instructor', lab.instructor!);
+    formData.append('instructor', String(lab.instructor!));
     formData.append('university', lab.university!);
     formData.append('course', lab.course!);
     if (lab.image) formData.append('image', lab.image);
@@ -53,7 +53,7 @@ export class LabService {
   updateLab(newLab: Lab, id: number) {
     const formData = new FormData();
     if (newLab.name) formData.append('name', newLab.name!);
-    if (newLab.instructor) formData.append('instructor', newLab.instructor!);
+    if (newLab.instructor) formData.append('instructor', String(newLab.instructor!));
     if (newLab.university) formData.append('university', newLab.university!);
     if (newLab.course) formData.append('course', newLab.course!);
 

@@ -111,7 +111,6 @@ export class LabDialogComponent implements OnInit {
   }
 
   addLab(): void {
-    console.log(this.labForm.value); // <-- Agregado
     this.labService.addLab(this.labForm.value as Lab).subscribe({
       next: (_) => {
         this.resetDialog('The lab has been created successfully.');
@@ -125,7 +124,6 @@ export class LabDialogComponent implements OnInit {
   }
 
   updateLab(): void {
-    console.log(this.labForm.value); // <-- Agregado
     this.labService
       .updateLab(this.labForm.value as Lab, this.selectedLabId)
       .subscribe({

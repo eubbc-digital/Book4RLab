@@ -7,7 +7,7 @@
 export interface Lab {
   id?: number;
   name?: string;
-  instructor?: string;
+  instructor?: string | string[];
   university?: string;
   course?: string;
   image?: any;

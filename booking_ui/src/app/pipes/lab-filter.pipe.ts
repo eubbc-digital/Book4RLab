@@ -36,7 +36,9 @@ export class FilterPipe implements PipeTransform {
       return (
         (lab.name && lab.name.toLocaleLowerCase().includes(searchText)) ||
         (lab.university && lab.university.toLocaleLowerCase().includes(searchText)) ||
-        (lab.instructor && lab.instructor.toLocaleLowerCase().includes(searchText)) ||
+        (Array.isArray(lab.instructor)
+          ? lab.instructor.join(' ').toLocaleLowerCase().includes(searchText)
+          : lab.instructor && lab.instructor.toLocaleLowerCase().includes(searchText)) ||
         (lab.course && lab.course.toLocaleLowerCase().includes(searchText)) ||
         countryMatches
       );
