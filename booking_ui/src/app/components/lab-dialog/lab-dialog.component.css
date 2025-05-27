@@ -11,10 +11,9 @@
 }
 
 mat-dialog-content {
-  width: 105%;
+  width: 100%;
   padding-right: 20px;
-  padding-top: 20px;
-  box-sizing: content-box;
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: scroll;
   min-height: 60vh;
@@ -31,16 +30,19 @@ mat-dialog-content {
   margin-bottom: 0;
 }
 
+.instructor-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
 .mat-icon {
   cursor: pointer;
 }
 
 .input-field {
+  padding-left: 0px;
   height: auto;
-}
-
-.selection-field {
-  padding-left: 10px;
 }
 
 .mat-form-field {
@@ -60,6 +62,24 @@ mat-dialog-content {
   display: flex;
 }
 
-.add-buttons-container button {
-  margin-right: 10px;
+.add-buttons-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
 }
+
+.instructor-buttons-container {
+  margin-bottom: 20px;
+}
+
+/*
+.instructor-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.instructor-field {
+  flex: 1;
+}
+*/

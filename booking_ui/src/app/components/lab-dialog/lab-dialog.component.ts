@@ -44,7 +44,7 @@ export class LabDialogComponent implements OnInit {
 
   labForm = this.fb.group({
     name: ['', Validators.required],
-    instructor: ['', Validators.required],
+    instructor: this.fb.array([]),
     university: ['', Validators.required],
     course: ['', Validators.required],
     image: [null as File | null],
@@ -66,7 +66,6 @@ export class LabDialogComponent implements OnInit {
 
       this.labForm.patchValue({
         name: lab.name,
-        instructor: lab.instructor,
         university: lab.university,
         course: lab.course,
         image: lab.image,
@@ -76,6 +75,7 @@ export class LabDialogComponent implements OnInit {
         notify_owner: lab.notify_owner,
         type: lab.type
       });
+      this.populateInstructors(lab.instructor);
       this.populateAllowedEmails(lab.allowed_emails);
 
       this.title = 'Update Laboratory';
@@ -83,6 +83,9 @@ export class LabDialogComponent implements OnInit {
     } else {
       this.title = 'Register Laboratory';
       this.onUpdate = false;
+
+      const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+      instructorsFormArray.push(this.fb.control('', [Validators.required]));
     }
   }
 
@@ -108,6 +111,7 @@ export class LabDialogComponent implements OnInit {
   }
 
   addLab(): void {
+    console.log(this.labForm.value); // <-- Agregado
     this.labService.addLab(this.labForm.value as Lab).subscribe({
       next: (_) => {
         this.resetDialog('The lab has been created successfully.');
@@ -121,6 +125,7 @@ export class LabDialogComponent implements OnInit {
   }
 
   updateLab(): void {
+    console.log(this.labForm.value); // <-- Agregado
     this.labService
       .updateLab(this.labForm.value as Lab, this.selectedLabId)
       .subscribe({
@@ -308,5 +313,27 @@ export class LabDialogComponent implements OnInit {
     }
 
     return true;
+  }
+
+  addInstructor(): void {
+    const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+    instructorsFormArray.push(this.fb.control('', [Validators.required]));
+  }
+
+  removeInstructor(index: number): void {
+    const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+    instructorsFormArray.removeAt(index);
+  }
+
+  populateInstructors(instructorsString: string): void {
+    if (instructorsString && instructorsString.trim() !== '') {
+      const instructorsArray = instructorsString.split(',');
+      const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+      instructorsArray.forEach(instructor => {
+        if (instructor.trim() !== '') {
+          instructorsFormArray.push(this.fb.control(instructor.trim(), [Validators.required]));
+        }
+      });
+    }
   }
 }

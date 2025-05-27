@@ -4,15 +4,10 @@
   <mat-tab label="Remote Laboratory">
     <mat-dialog-content>
       <form [formGroup]="labForm" ngNoForm>
-
+        <p class="dialog-label">Laboratory:</p>
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="input-field">
-          <mat-label>Instructor</mat-label>
-          <input matInput formControlName="instructor" />
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="input-field">
@@ -34,6 +29,49 @@
           </mat-select>
         </mat-form-field>
 
+        <!--
+        <div class="instructor-container">
+          <p class="dialog-label">Instructors:</p>
+          <div class="instructor-row">
+            <mat-form-field appearance="fill" class="input-field instructor-field">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="instructor_name" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="input-field instructor-field">
+              <mat-label>Lastname</mat-label>
+              <input matInput formControlName="instructor_lastname" />
+            </mat-form-field>
+          </div>
+        </div>
+        -->
+
+        <div class="instructor-container">
+          <p class="dialog-label">Instructors:</p>
+          <ng-container *ngIf="labForm.controls['instructor'] as instructorsArray">
+            <div class="instructor-group" *ngFor="let instructorControl of instructorsArray.controls; let i = index">
+              <div class="input-field">
+                <mat-form-field appearance="fill">
+                  <mat-label>Full Name</mat-label>
+                  <input matInput [formControl]="instructorControl" />
+                </mat-form-field>
+              </div>
+              <button mat-icon-button color="warn" (click)="removeInstructor(i)" [disabled]="labForm.controls['instructor'].length === 1">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+          <div class="add-buttons-container instructor-buttons-container">
+            <button mat-raised-button color="primary" (click)="addInstructor()" matTooltip="Add a new instructor.">
+              New instructor
+            </button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()"
+              matTooltip="Set your profile as instructor.">
+              Add me
+            </button>
+            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)">
+          </div>
+        </div>
+
         <div class="input-field">
           <div *ngIf="imageName != ''; else showImageLabel">
             <p>
@@ -47,7 +85,7 @@
           </div>
 
           <ng-template #showImageLabel>
-            <p class="file-label">Choose an image for the laboratory:</p>
+            <p class="dialog-label">Choose an image for the laboratory:</p>
           </ng-template>
 
           <input class="file" type="file" name="Image" accept="image/*" (change)="onFileChange($event)" />
@@ -80,10 +118,10 @@
         </mat-checkbox>
 
         <div class="email-container">
-          <div class="dialog-label">Allowed emails:</div>
-          <div class="dialog-sublabel">
+          <p class="dialog-label">Allowed emails:</p>
+          <p class="dialog-sublabel">
             Add the email addresses that will be able to book a timeframe in your laboratory.
-          </div>
+          </p>
           <ng-container *ngIf="labForm.controls['allowed_emails'] as emailsArray">
             <div class="email-group" *ngFor="let emailControl of emailsArray.controls; let i = index">
               <div class="input-field">
