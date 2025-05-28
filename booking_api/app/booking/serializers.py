@@ -258,24 +258,17 @@ class LaboratorySerializer(serializers.ModelSerializer):
         return Laboratory.objects.create(**validated_data)
     
     def validate_instructor(self, value):
-        if not value:
-            raise serializers.ValidationError("At least one lab instructor is required")
+        names = [re.sub(r'\s+', ' ', name.strip()) for name in re.split(r'\s*,\s*', value.strip())]
 
-        names = re.split(r'\s*,\s*', value.strip())
-        
-        # Pattern: Name [Name2] Lastname1 [Lastname2] (2+ letters each)
-        pattern = r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]{2,}(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]{2,}){1,3}$'
+        pattern = r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]{1,}\.?(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]{1,}\.?){1,3}$'
         invalid = [name for name in names if not re.match(pattern, name)]
         
         if invalid:
-            error_msg = (
-                f"Invalid instructor format in: {', '.join(invalid)}. "
-                "Required format: Name [SecondName] Lastname [SecondLastname] "
-                "(minimum 2 letters each)"
+            raise serializers.ValidationError(
+                f"Invalid instructor name format in: {', '.join(invalid)}. Use from 2 to 4 name parts, each containing at least two letters."
             )
-            raise serializers.ValidationError(error_msg)
         
-        return ','.join(names)
+        return ', '.join(names)
 
 class LaboratoryContentSerializer(serializers.ModelSerializer):
     class Meta:
