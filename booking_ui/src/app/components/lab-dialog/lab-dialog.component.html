@@ -37,7 +37,7 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Full Name</mat-label>
                   <input matInput [formControl]="instructorControl" />
-                  <mat-error *ngIf="instructorControl.invalid && (instructorControl.dirty || instructorControl.touched)">
+                  <mat-error *ngIf="instructorControl.invalid">
                     {{ getFullNameMessage(instructorControl) }}
                   </mat-error>
                 </mat-form-field>
@@ -115,7 +115,7 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Email Address</mat-label>
                   <input matInput [formControl]="emailControl" />
-                  <mat-error *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched)">
+                  <mat-error *ngIf="emailControl.invalid">
                     {{ getEmailMessage(emailControl) }}
                   </mat-error>
                 </mat-form-field>

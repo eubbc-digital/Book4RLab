@@ -82,6 +82,7 @@ export class LabDialogComponent implements OnInit {
 
       this.title = 'Update Laboratory';
       this.onUpdate = true;
+      this.displayFormErrors();
     } else {
       this.title = 'Register Laboratory';
       this.onUpdate = false;
@@ -240,7 +241,11 @@ export class LabDialogComponent implements OnInit {
   displayFormErrors(): void {
     (Object.keys(this.labForm.controls) as Array<keyof typeof this.labForm.controls>).forEach(controlKey => {
       const control = this.labForm.controls[controlKey];
-      control.markAsTouched();
+      if (control instanceof FormArray) {
+        control.controls.forEach(childControl => childControl.markAsTouched());
+      } else {
+        control.markAsTouched();
+      }
     });
   }
 
