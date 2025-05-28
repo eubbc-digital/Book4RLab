@@ -12,7 +12,6 @@
 
 mat-dialog-content {
   width: 100%;
-  padding-right: 20px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -72,14 +71,6 @@ mat-dialog-content {
   margin-bottom: 20px;
 }
 
-/*
-.instructor-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
+.lab-description-content {
+  margin-top: 30px;
 }
-
-.instructor-field {
-  flex: 1;
-}
-*/
