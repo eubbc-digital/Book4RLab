@@ -371,7 +371,7 @@ export class LabDialogComponent implements OnInit {
     if (typeof value === 'string') {
       const trimmedValue = value.trim();
 
-      const pattern = /^(?=\b\w{2,}\b(?:\s+\b\w{2,}\b)+).*$/;
+      const pattern = /^([A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ\.]{1,})(\s+([A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ\.]{1,})){1,3}$/;
 
       return Validators.pattern(pattern)(new FormControl(trimmedValue));
     }
