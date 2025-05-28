@@ -8,7 +8,6 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Lab } from 'src/app/interfaces/lab';
 import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
-import { User } from 'src/app/interfaces/user';
 import { UserService } from 'src/app/services/user.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -88,7 +87,7 @@ export class LabDialogComponent implements OnInit {
       this.onUpdate = false;
 
       const instructorsFormArray = this.labForm.get('instructor') as FormArray;
-      instructorsFormArray.push(this.fb.control('', [Validators.required]));
+      instructorsFormArray.push(this.fb.control('', [Validators.required, this.trimAndValidateFullName]));
     }
   }
 
@@ -188,10 +187,17 @@ export class LabDialogComponent implements OnInit {
   }
 
   getUrlErrorMessage() {
-    if (this.urlControl.hasError('required')) return 'Please provide url.';
-    return this.urlControl.hasError('pattern')
-      ? 'Please provide a valid url.'
-      : '';
+    if (this.urlControl.hasError('pattern')) {
+      return 'Please provide a valid url.';
+    }
+    return '';
+  }
+
+  getEmailMessage(control: AbstractControl) {
+    if (control.hasError('email')) {
+      return 'Please provide a valid email.';
+    }
+    return '';
   }
 
   async getBlobContent(fileUrl: string) {
@@ -318,7 +324,7 @@ export class LabDialogComponent implements OnInit {
 
   addInstructor(): void {
     const instructorsFormArray = this.labForm.get('instructor') as FormArray;
-    instructorsFormArray.push(this.fb.control('', [Validators.required]));
+    instructorsFormArray.push(this.fb.control('', [Validators.required, this.trimAndValidateFullName]));
   }
 
   removeInstructor(index: number): void {
@@ -332,7 +338,7 @@ export class LabDialogComponent implements OnInit {
       const instructorsFormArray = this.labForm.get('instructor') as FormArray;
       instructorsArray.forEach(instructor => {
         if (instructor.trim() !== '') {
-          instructorsFormArray.push(this.fb.control(instructor.trim(), [Validators.required]));
+          instructorsFormArray.push(this.fb.control(instructor.trim(), [Validators.required, this.trimAndValidateFullName]));
         }
       });
     }
@@ -348,7 +354,7 @@ export class LabDialogComponent implements OnInit {
           instructorsFormArray.at(0).setValue(name);
         }
         else{
-          instructorsFormArray.push(this.fb.control(name, [Validators.required]));
+          instructorsFormArray.push(this.fb.control(name, [Validators.required, this.trimAndValidateFullName]));
         }
       }
 
@@ -358,5 +364,24 @@ export class LabDialogComponent implements OnInit {
         emailsFormArray.push(this.fb.control(user.email, [Validators.required, Validators.email]));
       }
     });
+  }
+
+  trimAndValidateFullName(control: AbstractControl) {
+    const value = control.value;
+    if (typeof value === 'string') {
+      const trimmedValue = value.trim();
+
+      const pattern = /^(?=\b\w{2,}\b(?:\s+\b\w{2,}\b)+).*$/;
+
+      return Validators.pattern(pattern)(new FormControl(trimmedValue));
+    }
+    return null;
+  }
+
+  getFullNameMessage(control: AbstractControl) {
+    if (control.hasError('pattern')) {
+      return 'Provide a full name separated by spaces (e.g., John Doe)';
+    }
+    return '';
   }
 }

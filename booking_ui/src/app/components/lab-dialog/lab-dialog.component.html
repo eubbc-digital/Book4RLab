@@ -37,6 +37,9 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Full Name</mat-label>
                   <input matInput [formControl]="instructorControl" />
+                  <mat-error *ngIf="instructorControl.invalid && (instructorControl.dirty || instructorControl.touched)">
+                    {{ getFullNameMessage(instructorControl) }}
+                  </mat-error>
                 </mat-form-field>
               </div>
               <button mat-icon-button color="warn" (click)="removeInstructor(i)" [disabled]="labForm.controls['instructor'].length === 1">
@@ -112,6 +115,9 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Email Address</mat-label>
                   <input matInput [formControl]="emailControl" />
+                  <mat-error *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched)">
+                    {{ getEmailMessage(emailControl) }}
+                  </mat-error>
                 </mat-form-field>
               </div>
               <button mat-icon-button color="warn" (click)="removeEmail(i)">

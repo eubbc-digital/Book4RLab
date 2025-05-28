@@ -166,6 +166,10 @@ tr.no-data-row {
   white-space: pre-line;
 }
 
+.mat-error {
+  font-size: 0.77rem;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .reservation-list {
