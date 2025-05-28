@@ -8,6 +8,8 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Lab } from 'src/app/interfaces/lab';
 import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
+import { User } from 'src/app/interfaces/user';
+import { UserService } from 'src/app/services/user.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { lastValueFrom } from 'rxjs';
@@ -27,7 +29,8 @@ export class LabDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<LabDialogComponent>,
     private toastr: ToastrService,
     private labService: LabService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService,
   ) { }
 
 
@@ -333,5 +336,27 @@ export class LabDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  setMeAsInstructor(): void {
+    this.userService.getUserData().subscribe((user) => {
+      const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+      const name = `${user.name} ${user.last_name}`;
+      const instructorExists = instructorsFormArray.controls.some(control => control.value === name);
+      if (!instructorExists) {
+        if(!this.onUpdate && instructorsFormArray.at(0).value === ''){
+          instructorsFormArray.at(0).setValue(name);
+        }
+        else{
+          instructorsFormArray.push(this.fb.control(name, [Validators.required]));
+        }
+      }
+
+      const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
+      const emailExists = emailsFormArray.controls.some(control => control.value === user.email);
+      if(!emailExists){
+        emailsFormArray.push(this.fb.control(user.email, [Validators.required, Validators.email]));
+      }
+    });
   }
 }
