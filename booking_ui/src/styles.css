@@ -170,6 +170,11 @@ tr.no-data-row {
   font-size: 0.77rem;
 }
 
+.mat-checkbox-label {
+  white-space: normal;
+  word-break: break-word;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .reservation-list {

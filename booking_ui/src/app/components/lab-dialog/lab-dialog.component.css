@@ -46,6 +46,7 @@ mat-dialog-content {
 
 .mat-form-field {
   width: 100%;
+  display: block;
 }
 
 .dialog-label {
@@ -55,10 +56,6 @@ mat-dialog-content {
 .dialog-sublabel {
   font-style: italic;
   margin-bottom: 2%;
-}
-
-.add-buttons-container {
-  display: flex;
 }
 
 .add-buttons-container {
@@ -73,4 +70,16 @@ mat-dialog-content {
 
 .lab-description-content {
   margin-top: 30px;
+}
+
+@media (max-width: 600px) {
+  .add-buttons-container {
+    flex-direction: column;
+  }
+
+  .input-field, .email-group, .instructor-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
