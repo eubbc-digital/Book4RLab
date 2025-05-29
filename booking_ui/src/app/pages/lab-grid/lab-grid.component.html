@@ -12,7 +12,7 @@
       <div class="search-and-stats">
         <mat-form-field class="searched-lab-field" appearance="fill">
           <mat-label>Search laboratories</mat-label>
-          <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, or course" />
+          <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, or course" (click)="searchInputCLicked()"/>
           <mat-icon matPrefix id="search-icon">search</mat-icon>
           <button *ngIf="searchedLab" matSuffix mat-icon-button aria-label="Clear" (click)="searchedLab = ''">
             <mat-icon>close</mat-icon>
@@ -20,19 +20,19 @@
         </mat-form-field>
 
         <div class="stats-box">
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('all')">
             <span class="stat-value">{{ labs.length }}</span>
             <span class="stat-label">Total Labs</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('available')">
             <span class="stat-value">{{ getAvailableLabsCount() }}</span>
             <span class="stat-label">Available</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('uc')">
             <span class="stat-value">{{ getLabTypeCount('uc') }}</span>
             <span class="stat-label">Ultra-Concurrent</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('rt')">
             <span class="stat-value">{{ getLabTypeCount('rt') }}</span>
             <span class="stat-label">Real-Time</span>
           </div>
@@ -42,7 +42,7 @@
   </div>
 
   <div class="labs-grid">
-    <div *ngFor="let lab of labs | filter : searchedLab" class="card-container">
+    <div *ngFor="let lab of labsFiltered | filter : searchedLab" class="card-container">
       <mat-card class="card">
         <mat-card-header class="card-header">
           <mat-card-title>{{ lab.name }}</mat-card-title>
