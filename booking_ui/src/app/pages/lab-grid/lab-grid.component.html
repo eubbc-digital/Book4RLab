@@ -10,9 +10,9 @@
       </h4>
 
       <div class="search-and-stats">
-        <mat-form-field class="searched-lab-field" appearance="fill">
+        <mat-form-field class="searched-lab-field" appearance="fill" (click)="searchInputCLicked()">
           <mat-label>Search laboratories</mat-label>
-          <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, or course" (click)="searchInputCLicked()"/>
+          <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, or course"/>
           <mat-icon matPrefix id="search-icon">search</mat-icon>
           <button *ngIf="searchedLab" matSuffix mat-icon-button aria-label="Clear" (click)="searchedLab = ''">
             <mat-icon>close</mat-icon>
