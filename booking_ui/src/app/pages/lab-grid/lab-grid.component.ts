@@ -16,6 +16,7 @@ import { countries } from 'src/app/store/country-data-store';
   styleUrls: ['./lab-grid.component.css'],
 })
 export class LabGridComponent implements OnInit {
+  labsFiltered: Lab[] = [];
   labs: Lab[] = [];
   searchedLab = '';
 
@@ -29,6 +30,7 @@ export class LabGridComponent implements OnInit {
   ngOnInit(): void {
     this.publicLabsService.getPublicLabs().subscribe((labs) => {
       this.labs = labs;
+      this.labsFiltered = labs;
     });
   }
 
@@ -41,7 +43,7 @@ export class LabGridComponent implements OnInit {
   }
 
   getAvailableLabsCount(): number {
-    return this.labs.filter(lab => lab.is_available_now || lab.type === 'uc').length;
+    return this.labs.filter(lab => lab.is_available_now).length;
   }
 
   getLabTypeCount(type: string): number {
@@ -66,5 +68,28 @@ export class LabGridComponent implements OnInit {
   getFullCountryName(lab: Lab): string {
     const country = countries.find(country => country.code === lab.country);
     return country?.name ?? 'Unknown Country';
+  }
+
+  onStatClick(type: string): void {
+    switch (type) {
+      case "available":
+        this.labsFiltered = this.labs.filter(lab => lab.is_available_now);
+        break;
+      case "uc":
+        this.labsFiltered = this.labs.filter(lab => lab.type === 'uc');
+        break;
+      case "rt":
+        this.labsFiltered = this.labs.filter(lab => lab.type === 'rt');
+        break;
+      case "all":
+        this.labsFiltered = this.labs;
+        break;
+      default:
+        break;
+    }
+  }
+
+  searchInputCLicked(): void {
+    this.labsFiltered = this.labs;
   }
 }
