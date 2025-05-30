@@ -287,6 +287,7 @@ class LaboratoryList(generics.ListCreateAPIView):
         queryset = Laboratory.objects.filter(enabled=True)
         owner = self.request.query_params.get("owner")
         visible = self.request.query_params.get("visible")
+        availability_type = self.request.query_params.get("availability_type")
 
         if owner is not None:
             if not owner.isdigit():
@@ -299,6 +300,9 @@ class LaboratoryList(generics.ListCreateAPIView):
                 return queryset.filter(visible=True)
             elif visible == "false":
                 return queryset.filter(visible=False)
+            
+        if availability_type is not None:
+            queryset = queryset.filter(availability_type=availability_type)
 
         return queryset
 

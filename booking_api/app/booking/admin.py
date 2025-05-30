@@ -22,6 +22,7 @@ class LaboratoryAdmin(admin.ModelAdmin):
         "visible",
         "type",
         "owner",
+        "availability_type",
     ]
     search_fields = ["name", "university", "owner__email"]
 

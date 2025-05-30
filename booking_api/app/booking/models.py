@@ -108,6 +108,14 @@ class Laboratory(models.Model):
         ("uc", "Ultra Concurrent"),
     ]
 
+    AVAILABILITY_TYPE_CHOICES = [
+        ("bookable", "Available for Booking"),
+        ("development", "Under Development"),
+        ("demand", "Available on Demand"),
+        ("unavailable", "Not Available"),
+        ("always", "Always Available"),
+    ]
+
     name = models.CharField(max_length=255, blank=False, default="")
     instructor = models.CharField(max_length=1000, blank=False, default="")
     university = models.CharField(max_length=255, blank=False, default="")
@@ -127,12 +135,23 @@ class Laboratory(models.Model):
         related_name="owner_laboratories",
         on_delete=models.CASCADE,
     )
+    availability_type = models.CharField(
+        max_length=20,
+        default="development",
+        choices=AVAILABILITY_TYPE_CHOICES,
+    )
 
     class Meta:
         verbose_name_plural = "Laboratories"
 
     def has_bookings_available(self):
+        if self.type == "uc":
+            return self.availability_type == "always"
+        
         if self.type == "rt":
+            if self.availability_type not in ["bookable", "demand"]:
+                return False
+        
             current_datetime = timezone.now()
 
             future_timeframes = TimeFrame.objects.filter(
@@ -150,8 +169,6 @@ class Laboratory(models.Model):
                     Q(timeframe__in=future_timeframes) & Q(available=True)
                 )
                 return available_bookings.exists()
-
-        return self.type == "uc"
 
     @property
     def is_available_now(self):

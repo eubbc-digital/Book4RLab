@@ -223,7 +223,6 @@ class LaboratorySerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
     owner_email = serializers.SerializerMethodField()
     has_learnify_modules = serializers.SerializerMethodField()
-    instructor = serializers.CharField()
 
     class Meta:
         model = Laboratory
@@ -269,6 +268,24 @@ class LaboratorySerializer(serializers.ModelSerializer):
             )
         
         return ', '.join(names)
+    
+    def validate_availability_type(self, value):
+        lab_type = self.initial_data.get('type', self.instance.type if self.instance else 'rt')
+
+        rt_types = ["bookable", "development", "demand", "unavailable"]
+        uc_types = ["always", "development", "unavailable"]
+        
+        if lab_type == "rt" and value not in rt_types:
+            raise serializers.ValidationError(
+                f"Real Time labs can only have these availability types: {', '.join(rt_types)}"
+            )
+        
+        if lab_type == "uc" and value not in uc_types:
+            raise serializers.ValidationError(
+                f"Ultra Concurrent labs can only have these availability types: {', '.join(uc_types)}"
+            )
+        
+        return value
 
 class LaboratoryContentSerializer(serializers.ModelSerializer):
     class Meta:
