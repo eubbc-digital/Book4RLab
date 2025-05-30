@@ -64,6 +64,70 @@ export class LabGridComponent implements OnInit {
       return 'This lab is not available either because:\n- No booking slots were created\n- All existing slots are booked\n- The lab is currently in use';
     }
   }
+ 
+  //New version
+  getAvailabilityTooltip2(lab: Lab): string {
+    const isAvailable = lab.is_available_now;
+    const accessibility = lab.accessibility;
+
+    if (isAvailable === undefined) {
+      return 'Availability status is currently unknown.';
+    }
+    
+    if (isAvailable) {
+      switch (accessibility) {
+        case 'bookable':
+          return 'This lab has available time slots for booking.\nAvailability may change as others make reservations.';
+        case 'demand':
+          return 'This lab has available time slots for booking.\nHowever, it requires coordination with the lab manager before use.';
+        case 'always':
+          return 'This lab does not require booking slots.\nIt is always available for immediate access.';
+        default:
+          return 'Availability status is currently unknown.';
+      }  
+    }
+    else {
+      switch (accessibility) {
+        case 'bookable':
+        case 'demand':
+          return 'This lab is not available either because:\n- No booking slots were created\n- All existing slots are booked\n- The lab is currently in use';
+        case 'development':
+          return 'This lab is registered but not yet ready for use.';
+        case 'unavailable':
+          return 'This lab is temporarily or permanently unavailable.\nIt may be under maintenance or closed.';
+        default:
+          return 'Availability status is currently unknown.';
+      }  
+    }
+  }
+
+  getAvailabilityMessage(lab: Lab): string {
+    const isAvailable = lab.is_available_now;
+    const accessibility = lab.accessibility;
+
+    if (isAvailable === undefined) {
+      return 'Unknown';
+    }
+
+    if (isAvailable) {
+      switch (accessibility) {
+        case 'bookable':
+          return 'Available for Booking';
+        case 'demand':
+          return 'Available on Demand';
+        case 'always':
+          return 'Always Available';
+        default:
+          return 'Unknown';
+      }
+    }
+    else {
+      if(accessibility === 'development') {
+        return 'Under Development';
+      }
+      return 'Not Available';
+    }
+  }
 
   getFullCountryName(lab: Lab): string {
     const country = countries.find(country => country.code === lab.country);

@@ -45,7 +45,7 @@ export class LabDialogComponent implements OnInit {
   ];
 
   accessibilityOptionsRT = [
-    { value: 'bookable', viewValue: 'Available on Booking' },
+    { value: 'bookable', viewValue: 'Available for Booking' },
     { value: 'demand', viewValue: 'Available on Demand' },
     { value: 'development', viewValue: 'Under Development' },
     { value: 'unavailable', viewValue: 'Unavailable' }
