@@ -29,6 +29,15 @@
           </mat-select>
         </mat-form-field>
 
+        <mat-form-field appearance="fill" class="selection-field">
+          <mat-label>Accessibility</mat-label>
+          <mat-select formControlName="accessibility">
+            <mat-option *ngFor="let option of accessibilityOptions" [value]="option.value">
+              {{option.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <div class="instructor-container">
           <p class="dialog-label">Instructors:</p>
           <ng-container *ngIf="labForm.controls['instructor'] as instructorsArray">

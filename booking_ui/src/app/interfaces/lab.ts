@@ -19,6 +19,7 @@ export interface Lab {
   notify_owner?: boolean;
   allowed_emails?: string[];
   type?: string;
+  accessibility?: string;
   country?: string;
   has_learnify_modules?: boolean;
 }

@@ -44,6 +44,19 @@ export class LabDialogComponent implements OnInit {
     { value: 'uc', viewValue: 'Ultra Concurrent' },
   ];
 
+  accessibilityOptionsRT = [
+    { value: 'bookable', viewValue: 'Available on Booking' },
+    { value: 'demand', viewValue: 'Available on Demand' },
+    { value: 'development', viewValue: 'Under Development' },
+    { value: 'unavailable', viewValue: 'Unavailable' }
+  ];
+
+  accessibilityOptionsUC = [
+    { value: 'always', viewValue: 'Always Available' },
+    { value: 'development', viewValue: 'Under Development' },
+    { value: 'unavailable', viewValue: 'Unavailable' }
+  ];
+
   labForm = this.fb.group({
     name: ['', Validators.required],
     instructor: this.fb.array([]),
@@ -55,12 +68,23 @@ export class LabDialogComponent implements OnInit {
     description: ['', Validators.required],
     notify_owner: [false, Validators.required],
     allowed_emails: this.fb.array([]),
-    type: ['', Validators.required]
+    type: ['', Validators.required],
+    accessibility: [{value: '', disabled: true}, Validators.required]
   });
 
   get urlControl() { return this.labForm.controls['url']; }
   get imageControl() { return this.labForm.controls['image']; }
   get descriptionControl() { return this.labForm.controls['description']; }
+
+  get accessibilityOptions() {
+    const type = this.labForm.get('type')?.value;
+    return type === 'rt'
+      ? this.accessibilityOptionsRT
+      : type === 'uc'
+        ? this.accessibilityOptionsUC
+        : [];
+  }
+
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
@@ -75,7 +99,8 @@ export class LabDialogComponent implements OnInit {
         url: lab.url,
         description: lab.description,
         notify_owner: lab.notify_owner,
-        type: lab.type
+        type: lab.type,
+        accessibility: lab.accessibility
       });
       this.populateInstructors(lab.instructor);
       this.populateAllowedEmails(lab.allowed_emails);
@@ -89,6 +114,19 @@ export class LabDialogComponent implements OnInit {
 
       const instructorsFormArray = this.labForm.get('instructor') as FormArray;
       instructorsFormArray.push(this.fb.control('', [Validators.required, this.trimAndValidateFullName]));
+    }
+
+    this.labForm.get('type')?.valueChanges.subscribe(type => {
+      const accessibilityControl = this.labForm.get('accessibility');
+      if (!type) {
+        accessibilityControl?.disable();
+      } else {
+        accessibilityControl?.enable();
+      }
+    });
+
+    if(this.labForm.get('type')?.value) {
+      this.labForm.get('accessibility')?.enable();
     }
   }
 
