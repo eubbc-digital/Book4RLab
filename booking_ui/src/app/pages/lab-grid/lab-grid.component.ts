@@ -68,14 +68,14 @@ export class LabGridComponent implements OnInit {
   //New version
   getAvailabilityTooltip2(lab: Lab): string {
     const isAvailable = lab.is_available_now;
-    const accessibility = lab.accessibility;
+    const availabilityType = lab.availability_type;
 
     if (isAvailable === undefined) {
       return 'Availability status is currently unknown.';
     }
     
     if (isAvailable) {
-      switch (accessibility) {
+      switch (availabilityType) {
         case 'bookable':
           return 'This lab has available time slots for booking.\nAvailability may change as others make reservations.';
         case 'demand':
@@ -87,7 +87,7 @@ export class LabGridComponent implements OnInit {
       }  
     }
     else {
-      switch (accessibility) {
+      switch (availabilityType) {
         case 'bookable':
         case 'demand':
           return 'This lab is not available either because:\n- No booking slots were created\n- All existing slots are booked\n- The lab is currently in use';
@@ -103,14 +103,14 @@ export class LabGridComponent implements OnInit {
 
   getAvailabilityMessage(lab: Lab): string {
     const isAvailable = lab.is_available_now;
-    const accessibility = lab.accessibility;
+    const availabilityType = lab.availability_type;
 
     if (isAvailable === undefined) {
       return 'Unknown';
     }
 
     if (isAvailable) {
-      switch (accessibility) {
+      switch (availabilityType) {
         case 'bookable':
           return 'Available for Booking';
         case 'demand':
@@ -122,7 +122,7 @@ export class LabGridComponent implements OnInit {
       }
     }
     else {
-      if(accessibility === 'development') {
+      if(availabilityType === 'development') {
         return 'Under Development';
       }
       return 'Not Available';

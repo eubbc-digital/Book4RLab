@@ -44,14 +44,14 @@ export class LabDialogComponent implements OnInit {
     { value: 'uc', viewValue: 'Ultra Concurrent' },
   ];
 
-  accessibilityOptionsRT = [
+  availabilityOptionsRT = [
     { value: 'bookable', viewValue: 'Available for Booking' },
     { value: 'demand', viewValue: 'Available on Demand' },
     { value: 'development', viewValue: 'Under Development' },
     { value: 'unavailable', viewValue: 'Unavailable' }
   ];
 
-  accessibilityOptionsUC = [
+  availabilityOptionsUC = [
     { value: 'always', viewValue: 'Always Available' },
     { value: 'development', viewValue: 'Under Development' },
     { value: 'unavailable', viewValue: 'Unavailable' }
@@ -69,19 +69,19 @@ export class LabDialogComponent implements OnInit {
     notify_owner: [false, Validators.required],
     allowed_emails: this.fb.array([]),
     type: ['', Validators.required],
-    accessibility: [{value: '', disabled: true}, Validators.required]
+    availability_type: [{value: '', disabled: true}, Validators.required]
   });
 
   get urlControl() { return this.labForm.controls['url']; }
   get imageControl() { return this.labForm.controls['image']; }
   get descriptionControl() { return this.labForm.controls['description']; }
 
-  get accessibilityOptions() {
+  get availabilityTypeOptions() {
     const type = this.labForm.get('type')?.value;
     return type === 'rt'
-      ? this.accessibilityOptionsRT
+      ? this.availabilityOptionsRT
       : type === 'uc'
-        ? this.accessibilityOptionsUC
+        ? this.availabilityOptionsUC
         : [];
   }
 
@@ -100,7 +100,7 @@ export class LabDialogComponent implements OnInit {
         description: lab.description,
         notify_owner: lab.notify_owner,
         type: lab.type,
-        accessibility: lab.accessibility
+        availability_type: lab.availability_type
       });
       this.populateInstructors(lab.instructor);
       this.populateAllowedEmails(lab.allowed_emails);
@@ -117,16 +117,16 @@ export class LabDialogComponent implements OnInit {
     }
 
     this.labForm.get('type')?.valueChanges.subscribe(type => {
-      const accessibilityControl = this.labForm.get('accessibility');
+      const availabilityTypeControl = this.labForm.get('availability_type');
       if (!type) {
-        accessibilityControl?.disable();
+        availabilityTypeControl?.disable();
       } else {
-        accessibilityControl?.enable();
+        availabilityTypeControl?.enable();
       }
     });
 
     if(this.labForm.get('type')?.value) {
-      this.labForm.get('accessibility')?.enable();
+      this.labForm.get('availability_type')?.enable();
     }
   }
 

@@ -30,9 +30,9 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="selection-field">
-          <mat-label>Accessibility</mat-label>
-          <mat-select formControlName="accessibility">
-            <mat-option *ngFor="let option of accessibilityOptions" [value]="option.value">
+          <mat-label>Availability Type</mat-label>
+          <mat-select formControlName="availability_type">
+            <mat-option *ngFor="let option of availabilityTypeOptions" [value]="option.value">
               {{option.viewValue}}
             </mat-option>
           </mat-select>
