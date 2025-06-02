@@ -1,13 +1,13 @@
 from django.db import migrations, models
 
-def set_default_availability_types(apps, schema_editor):
+def set_availability_types(apps, schema_editor):
     Laboratory = apps.get_model('booking', 'Laboratory')
-    # First update RT labs
-    Laboratory.objects.filter(type='rt').update(availability_type='bookable')
-    # Then update UC labs
-    Laboratory.objects.filter(type='uc').update(availability_type='always')
+    # Set defaults based on laboratory type
+    Laboratory.objects.filter(type='rt', availability_type__isnull=True).update(availability_type='bookable')
+    Laboratory.objects.filter(type='uc', availability_type__isnull=True).update(availability_type='always')
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('booking', '0003_alter_laboratory_instructor'),
     ]
@@ -25,15 +25,23 @@ class Migration(migrations.Migration):
                     ('always', 'Always Available')
                 ],
                 max_length=20,
-                default=models.Case(
-                    models.When(type='rt', then=models.Value('bookable')),
-                    models.When(type='uc', then=models.Value('always')),
-                    default=models.Value('development'),
-                )
+                null=True  # Allow null temporarily
             ),
         ),
-        migrations.RunPython(
-            set_default_availability_types,
-            migrations.RunPython.noop
+        migrations.RunPython(set_availability_types),
+        migrations.AlterField(
+            model_name='laboratory',
+            name='availability_type',
+            field=models.CharField(
+                choices=[
+                    ('bookable', 'Available for Booking'),
+                    ('development', 'Under Development'),
+                    ('demand', 'Available on Demand'),
+                    ('unavailable', 'Not Available'),
+                    ('always', 'Always Available')
+                ],
+                max_length=20,
+                null=False  # Remove null after setting values
+            ),
         ),
     ]
