@@ -14,6 +14,8 @@ class LaboratoryAdmin(admin.ModelAdmin):
         "id",
         "name",
         "university",
+        "university_abbreviation",
+        "project_tag",
         "instructor",
         "course",
         "image",
