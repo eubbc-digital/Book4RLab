@@ -46,6 +46,7 @@ export class LabService {
     formData.append('allowed_emails', String(lab.allowed_emails));
     formData.append('enabled', '1');
     formData.append('type', String(lab.type!));
+    formData.append('availability_type', lab.availability_type!);
 
     return this.http.post<Lab>(this.url, formData);
   }
@@ -67,6 +68,7 @@ export class LabService {
     formData.append('allowed_emails', String(newLab.allowed_emails!));
     formData.append('enabled', '1');
     formData.append('type', String(newLab.type!));
+    formData.append('availability_type', newLab.availability_type!);
 
     return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }

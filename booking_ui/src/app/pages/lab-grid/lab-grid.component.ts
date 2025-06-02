@@ -49,24 +49,8 @@ export class LabGridComponent implements OnInit {
   getLabTypeCount(type: string): number {
     return this.labs.filter(lab => lab.type === type).length;
   }
-
-  getAvailabilityTooltip(lab: Lab): string {
-    if (lab.type === 'uc') {
-      return 'Ultra Concurrent labs do not require booking slots.\nThey are always available for immediate access.';
-    }
-
-    if (lab.is_available_now === undefined) {
-      return 'Availability status is currently unknown.';
-    }
-    if (lab.is_available_now) {
-      return 'This lab has available time slots for booking.\nAvailability may change as others make reservations.';
-    } else {
-      return 'This lab is not available either because:\n- No booking slots were created\n- All existing slots are booked\n- The lab is currently in use';
-    }
-  }
  
-  //New version
-  getAvailabilityTooltip2(lab: Lab): string {
+  getAvailabilityTooltip(lab: Lab): string {
     const isAvailable = lab.is_available_now;
     const availabilityType = lab.availability_type;
 

@@ -77,9 +77,8 @@
           <div class="availability-status"
               [class.available]="lab.is_available_now"
               [class.not-available]="!lab.is_available_now"
-              [matTooltip]="getAvailabilityTooltip2(lab)">
+              [matTooltip]="getAvailabilityTooltip(lab)">
             {{ getAvailabilityMessage(lab) }}
-            <!--<span *ngIf="lab.type === 'uc'" class="uc-badge">(UC)</span>-->
           </div>
           <button mat-raised-button
                   color="primary"
