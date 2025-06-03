@@ -21,14 +21,26 @@ export class FilterPipe implements PipeTransform {
     }
     searchText = searchText.toLocaleLowerCase();
 
-    return items.filter((lab) => {
-      // Get matching countries based on search text
-      const matchingCountries = countries.filter(country =>
-        country.name.toLocaleLowerCase().includes(searchText) ||
-        country.code.toLocaleLowerCase().includes(searchText)
-      );
+    const typeMap: Record<string, string> = {
+      bookable: 'Available for Booking',
+      development: 'Under Development',
+      demand: 'Available on Demand',
+      unavailable: 'Unavailable',
+      always: 'Always Available'
+    }
 
-      // Check if lab's country matches any of the found countries
+    const matchingAvailabilityTypes = Object.entries(typeMap)
+      .filter(([_, label]) => label.toLowerCase().includes(searchText))
+      .map(([key]) => key);
+
+    const matchingCountries = countries.filter(country =>
+      country.name.toLocaleLowerCase().includes(searchText) ||
+      country.code.toLocaleLowerCase().includes(searchText)
+    );
+
+    return items.filter((lab) => {
+      const availabilityMatch = matchingAvailabilityTypes.includes(lab.availability_type?.toLowerCase() || '');
+
       const countryMatches = matchingCountries.some(country =>
         lab.country && country.code === lab.country.toUpperCase()
       );
@@ -40,6 +52,7 @@ export class FilterPipe implements PipeTransform {
           ? lab.instructor.join(' ').toLocaleLowerCase().includes(searchText)
           : lab.instructor && lab.instructor.toLocaleLowerCase().includes(searchText)) ||
         (lab.course && lab.course.toLocaleLowerCase().includes(searchText)) ||
+        availabilityMatch ||
         countryMatches
       );
     });
