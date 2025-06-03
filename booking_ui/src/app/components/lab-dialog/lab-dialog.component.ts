@@ -61,6 +61,8 @@ export class LabDialogComponent implements OnInit {
     name: ['', Validators.required],
     instructor: this.fb.array([]),
     university: ['', Validators.required],
+    university_abbreviation: [''],
+    project_tag: [''],
     course: ['', Validators.required],
     image: [null as File | null],
     visible: [false, Validators.required],
@@ -93,6 +95,8 @@ export class LabDialogComponent implements OnInit {
       this.labForm.patchValue({
         name: lab.name,
         university: lab.university,
+        university_abbreviation: lab.university_abbreviation,
+        project_tag: lab.project_tag,
         course: lab.course,
         image: lab.image,
         visible: lab.visible,

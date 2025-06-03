@@ -5,8 +5,9 @@
     <div class="text-center search-container">
       <h4 class="search-instructions">
         Search for a laboratory by <span class="search-keyword">name</span>, <span class="search-keyword">country</span>,
-        <span class="search-keyword">university</span>, <span class="search-keyword">instructor</span>,
-        or <span class="search-keyword">course</span>, and select an available time slot to make a reservation.
+        <span class="search-keyword">university</span>, <span class="search-keyword">instructor</span>, 
+        <span class="search-keyword">course</span>, <span class="search-keyword">availability type</span>
+        or <span class="search-keyword">project tag</span>, and select an available time slot to make a reservation.
       </h4>
 
       <div class="search-and-stats">
@@ -68,6 +69,9 @@
             <p class="lab-info">
               <strong>Country:</strong> {{ getFullCountryName(lab) }}<br>
               <strong>Instructor:</strong> {{ lab.instructor }}<br>
+              <span *ngIf="lab.project_tag">
+                <strong>Project Tag:</strong> {{ lab.project_tag }}<br>
+              </span>
               <strong>Description:</strong> {{ lab.description }}
             </p>
           </div>

@@ -48,6 +48,8 @@ export class FilterPipe implements PipeTransform {
       return (
         (lab.name && lab.name.toLocaleLowerCase().includes(searchText)) ||
         (lab.university && lab.university.toLocaleLowerCase().includes(searchText)) ||
+        (lab.university_abbreviation && lab.university_abbreviation.toLocaleLowerCase().includes(searchText)) ||
+        (lab.project_tag && lab.project_tag.toLocaleLowerCase().includes(searchText)) ||
         (Array.isArray(lab.instructor)
           ? lab.instructor.join(' ').toLocaleLowerCase().includes(searchText)
           : lab.instructor && lab.instructor.toLocaleLowerCase().includes(searchText)) ||

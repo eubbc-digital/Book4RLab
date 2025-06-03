@@ -9,6 +9,8 @@ export interface Lab {
   name?: string;
   instructor?: string | string[];
   university?: string;
+  university_abbreviation?: string;
+  project_tag?: string;
   course?: string;
   image?: any;
   description?: string;
