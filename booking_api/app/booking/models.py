@@ -5,21 +5,69 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import FileSystemStorage, default_storage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-import hashlib
-import os
-import uuid
+from PIL import Image
+import hashlib, os, io, uuid
+
+
+def optimize_image(image_field, max_size=(1024,1024), quality=85):
+    """Optimize image keeping original if optimization fails"""
+    if not image_field: return image_field, None, None
+    try:
+        image_field.seek(0)
+        img = Image.open(image_field)
+        img.thumbnail(max_size, Image.LANCZOS)
+        output = io.BytesIO()
+        if img.format == 'PNG':
+            if img.mode not in ('RGBA','LA'): img = img.convert('RGBA')
+            img.save(output, format='WEBP', quality=quality, method=6)
+            ext, content_type = '.webp', 'image/webp'
+        else:
+            if img.mode in ('RGBA','LA','P'): img = img.convert('RGB')
+            img.save(output, format='JPEG', quality=quality, optimize=True)
+            ext, content_type = '.jpg', 'image/jpeg'
+        output.seek(0)
+        return output, ext, content_type
+    except: return image_field, None, None
 
 
 def generate_unique_filename_image(instance, filename):
     image_content = instance.image.read()
     md5_hash = hashlib.md5(image_content).hexdigest()
-    _, ext = os.path.splitext(filename)
-    new_filename = f"{md5_hash}{ext}"
-    return os.path.join("labs_content_photos", new_filename)
+    base = "labs_content_photos"
+    base_path = default_storage.path(base) if default_storage.exists(base) else None
+
+    files = []
+    if base_path and os.path.exists(base_path):
+        try:
+            files = [f for f in default_storage.listdir(base)[1] if f.startswith(md5_hash)]
+        except Exception:
+            files = []
+
+    if files:
+        path = os.path.join(base, files[0])
+        instance.image.name = path
+        return path
+
+    optimized, ext, ct = optimize_image(io.BytesIO(image_content))
+    if not ext:
+        ext = os.path.splitext(filename)[1].lower()
+    path = os.path.join(base, f"{md5_hash}{ext}")
+    file = InMemoryUploadedFile(
+        io.BytesIO(optimized.read() if hasattr(optimized, "read") else image_content),
+        'image',
+        f"{md5_hash}{ext}",
+        ct or 'application/octet-stream',
+        len(optimized.getvalue()) if hasattr(optimized, "getvalue") else len(image_content),
+        None
+    )
+    default_storage.save(path, file)
+    instance.image.name = path
+    return path
 
 
 def generate_unique_filename_video(instance, filename):
