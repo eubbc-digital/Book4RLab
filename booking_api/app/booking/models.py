@@ -119,6 +119,8 @@ class Laboratory(models.Model):
     name = models.CharField(max_length=255, blank=False, default="")
     instructor = models.CharField(max_length=1000, blank=False, default="")
     university = models.CharField(max_length=255, blank=False, default="")
+    university_abbreviation = models.CharField(max_length=100, blank=True, null=True)
+    project_tag = models.CharField(max_length=100, blank=True, null=True)
     course = models.CharField(max_length=255, blank=False, default="")
     image = models.ImageField(upload_to="labs/", blank=True, null=True, default=None)
     description = models.CharField(max_length=1000, default="")
