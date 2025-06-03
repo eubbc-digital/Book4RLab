@@ -19,6 +19,7 @@ export class LabGridComponent implements OnInit {
   labsFiltered: Lab[] = [];
   labs: Lab[] = [];
   searchedLab = '';
+  availabilityTypes = "- Available with Booking\n- Available on Demand\n- Always Available\n- Under Development\n- Out of Service";
 
   defaultLabImg = './assets/remote-lab.png';
 
@@ -96,7 +97,7 @@ export class LabGridComponent implements OnInit {
     if (isAvailable) {
       switch (availabilityType) {
         case 'bookable':
-          return 'Available for Booking';
+          return 'Available with Booking';
         case 'demand':
           return 'Available on Demand';
         case 'always':
@@ -106,10 +107,14 @@ export class LabGridComponent implements OnInit {
       }
     }
     else {
-      if(availabilityType === 'development') {
-        return 'Under Development';
+      switch (availabilityType) {
+        case 'development':
+          return 'Under Development';
+        case 'unavailable':
+          return 'Out of Service';
+        default:
+          return 'Not available';
       }
-      return 'Not Available';
     }
   }
 

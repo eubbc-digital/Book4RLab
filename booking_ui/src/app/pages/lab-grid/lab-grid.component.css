@@ -44,6 +44,10 @@
   color: #3f51b5;
 }
 
+.search-keyword.availability-types{
+  cursor: help;
+}
+
 /* Statistics box */
 .stats-box {
   display: flex;
@@ -271,6 +275,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: help;
+  text-align: center;
 }
 
 .availability-status.available {

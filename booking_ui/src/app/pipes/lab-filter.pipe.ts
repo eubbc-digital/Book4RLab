@@ -22,10 +22,10 @@ export class FilterPipe implements PipeTransform {
     searchText = searchText.toLocaleLowerCase();
 
     const typeMap: Record<string, string> = {
-      bookable: 'Available for Booking',
+      bookable: 'Available with Booking',
       development: 'Under Development',
       demand: 'Available on Demand',
-      unavailable: 'Unavailable',
+      unavailable: 'Out of Service',
       always: 'Always Available'
     }
 

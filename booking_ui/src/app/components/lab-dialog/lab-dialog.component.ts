@@ -45,16 +45,16 @@ export class LabDialogComponent implements OnInit {
   ];
 
   availabilityOptionsRT = [
-    { value: 'bookable', viewValue: 'Available for Booking' },
+    { value: 'bookable', viewValue: 'Available with Booking' },
     { value: 'demand', viewValue: 'Available on Demand' },
     { value: 'development', viewValue: 'Under Development' },
-    { value: 'unavailable', viewValue: 'Unavailable' }
+    { value: 'unavailable', viewValue: 'Out of Service' }
   ];
 
   availabilityOptionsUC = [
     { value: 'always', viewValue: 'Always Available' },
     { value: 'development', viewValue: 'Under Development' },
-    { value: 'unavailable', viewValue: 'Unavailable' }
+    { value: 'unavailable', viewValue: 'Out of Service' }
   ];
 
   labForm = this.fb.group({
