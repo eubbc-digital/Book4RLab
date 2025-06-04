@@ -157,11 +157,11 @@ class Laboratory(models.Model):
     ]
 
     AVAILABILITY_TYPE_CHOICES = [
-        ("bookable", "Available for Booking"),
+        ("bookable", "Available with Booking (Bookable)"),
         ("development", "Under Development"),
-        ("demand", "Available on Demand"),
-        ("unavailable", "Not Available"),
-        ("always", "Always Available"),
+        ("demand", "Available on Demand (Contact Required)"),
+        ("unavailable", "Out of Service (Maintenance/Closed)"),
+        ("always", "Always Available (Ultraconcurrent)"),
     ]
 
     name = models.CharField(max_length=255, blank=False, default="")

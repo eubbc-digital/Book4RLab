@@ -18,11 +18,11 @@ class Migration(migrations.Migration):
             name='availability_type',
             field=models.CharField(
                 choices=[
-                    ('bookable', 'Available for Booking'),
-                    ('development', 'Under Development'),
-                    ('demand', 'Available on Demand'),
-                    ('unavailable', 'Not Available'),
-                    ('always', 'Always Available')
+                    ("bookable", "Available with Booking (Bookable)"),
+                    ("development", "Under Development"),
+                    ("demand", "Available on Demand (Contact Required)"),
+                    ("unavailable", "Out of Service (Maintenance/Closed)"),
+                    ("always", "Always Available (Ultraconcurrent)"),
                 ],
                 max_length=20,
                 null=True  # Allow null temporarily
@@ -34,11 +34,11 @@ class Migration(migrations.Migration):
             name='availability_type',
             field=models.CharField(
                 choices=[
-                    ('bookable', 'Available for Booking'),
-                    ('development', 'Under Development'),
-                    ('demand', 'Available on Demand'),
-                    ('unavailable', 'Not Available'),
-                    ('always', 'Always Available')
+                    ("bookable", "Available with Booking (Bookable)"),
+                    ("development", "Under Development"),
+                    ("demand", "Available on Demand (Contact Required)"),
+                    ("unavailable", "Out of Service (Maintenance/Closed)"),
+                    ("always", "Always Available (Ultraconcurrent)"),
                 ],
                 max_length=20,
                 null=False  # Remove null after setting values

@@ -13,6 +13,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='laboratory',
             name='availability_type',
-            field=models.CharField(choices=[('bookable', 'Available for Booking'), ('development', 'Under Development'), ('demand', 'Available on Demand'), ('unavailable', 'Not Available'), ('always', 'Always Available')], default='development', max_length=20),
+            field=models.CharField(choices=[("bookable", "Available with Booking (Bookable)"),
+                                            ("development", "Under Development"),
+                                            ("demand", "Available on Demand (Contact Required)"),
+                                            ("unavailable", "Out of Service (Maintenance/Closed)"),
+                                            ("always", "Always Available (Ultraconcurrent)"),], default='development', max_length=20),
         ),
     ]
