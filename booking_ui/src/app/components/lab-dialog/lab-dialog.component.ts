@@ -71,7 +71,7 @@ export class LabDialogComponent implements OnInit {
     notify_owner: [false, Validators.required],
     allowed_emails: this.fb.array([]),
     type: ['', Validators.required],
-    availability_type: ['', Validators.required]
+    availability_type: [{ value: '', disabled: true }, Validators.required]
   });
 
   get urlControl() { return this.labForm.controls['url']; }
