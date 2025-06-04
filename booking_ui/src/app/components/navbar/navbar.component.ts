@@ -1,17 +1,14 @@
-﻿/*
-* Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
-* Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
-* MIT License - See LICENSE file in the root directory
-*/
+/*
+ * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+ * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
+ * MIT License - See LICENSE file in the root directory
+ */
 
-import {
-  BreakpointObserver,
-  Breakpoints,
-  BreakpointState
-} from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, BreakpointState,} from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import config from '../../config.json';
 
 import { UserService } from 'src/app/services/user.service';
 
@@ -27,14 +24,17 @@ export class NavbarComponent implements OnInit {
     Breakpoints.Handset
   );
 
-  shownMenu = false;
-  showLabsButton = false;
+  professorLearnifyUrl = config.learnifyUrl.instructor;
+  studentLearnifyUrl = config.learnifyUrl.student;
+  isLearnifyUrl = false;
+  isLoggedIn = false;
+  isProfessor = false;
 
   constructor(
     private router: Router,
     private breakPointObserver: BreakpointObserver,
     private userService: UserService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -42,17 +42,21 @@ export class NavbarComponent implements OnInit {
     if (token) {
       this.userService.getUserData().subscribe(
         (user) => {
-          user.groups!.forEach((group) => {
-            if (group.name === Group.Professors) this.showLabsButton = true;
-          });
+          this.isProfessor = user.groups?.some(group => group.name === Group.Professors) ?? false;
+
+          this.isLearnifyUrl = this.isProfessor
+            ? this.professorLearnifyUrl !== ''
+            : this.studentLearnifyUrl !== '';
+
+          this.isLoggedIn = true;
         },
-        (err) => (this.shownMenu = false)
+        (err) => (this.isLoggedIn = false)
       );
 
-      this.shownMenu = true;
+      this.isLoggedIn = true;
     } else {
-      this.shownMenu = false;
-      this.showLabsButton = false;
+      this.isLoggedIn = false;
+      this.isProfessor = false;
     }
   }
 
@@ -83,10 +87,21 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl('/access');
   }
 
+  goToLearnifyProfessor(): void {
+    window.open(
+      this.professorLearnifyUrl,
+      '_blank'
+    );
+  }
+
+  goToLearnifyStudent(): void {
+    window.open(this.studentLearnifyUrl, '_blank');
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     this.goToLabGrid();
-    this.shownMenu = false;
-    this.showLabsButton = false;
+    this.isLoggedIn = false;
+    this.isProfessor = false;
   }
 }

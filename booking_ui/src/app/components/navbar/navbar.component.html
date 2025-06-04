@@ -1,15 +1,17 @@
 <mat-toolbar color="primary">
   <div id="main-label">
     <div id="logo-title-group" (click)="goToLabGrid()">
-      <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
-      <span id="navbar-title">Book4RLab</span>
+      <img id="logo" src="./assets/eeda-logo.png" alt="logo" width="32px" />
+      <span id="navbar-title">EEDA Remote Lab Booking System</span>
     </div>
 
-    <button *ngIf="!showLabsButton && shownMenu"
-            mat-button
-            aria-label="Instructor access"
-            (click)="goToInstructorAccess()"
-            class="instructor-access-button">
+    <button
+      *ngIf="!isProfessor && isLoggedIn && !(isHandset | async)?.matches"
+      mat-button
+      aria-label="Instructor access"
+      (click)="goToInstructorAccess()"
+      class="instructor-access-button"
+    >
       <mat-icon>school</mat-icon>
       <span>Instructor Access</span>
     </button>
@@ -18,37 +20,80 @@
   <span class="spacer"></span>
 
   <!-- Mobile menu -->
-  <button type="button"
-          aria-label="side nav"
-          [matMenuTriggerFor]="menu"
-          mat-icon-button
-          *ngIf="(isHandset | async)!.matches; else navbarButtons">
+  <button
+    type="button"
+    aria-label="side nav"
+    [matMenuTriggerFor]="menu"
+    mat-icon-button
+    *ngIf="(isHandset | async)!.matches; else navbarButtons"
+  >
     <mat-icon aria-label="Side nav icon">menu</mat-icon>
   </button>
 
   <mat-menu class="navbar-menu" #menu="matMenu">
-    <div *ngIf="shownMenu; else showLoginButton">
-      <button mat-menu-item aria-label="Labs button" (click)="goToLabManager()" *ngIf="showLabsButton">
-        <mat-icon class="icon">science</mat-icon>
-        <span>My Laboratories</span>
+    <div *ngIf="isLoggedIn; else showLoginButton">
+      <button
+        *ngIf="!isProfessor"
+        mat-menu-item
+        aria-label="Instructor access"
+        (click)="goToInstructorAccess()"
+      >
+        <mat-icon class="icon">school</mat-icon>
+        <span>Instructor Access</span>
       </button>
 
-      <button mat-menu-item aria-label="Booking button" (click)="goToLabGrid()">
+      <button 
+        mat-menu-item 
+        aria-label="Booking button" 
+        (click)="goToLabGrid()"
+      >
         <mat-icon class="icon">book_online</mat-icon>
         <span>New booking</span>
       </button>
 
-      <button mat-menu-item aria-label="Public reservation list button" (click)="goToPublicReservations()">
+      <button
+        mat-menu-item
+        aria-label="Labs button"
+        (click)="goToLabManager()"
+        *ngIf="isProfessor"
+      >
+        <mat-icon class="icon">science</mat-icon>
+        <span>My Laboratories</span>
+      </button>
+
+      <button
+        mat-menu-item
+        aria-label="Learnify module button"
+        (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+        *ngIf="isLearnifyUrl"
+      >
+        <mat-icon class="icon">library_books</mat-icon>
+        <span>Learnify Module</span>
+      </button>
+
+      <button
+        mat-menu-item
+        aria-label="Public reservation list button"
+        (click)="goToPublicReservations()"
+      >
         <mat-icon class="icon">list</mat-icon>
         <span>Public Rooms</span>
       </button>
 
-      <button mat-menu-item aria-label="Personal reservation list button" (click)="goToMyReservations()">
+      <button
+        mat-menu-item
+        aria-label="Personal reservation list button"
+        (click)="goToMyReservations()"
+      >
         <mat-icon class="icon">list</mat-icon>
         <span>My Reservations</span>
       </button>
 
-      <button mat-menu-item aria-label="Profile list button" (click)="goToMyProfile()">
+      <button
+        mat-menu-item
+        aria-label="Profile list button"
+        (click)="goToMyProfile()"
+      >
         <mat-icon class="icon">person</mat-icon>
         <span>Profile</span>
       </button>
@@ -62,46 +107,75 @@
     <ng-template #showLoginButton>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
         <mat-icon class="icon">login</mat-icon>
-        Login
+        <span>Login</span>
       </button>
     </ng-template>
   </mat-menu>
 
   <!-- Web menu -->
   <ng-template #navbarButtons>
-    <div *ngIf="shownMenu; else showLoginButton">
-      <button mat-button aria-label="Labs button" (click)="goToLabManager()" *ngIf="showLabsButton">
+    <div *ngIf="isLoggedIn; else showLoginButton">
+      <button 
+        mat-button 
+        aria-label="Booking button" 
+        (click)="goToLabGrid()"
+      >
+        <mat-icon class="icon">book_online</mat-icon>
+        <span>New Booking</span>
+      </button>
+
+      <button
+        mat-button
+        aria-label="Labs button"
+        (click)="goToLabManager()"
+        *ngIf="isProfessor"
+      >
         <span>My Laboratories</span>
       </button>
 
-      <button mat-button aria-label="Booking button" (click)="goToLabGrid()">
-        <mat-icon class="icon">book_online</mat-icon>
-        New Booking
+      <button
+        mat-button
+        aria-label="Learnify module button"
+        (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+        *ngIf="isLearnifyUrl"
+      >
+        <span>Learnify Module</span>
       </button>
 
-      <button mat-button aria-label="Public reservation list button" (click)="goToPublicReservations()">
-        Public Rooms
+      <button
+        mat-button
+        aria-label="Public reservation list button"
+        (click)="goToPublicReservations()"
+      >
+        <span>Public Rooms</span>
       </button>
 
-      <button mat-button aria-label="Personal reservation list button" (click)="goToMyReservations()">
-        My Reservations
+      <button
+        mat-button
+        aria-label="Personal reservation list button"
+        (click)="goToMyReservations()"
+      >
+        <span>My Reservations</span>
       </button>
 
-      <button mat-button aria-label="Profile list button" (click)="goToMyProfile()">
-        <mat-icon class="icon">person</mat-icon>
+      <button
+        mat-button
+        aria-label="Profile list button"
+        (click)="goToMyProfile()"
+      >
         <span>Profile</span>
       </button>
 
       <button mat-button aria-label="Logout icon" (click)="logout()">
         <mat-icon class="icon">logout</mat-icon>
-        Logout
+        <span>Logout</span>
       </button>
     </div>
 
     <ng-template #showLoginButton>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
         <mat-icon class="icon">login</mat-icon>
-        Login / Sign Up
+        <span>Login / Sign Up</span>
       </button>
     </ng-template>
   </ng-template>
