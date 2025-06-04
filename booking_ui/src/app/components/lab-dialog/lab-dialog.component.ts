@@ -427,7 +427,7 @@ export class LabDialogComponent implements OnInit {
 
   getFullNameMessage(control: AbstractControl) {
     if (control.hasError('pattern')) {
-      return 'Provide a full name separated by spaces (e.g., John Doe)';
+      return 'Provide a full name with up to 4 words, separated by spaces';
     }
     return '';
   }
