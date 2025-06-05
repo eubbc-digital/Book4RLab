@@ -91,7 +91,6 @@ export class LabDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
-      console.log('Lab data received:', lab); /////
       this.selectedLabId = lab.id;
 
       this.labForm.patchValue({
