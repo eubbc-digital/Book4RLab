@@ -47,8 +47,8 @@ export class LabService {
     formData.append('enabled', '1');
     formData.append('type', String(lab.type!));
     formData.append('availability_type', lab.availability_type!);
-    formData.append('university_abbreviation', lab.university_abbreviation!);
-    formData.append('project_tag', lab.project_tag!);
+    if (lab.university_abbreviation) formData.append('university_abbreviation', lab.university_abbreviation);
+    if (lab.project_tag) formData.append('project_tag', lab.project_tag);
 
     return this.http.post<Lab>(this.url, formData);
   }
@@ -71,8 +71,8 @@ export class LabService {
     formData.append('enabled', '1');
     formData.append('type', String(newLab.type!));
     formData.append('availability_type', newLab.availability_type!);
-    formData.append('university_abbreviation', newLab.university_abbreviation!);
-    formData.append('project_tag', newLab.project_tag!);
+    if (newLab.university_abbreviation) formData.append('university_abbreviation', newLab.university_abbreviation!);
+    if (newLab.project_tag) formData.append('project_tag', newLab.project_tag!);
 
     return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }
