@@ -71,8 +71,8 @@ export class LabService {
     formData.append('enabled', '1');
     formData.append('type', String(newLab.type!));
     formData.append('availability_type', newLab.availability_type!);
-    if (newLab.university_abbreviation) formData.append('university_abbreviation', newLab.university_abbreviation!);
-    if (newLab.project_tag) formData.append('project_tag', newLab.project_tag!);
+    formData.append('university_abbreviation', newLab.university_abbreviation!);
+    formData.append('project_tag', newLab.project_tag!);
 
     return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }
