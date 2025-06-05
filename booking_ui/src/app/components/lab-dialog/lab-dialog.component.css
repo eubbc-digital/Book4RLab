@@ -19,20 +19,21 @@ mat-dialog-content {
 }
 
 .email-container {
-  margin-top: 2%;
-  margin-bottom: 5%;
+  margin-bottom: 12px;
 }
 
 .email-group {
   display: flex;
   align-items: center;
-  margin-bottom: 0;
+}
+
+.instructor-container {
+  margin-top: 8px;
 }
 
 .instructor-group {
   display: flex;
   align-items: center;
-  margin-bottom: 0;
 }
 
 .mat-icon {
@@ -42,6 +43,15 @@ mat-dialog-content {
 .input-field {
   padding-left: 0px;
   height: auto;
+}
+
+.selection-field {
+  height: auto;
+  padding-bottom: 10px;
+}
+
+.image-field {
+  margin-bottom: 0px;
 }
 
 .mat-form-field {
@@ -84,7 +94,7 @@ mat-dialog-content {
 }
 
 @media (max-width: 600px) {
-  .add-buttons-container, .image-field {
+  .add-buttons-container {
     flex-direction: column;
   }
   

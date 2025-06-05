@@ -48,6 +48,29 @@
           </mat-select>
         </mat-form-field>
 
+        <mat-form-field appearance="fill" class="input-field" [class.has-error]="urlControl.hasError('pattern')">
+          <mat-label>URL</mat-label>
+          <input matInput formControlName="url" />
+          <mat-error *ngIf="urlControl.invalid">
+            {{ getUrlErrorMessage() }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="input-field">
+          <mat-label>Description</mat-label>
+          <textarea #description matInput formControlName="description" maxlength="500" cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="15"></textarea>
+          <mat-hint align="end">{{ description.value.length }} / 500 </mat-hint>
+        </mat-form-field>
+
+        <mat-checkbox class="input-field" id="visibility-checkbox" formControlName="visible">
+          Visible
+        </mat-checkbox>
+
+        <mat-checkbox class="input-field" id="notify-owner-checkbox" formControlName="notify_owner">
+          Notify me when a booking is placed
+        </mat-checkbox>
+
         <div class="instructor-container">
           <p class="dialog-label">Instructors:</p>
           <ng-container *ngIf="labForm.controls['instructor'] as instructorsArray">
@@ -98,33 +121,7 @@
           </ng-template>
 
           <input class="file" type="file" name="Image" accept="image/*" (change)="onFileChange($event)" />
-          <div *ngIf="imageControl.errors && (imageControl.dirty || submitted)" class="text-danger">
-            <div *ngIf="imageControl.errors['required']">Image is required</div>
-          </div>
         </div>
-
-        <mat-form-field appearance="fill" class="input-field" [class.has-error]="urlControl.hasError('pattern')">
-          <mat-label>URL</mat-label>
-          <input matInput formControlName="url" />
-          <mat-error *ngIf="urlControl.invalid">
-            {{ getUrlErrorMessage() }}
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="input-field">
-          <mat-label>Description</mat-label>
-          <textarea #description matInput formControlName="description" maxlength="500" cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="15"></textarea>
-          <mat-hint align="end">{{ description.value.length }} / 500 </mat-hint>
-        </mat-form-field>
-
-        <mat-checkbox class="input-field" id="visibility-checkbox" formControlName="visible">
-          Visible
-        </mat-checkbox>
-
-        <mat-checkbox class="input-field" id="notify-owner-checkbox" formControlName="notify_owner">
-          Notify me when a booking is placed
-        </mat-checkbox>
 
         <div class="email-container">
           <p class="dialog-label">Allowed emails:</p>
