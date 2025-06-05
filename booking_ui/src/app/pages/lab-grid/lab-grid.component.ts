@@ -145,4 +145,12 @@ export class LabGridComponent implements OnInit {
   searchInputCLicked(): void {
     this.labsFiltered = this.labs;
   }
+
+  getLabTypeToolTip(lab: Lab): string {
+    switch (lab.type) {
+      case 'rt': return 'A real-time lab grants exclusive live interaction with lab equipment after booking.';
+      case 'uc': return 'An ultraconcurrent lab allows instant access for multiple simultaneous users.';
+      default: return 'Unknown Lab Type';
+    }
+  }
 }
