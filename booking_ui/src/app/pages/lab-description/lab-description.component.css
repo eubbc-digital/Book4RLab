@@ -54,6 +54,11 @@ video {
   width: 100%;
 }
 
+/* Style The 'no content' Title */
+.no-content-span{
+  margin-left: 20px;
+}
+
 /* Style The Dropdown Button */
 .dropbtn {
   padding: 10px;

@@ -8,6 +8,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Lab } from 'src/app/interfaces/lab';
 import { LabDescriptionComponent } from 'src/app/pages/lab-description/lab-description.component';
 import { LabService } from 'src/app/services/lab.service';
+import { UserService } from 'src/app/services/user.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { lastValueFrom } from 'rxjs';
@@ -27,12 +28,14 @@ export class LabDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<LabDialogComponent>,
     private toastr: ToastrService,
     private labService: LabService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService,
   ) { }
 
 
   title = 'Register laboratory';
   imageName = '';
+  currentCoverImage: string | null = null;
   selectedLabId = 0;
   submitted = false;
   onUpdate!: boolean;
@@ -42,10 +45,25 @@ export class LabDialogComponent implements OnInit {
     { value: 'uc', viewValue: 'Ultra Concurrent' },
   ];
 
+  availabilityOptionsRT = [
+    { value: 'bookable', viewValue: 'Available with Booking' },
+    { value: 'demand', viewValue: 'Available on Demand' },
+    { value: 'development', viewValue: 'Under Development' },
+    { value: 'unavailable', viewValue: 'Out of Service' }
+  ];
+
+  availabilityOptionsUC = [
+    { value: 'always', viewValue: 'Always Available' },
+    { value: 'development', viewValue: 'Under Development' },
+    { value: 'unavailable', viewValue: 'Out of Service' }
+  ];
+
   labForm = this.fb.group({
     name: ['', Validators.required],
-    instructor: ['', Validators.required],
+    instructor: this.fb.array([]),
     university: ['', Validators.required],
+    university_abbreviation: [null],
+    project_tag: [null],
     course: ['', Validators.required],
     image: [null as File | null],
     visible: [false, Validators.required],
@@ -53,12 +71,23 @@ export class LabDialogComponent implements OnInit {
     description: ['', Validators.required],
     notify_owner: [false, Validators.required],
     allowed_emails: this.fb.array([]),
-    type: ['', Validators.required]
+    type: ['', Validators.required],
+    availability_type: [{ value: '', disabled: true }, Validators.required]
   });
 
   get urlControl() { return this.labForm.controls['url']; }
   get imageControl() { return this.labForm.controls['image']; }
   get descriptionControl() { return this.labForm.controls['description']; }
+
+  get availabilityTypeOptions() {
+    const type = this.labForm.get('type')?.value;
+    return type === 'rt'
+      ? this.availabilityOptionsRT
+      : type === 'uc'
+        ? this.availabilityOptionsUC
+        : [];
+  }
+
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
@@ -66,23 +95,46 @@ export class LabDialogComponent implements OnInit {
 
       this.labForm.patchValue({
         name: lab.name,
-        instructor: lab.instructor,
         university: lab.university,
+        university_abbreviation: lab.university_abbreviation,
+        project_tag: lab.project_tag,
         course: lab.course,
         image: lab.image,
         visible: lab.visible,
         url: lab.url,
         description: lab.description,
         notify_owner: lab.notify_owner,
-        type: lab.type
+        type: lab.type,
+        availability_type: lab.availability_type
       });
+      this.populateInstructors(lab.instructor);
       this.populateAllowedEmails(lab.allowed_emails);
 
       this.title = 'Update Laboratory';
+      this.currentCoverImage = typeof this.imageControl.value === 'string'
+        ? this.imageControl.value
+        : null;
       this.onUpdate = true;
+      this.displayFormErrors();
     } else {
       this.title = 'Register Laboratory';
       this.onUpdate = false;
+
+      const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+      instructorsFormArray.push(this.fb.control('', [Validators.required, this.trimAndValidateFullName]));
+    }
+
+    this.labForm.get('type')?.valueChanges.subscribe(type => {
+      const availabilityTypeControl = this.labForm.get('availability_type');
+      if (!type) {
+        availabilityTypeControl?.disable();
+      } else {
+        availabilityTypeControl?.enable();
+      }
+    });
+
+    if(this.labForm.get('type')?.value) {
+      this.labForm.get('availability_type')?.enable();
     }
   }
 
@@ -182,10 +234,17 @@ export class LabDialogComponent implements OnInit {
   }
 
   getUrlErrorMessage() {
-    if (this.urlControl.hasError('required')) return 'Please provide url.';
-    return this.urlControl.hasError('pattern')
-      ? 'Please provide a valid url.'
-      : '';
+    if (this.urlControl.hasError('pattern')) {
+      return 'Please provide a valid url.';
+    }
+    return '';
+  }
+
+  getEmailMessage(control: AbstractControl) {
+    if (control.hasError('email')) {
+      return 'Please provide a valid email.';
+    }
+    return '';
   }
 
   async getBlobContent(fileUrl: string) {
@@ -228,7 +287,11 @@ export class LabDialogComponent implements OnInit {
   displayFormErrors(): void {
     (Object.keys(this.labForm.controls) as Array<keyof typeof this.labForm.controls>).forEach(controlKey => {
       const control = this.labForm.controls[controlKey];
-      control.markAsTouched();
+      if (control instanceof FormArray) {
+        control.controls.forEach(childControl => childControl.markAsTouched());
+      } else {
+        control.markAsTouched();
+      }
     });
   }
 
@@ -308,5 +371,68 @@ export class LabDialogComponent implements OnInit {
     }
 
     return true;
+  }
+
+  addInstructor(): void {
+    const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+    instructorsFormArray.push(this.fb.control('', [Validators.required, this.trimAndValidateFullName]));
+  }
+
+  removeInstructor(index: number): void {
+    const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+    instructorsFormArray.removeAt(index);
+  }
+
+  populateInstructors(instructorsString: string): void {
+    if (instructorsString && instructorsString.trim() !== '') {
+      const instructorsArray = instructorsString.split(',');
+      const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+      instructorsArray.forEach(instructor => {
+        if (instructor.trim() !== '') {
+          instructorsFormArray.push(this.fb.control(instructor.trim(), [Validators.required, this.trimAndValidateFullName]));
+        }
+      });
+    }
+  }
+
+  setMeAsInstructor(): void {
+    this.userService.getUserData().subscribe((user) => {
+      const instructorsFormArray = this.labForm.get('instructor') as FormArray;
+      const name = `${user.name} ${user.last_name}`;
+      const instructorExists = instructorsFormArray.controls.some(control => control.value === name);
+      if (!instructorExists) {
+        if(!this.onUpdate && instructorsFormArray.at(0).value === ''){
+          instructorsFormArray.at(0).setValue(name);
+        }
+        else{
+          instructorsFormArray.push(this.fb.control(name, [Validators.required, this.trimAndValidateFullName]));
+        }
+      }
+
+      const emailsFormArray = this.labForm.get('allowed_emails') as FormArray;
+      const emailExists = emailsFormArray.controls.some(control => control.value === user.email);
+      if(!emailExists){
+        emailsFormArray.push(this.fb.control(user.email, [Validators.required, Validators.email]));
+      }
+    });
+  }
+
+  trimAndValidateFullName(control: AbstractControl) {
+    const value = control.value;
+    if (typeof value === 'string') {
+      const trimmedValue = value.trim();
+
+      const pattern = /^([A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ\.]{1,})(\s+([A-Za-zÁÉÍÓÚÑáéíóúñ][A-Za-zÁÉÍÓÚÑáéíóúñ\.]{1,})){1,3}$/;
+
+      return Validators.pattern(pattern)(new FormControl(trimmedValue));
+    }
+    return null;
+  }
+
+  getFullNameMessage(control: AbstractControl) {
+    if (control.hasError('pattern')) {
+      return 'Provide a full name with up to 4 words, separated by spaces.';
+    }
+    return '';
   }
 }

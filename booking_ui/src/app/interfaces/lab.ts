@@ -7,8 +7,10 @@
 export interface Lab {
   id?: number;
   name?: string;
-  instructor?: string;
+  instructor?: string | string[];
   university?: string;
+  university_abbreviation?: string;
+  project_tag?: string;
   course?: string;
   image?: any;
   description?: string;
@@ -19,6 +21,7 @@ export interface Lab {
   notify_owner?: boolean;
   allowed_emails?: string[];
   type?: string;
+  availability_type?: string;
   country?: string;
   has_learnify_modules?: boolean;
 }

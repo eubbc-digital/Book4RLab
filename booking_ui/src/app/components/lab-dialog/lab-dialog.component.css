@@ -11,24 +11,29 @@
 }
 
 mat-dialog-content {
-  width: 105%;
-  padding-right: 20px;
-  padding-top: 20px;
-  box-sizing: content-box;
+  width: 100%;
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: scroll;
   min-height: 60vh;
 }
 
 .email-container {
-  margin-top: 2%;
-  margin-bottom: 5%;
+  margin-bottom: 12px;
 }
 
 .email-group {
   display: flex;
   align-items: center;
-  margin-bottom: 0;
+}
+
+.instructor-container {
+  margin-top: 8px;
+}
+
+.instructor-group {
+  display: flex;
+  align-items: center;
 }
 
 .mat-icon {
@@ -36,15 +41,22 @@ mat-dialog-content {
 }
 
 .input-field {
+  padding-left: 0px;
   height: auto;
 }
 
 .selection-field {
-  padding-left: 10px;
+  height: auto;
+  padding-bottom: 10px;
+}
+
+.image-field {
+  margin-bottom: 0px;
 }
 
 .mat-form-field {
   width: 100%;
+  display: block;
 }
 
 .dialog-label {
@@ -58,8 +70,35 @@ mat-dialog-content {
 
 .add-buttons-container {
   display: flex;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
-.add-buttons-container button {
-  margin-right: 10px;
+.instructor-buttons-container {
+  margin-bottom: 20px;
+}
+
+.lab-description-content {
+  margin-top: 30px;
+}
+
+.remote-lab-img {
+  height: 100%;
+  width: 100%;
+  padding-left: 16px;
+}
+
+.cover-image-text{
+  padding-bottom: 16px;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .add-buttons-container {
+    flex-direction: column;
+  }
+  
+  .has-error{
+    padding-bottom: 26px;
+  }
 }

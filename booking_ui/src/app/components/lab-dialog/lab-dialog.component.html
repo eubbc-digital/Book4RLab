@@ -1,23 +1,28 @@
 <h2 mat-dialog-title class="text-center">{{ title }}</h2>
 
-<mat-tab-group>
+<mat-tab-group mat-align-tabs="center">
   <mat-tab label="Remote Laboratory">
     <mat-dialog-content>
       <form [formGroup]="labForm" ngNoForm>
-
+        <p class="dialog-label">Laboratory:</p>
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="input-field">
-          <mat-label>Instructor</mat-label>
-          <input matInput formControlName="instructor" />
+          <mat-label>University</mat-label>
+          <input matInput formControlName="university" />
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="input-field">
-          <mat-label>University</mat-label>
-          <input matInput formControlName="university" />
+          <mat-label>University Abbreviation</mat-label>
+          <input matInput formControlName="university_abbreviation" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="input-field">
+          <mat-label>Project Tag</mat-label>
+          <input matInput formControlName="project_tag" />
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="input-field">
@@ -34,29 +39,16 @@
           </mat-select>
         </mat-form-field>
 
-        <div class="input-field">
-          <div *ngIf="imageName != ''; else showImageLabel">
-            <p>
-              <strong>Current Image: </strong>
-              {{ imageName }}
-            </p>
+        <mat-form-field appearance="fill" class="selection-field">
+          <mat-label>Availability Type</mat-label>
+          <mat-select formControlName="availability_type">
+            <mat-option *ngFor="let option of availabilityTypeOptions" [value]="option.value">
+              {{option.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-            <p>
-              <strong>If you want to change, choose another:</strong>
-            </p>
-          </div>
-
-          <ng-template #showImageLabel>
-            <p class="file-label">Choose an image for the laboratory:</p>
-          </ng-template>
-
-          <input class="file" type="file" name="Image" accept="image/*" (change)="onFileChange($event)" />
-          <div *ngIf="imageControl.errors && (imageControl.dirty || submitted)" class="text-danger">
-            <div *ngIf="imageControl.errors['required']">Image is required</div>
-          </div>
-        </div>
-
-        <mat-form-field appearance="fill" class="input-field">
+        <mat-form-field appearance="fill" class="input-field" [class.has-error]="urlControl.hasError('pattern')">
           <mat-label>URL</mat-label>
           <input matInput formControlName="url" />
           <mat-error *ngIf="urlControl.invalid">
@@ -79,17 +71,72 @@
           Notify me when a booking is placed
         </mat-checkbox>
 
-        <div class="email-container">
-          <div class="dialog-label">Allowed emails:</div>
-          <div class="dialog-sublabel">
-            Add the email addresses that will be able to book a timeframe in your laboratory.
+        <div class="instructor-container">
+          <p class="dialog-label">Instructors:</p>
+          <ng-container *ngIf="labForm.controls['instructor'] as instructorsArray">
+            <div class="instructor-group" *ngFor="let instructorControl of instructorsArray.controls; let i = index">
+              <div class="input-field" [class.has-error]="instructorControl.hasError('pattern')">
+                <mat-form-field appearance="fill">
+                  <mat-label>Full Name</mat-label>
+                  <input matInput [formControl]="instructorControl" />
+                  <mat-error *ngIf="instructorControl.invalid">
+                    {{ getFullNameMessage(instructorControl) }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <button mat-icon-button color="warn" (click)="removeInstructor(i)" [disabled]="labForm.controls['instructor'].length === 1">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+          <div class="add-buttons-container instructor-buttons-container">
+            <button mat-raised-button color="primary" (click)="addInstructor()" matTooltip="Add a new instructor.">
+              New instructor
+            </button>
+            <button mat-raised-button color="primary" (click)="setMeAsInstructor()"
+              matTooltip="Set your profile as instructor.">
+              Add me
+            </button>
+            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)">
           </div>
+        </div>
+
+        <div class="input-field image-field">
+          <p class="dialog-label">Current cover image:</p>
+          <img *ngIf="currentCoverImage" mat-card-image [src]="currentCoverImage" alt="Cover image" class="remote-lab-img" />
+          <span *ngIf="!currentCoverImage" class="cover-image-text">The laboratory does not have a cover image.</span>
+          <div *ngIf="imageName != ''; else showImageLabel">
+            <p>
+              <strong>Selected Image: </strong>
+              {{ imageName }}
+            </p>
+
+            <p>
+              <strong>If you want to change, choose another:</strong>
+            </p>
+          </div>
+
+          <ng-template #showImageLabel>
+            <p class="dialog-label">Choose a new image for the laboratory:</p>
+          </ng-template>
+
+          <input class="file" type="file" name="Image" accept="image/*" (change)="onFileChange($event)" />
+        </div>
+
+        <div class="email-container">
+          <p class="dialog-label">Allowed emails:</p>
+          <p class="dialog-sublabel">
+            Add the email addresses that will be able to book a timeframe in your laboratory.
+          </p>
           <ng-container *ngIf="labForm.controls['allowed_emails'] as emailsArray">
             <div class="email-group" *ngFor="let emailControl of emailsArray.controls; let i = index">
-              <div class="input-field">
+              <div class="input-field" [class.has-error]="emailControl.hasError('email')">
                 <mat-form-field appearance="fill">
                   <mat-label>Email Address</mat-label>
                   <input matInput [formControl]="emailControl" />
+                  <mat-error *ngIf="emailControl.invalid">
+                    {{ getEmailMessage(emailControl) }}
+                  </mat-error>
                 </mat-form-field>
               </div>
               <button mat-icon-button color="warn" (click)="removeEmail(i)">
@@ -114,7 +161,7 @@
     </mat-dialog-content>
   </mat-tab>
   <mat-tab [disabled]='!onUpdate' label="Remote Laboratory Content">
-    <mat-dialog-content>
+    <mat-dialog-content class="lab-description-content">
       <app-lab-description #description [labId]="selectedLabId"></app-lab-description>
     </mat-dialog-content>
 

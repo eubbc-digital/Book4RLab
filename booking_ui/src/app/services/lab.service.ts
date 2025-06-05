@@ -35,7 +35,7 @@ export class LabService {
   addLab(lab: Lab) {
     const formData = new FormData();
     formData.append('name', lab.name!);
-    formData.append('instructor', lab.instructor!);
+    formData.append('instructor', String(lab.instructor!));
     formData.append('university', lab.university!);
     formData.append('course', lab.course!);
     if (lab.image) formData.append('image', lab.image);
@@ -43,9 +43,12 @@ export class LabService {
     formData.append('description', lab.description!);
     formData.append('visible', String(lab.visible!));
     formData.append('notify_owner', String(lab.notify_owner!));
-    formData.append('allowed_emails', String(lab.allowed_emails));
+    formData.append('allowed_emails', String(lab.allowed_emails!));
     formData.append('enabled', '1');
     formData.append('type', String(lab.type!));
+    formData.append('availability_type', lab.availability_type!);
+    if (lab.university_abbreviation) formData.append('university_abbreviation', lab.university_abbreviation);
+    if (lab.project_tag) formData.append('project_tag', lab.project_tag);
 
     return this.http.post<Lab>(this.url, formData);
   }
@@ -53,7 +56,7 @@ export class LabService {
   updateLab(newLab: Lab, id: number) {
     const formData = new FormData();
     if (newLab.name) formData.append('name', newLab.name!);
-    if (newLab.instructor) formData.append('instructor', newLab.instructor!);
+    if (newLab.instructor) formData.append('instructor', String(newLab.instructor!));
     if (newLab.university) formData.append('university', newLab.university!);
     if (newLab.course) formData.append('course', newLab.course!);
 
@@ -67,6 +70,9 @@ export class LabService {
     formData.append('allowed_emails', String(newLab.allowed_emails!));
     formData.append('enabled', '1');
     formData.append('type', String(newLab.type!));
+    formData.append('availability_type', newLab.availability_type!);
+    formData.append('university_abbreviation', newLab.university_abbreviation!);
+    formData.append('project_tag', newLab.project_tag!);
 
     return this.http.patch<Lab>(`${this.url}${id}/${config.api['labs-update']}`, formData);
   }

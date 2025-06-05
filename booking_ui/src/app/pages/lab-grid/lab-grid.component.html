@@ -5,14 +5,15 @@
     <div class="text-center search-container">
       <h4 class="search-instructions">
         Search for a laboratory by <span class="search-keyword">name</span>, <span class="search-keyword">country</span>,
-        <span class="search-keyword">university</span>, <span class="search-keyword">instructor</span>,
-        or <span class="search-keyword">course</span>, and select an available time slot to make a reservation.
+        <span class="search-keyword">university</span>, <span class="search-keyword">instructor</span>, 
+        <span class="search-keyword">course</span>, <span class="search-keyword availability-types" [matTooltip]="availabilityTypes">availability type</span>
+        or <span class="search-keyword">project tag</span>, and select an available time slot to make a reservation.
       </h4>
 
       <div class="search-and-stats">
-        <mat-form-field class="searched-lab-field" appearance="fill">
+        <mat-form-field class="searched-lab-field" appearance="fill" (click)="searchInputCLicked()">
           <mat-label>Search laboratories</mat-label>
-          <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, or course" />
+          <input matInput type="text" [(ngModel)]="searchedLab" placeholder="Search by name, country, university, instructor, course, availability type or project tag"/>
           <mat-icon matPrefix id="search-icon">search</mat-icon>
           <button *ngIf="searchedLab" matSuffix mat-icon-button aria-label="Clear" (click)="searchedLab = ''">
             <mat-icon>close</mat-icon>
@@ -20,19 +21,19 @@
         </mat-form-field>
 
         <div class="stats-box">
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('all')">
             <span class="stat-value">{{ labs.length }}</span>
             <span class="stat-label">Total Labs</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('available')">
             <span class="stat-value">{{ getAvailableLabsCount() }}</span>
             <span class="stat-label">Available</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('uc')">
             <span class="stat-value">{{ getLabTypeCount('uc') }}</span>
             <span class="stat-label">Ultra-Concurrent</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" (click)="onStatClick('rt')">
             <span class="stat-value">{{ getLabTypeCount('rt') }}</span>
             <span class="stat-label">Real-Time</span>
           </div>
@@ -42,11 +43,11 @@
   </div>
 
   <div class="labs-grid">
-    <div *ngFor="let lab of labs | filter : searchedLab" class="card-container">
+    <div *ngFor="let lab of labsFiltered | filter : searchedLab" class="card-container">
       <mat-card class="card">
         <mat-card-header class="card-header">
           <mat-card-title>{{ lab.name }}</mat-card-title>
-          <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ lab.university + (lab.university_abbreviation ? ' (' + lab.university_abbreviation + ')' : '') }}</mat-card-subtitle>
         </mat-card-header>
 
         <div class="image-container">
@@ -70,6 +71,9 @@
             <p class="lab-info">
               <strong>Country:</strong> {{ getFullCountryName(lab) }}<br>
               <strong>Instructor:</strong> {{ lab.instructor }}<br>
+              <span *ngIf="lab.project_tag">
+                <strong>Project Tag:</strong> {{ lab.project_tag }}<br>
+              </span>
               <strong>Description:</strong> {{ lab.description }}
             </p>
           </div>
@@ -77,11 +81,10 @@
 
         <mat-card-actions class="card-actions">
           <div class="availability-status"
-              [class.available]="lab.is_available_now || lab.type === 'uc'"
-              [class.not-available]="!lab.is_available_now && lab.type !== 'uc'"
+              [class.available]="lab.is_available_now"
+              [class.not-available]="!lab.is_available_now"
               [matTooltip]="getAvailabilityTooltip(lab)">
-            {{ (lab.is_available_now || lab.type === 'uc') ? 'Available' : 'Not Available' }}
-            <span *ngIf="lab.type === 'uc'" class="uc-badge">(UC)</span>
+            {{ getAvailabilityMessage(lab) }}
           </div>
           <button mat-raised-button
                   color="primary"

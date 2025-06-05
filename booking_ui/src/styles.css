@@ -166,6 +166,15 @@ tr.no-data-row {
   white-space: pre-line;
 }
 
+.mat-error {
+  font-size: 0.77rem;
+}
+
+.mat-checkbox-label {
+  white-space: normal;
+  word-break: break-word;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .reservation-list {

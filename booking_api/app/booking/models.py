@@ -5,21 +5,69 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import FileSystemStorage, default_storage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-import hashlib
-import os
-import uuid
+from PIL import Image
+import hashlib, os, io, uuid
 
 
-def generate_unique_filename_image(instance, filename):
+def optimize_image(image_field, max_size=(1024,1024), quality=85):
+    """Optimize image keeping original if optimization fails"""
+    if not image_field: return image_field, None, None
+    try:
+        image_field.seek(0)
+        img = Image.open(image_field)
+        img.thumbnail(max_size, Image.LANCZOS)
+        output = io.BytesIO()
+        if img.format == 'PNG':
+            if img.mode not in ('RGBA','LA'): img = img.convert('RGBA')
+            img.save(output, format='WEBP', quality=quality, method=6)
+            ext, content_type = '.webp', 'image/webp'
+        else:
+            if img.mode in ('RGBA','LA','P'): img = img.convert('RGB')
+            img.save(output, format='JPEG', quality=quality, optimize=True)
+            ext, content_type = '.jpg', 'image/jpeg'
+        output.seek(0)
+        return output, ext, content_type
+    except: return image_field, None, None
+
+
+def generate_unique_filename_image(instance, filename, folder="labs_content_photos"):
     image_content = instance.image.read()
     md5_hash = hashlib.md5(image_content).hexdigest()
-    _, ext = os.path.splitext(filename)
-    new_filename = f"{md5_hash}{ext}"
-    return os.path.join("labs_content_photos", new_filename)
+    base = folder
+    base_path = default_storage.path(base) if default_storage.exists(base) else None
+
+    files = []
+    if base_path and os.path.exists(base_path):
+        try:
+            files = [f for f in default_storage.listdir(base)[1] if f.startswith(md5_hash)]
+        except Exception:
+            files = []
+
+    if files:
+        path = os.path.join(base, files[0])
+        instance.image.name = path
+        return path
+
+    optimized, ext, ct = optimize_image(io.BytesIO(image_content))
+    if not ext:
+        ext = os.path.splitext(filename)[1].lower()
+    path = os.path.join(base, f"{md5_hash}{ext}")
+    file = InMemoryUploadedFile(
+        io.BytesIO(optimized.read() if hasattr(optimized, "read") else image_content),
+        'image',
+        f"{md5_hash}{ext}",
+        ct or 'application/octet-stream',
+        len(optimized.getvalue()) if hasattr(optimized, "getvalue") else len(image_content),
+        None
+    )
+    default_storage.save(path, file)
+    instance.image.name = path
+    return path
 
 
 def generate_unique_filename_video(instance, filename):
@@ -28,6 +76,22 @@ def generate_unique_filename_video(instance, filename):
     _, ext = os.path.splitext(filename)
     new_filename = f"{md5_hash}{ext}"
     return os.path.join("labs_content_videos", new_filename)
+
+
+def laboratory_image_upload_to(instance, filename):
+    return generate_unique_filename_image(instance, filename, folder="labs")
+
+
+class UniqueFilenameStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        if max_length and len(name) > max_length:
+            raise (Exception("name's length is greater than max_length"))
+        return name
+
+    def _save(self, name, content):
+        if self.exists(name):
+            return name
+        return super(UniqueFilenameStorage, self)._save(name, content)
 
 
 class Booking(models.Model):
@@ -108,11 +172,21 @@ class Laboratory(models.Model):
         ("uc", "Ultra Concurrent"),
     ]
 
+    AVAILABILITY_TYPE_CHOICES = [
+        ("bookable", "Available with Booking (Bookable)"),
+        ("development", "Under Development"),
+        ("demand", "Available on Demand (Contact Required)"),
+        ("unavailable", "Out of Service (Maintenance/Closed)"),
+        ("always", "Always Available (Ultraconcurrent)"),
+    ]
+
     name = models.CharField(max_length=255, blank=False, default="")
-    instructor = models.CharField(max_length=255, blank=False, default="")
+    instructor = models.CharField(max_length=1000, blank=False, default="")
     university = models.CharField(max_length=255, blank=False, default="")
+    university_abbreviation = models.CharField(max_length=100, blank=True, null=True)
+    project_tag = models.CharField(max_length=100, blank=True, null=True)
     course = models.CharField(max_length=255, blank=False, default="")
-    image = models.ImageField(upload_to="labs/", blank=True, null=True, default=None)
+    image = models.ImageField(upload_to=laboratory_image_upload_to, storage=UniqueFilenameStorage(), blank=True, null=True, default=None)
     description = models.CharField(max_length=1000, default="")
     url = models.CharField(max_length=255, blank=True, null=True, default="")
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -127,12 +201,23 @@ class Laboratory(models.Model):
         related_name="owner_laboratories",
         on_delete=models.CASCADE,
     )
+    availability_type = models.CharField(
+        max_length=20,
+        default="development",
+        choices=AVAILABILITY_TYPE_CHOICES,
+    )
 
     class Meta:
         verbose_name_plural = "Laboratories"
 
     def has_bookings_available(self):
+        if self.type == "uc":
+            return self.availability_type == "always"
+        
         if self.type == "rt":
+            if self.availability_type not in ["bookable", "demand"]:
+                return False
+        
             current_datetime = timezone.now()
 
             future_timeframes = TimeFrame.objects.filter(
@@ -151,23 +236,9 @@ class Laboratory(models.Model):
                 )
                 return available_bookings.exists()
 
-        return self.type == "uc"
-
     @property
     def is_available_now(self):
         return self.has_bookings_available()
-
-
-class UniqueFilenameStorage(FileSystemStorage):
-    def get_available_name(self, name, max_length=None):
-        if max_length and len(name) > max_length:
-            raise (Exception("name's length is greater than max_length"))
-        return name
-
-    def _save(self, name, content):
-        if self.exists(name):
-            return name
-        return super(UniqueFilenameStorage, self)._save(name, content)
 
 
 class LaboratoryContent(models.Model):
