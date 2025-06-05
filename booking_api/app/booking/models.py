@@ -35,10 +35,10 @@ def optimize_image(image_field, max_size=(1024,1024), quality=85):
     except: return image_field, None, None
 
 
-def generate_unique_filename_image(instance, filename):
+def generate_unique_filename_image(instance, filename, folder="labs_content_photos"):
     image_content = instance.image.read()
     md5_hash = hashlib.md5(image_content).hexdigest()
-    base = "labs_content_photos"
+    base = folder
     base_path = default_storage.path(base) if default_storage.exists(base) else None
 
     files = []
@@ -76,6 +76,22 @@ def generate_unique_filename_video(instance, filename):
     _, ext = os.path.splitext(filename)
     new_filename = f"{md5_hash}{ext}"
     return os.path.join("labs_content_videos", new_filename)
+
+
+def laboratory_image_upload_to(instance, filename):
+    return generate_unique_filename_image(instance, filename, folder="labs")
+
+
+class UniqueFilenameStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        if max_length and len(name) > max_length:
+            raise (Exception("name's length is greater than max_length"))
+        return name
+
+    def _save(self, name, content):
+        if self.exists(name):
+            return name
+        return super(UniqueFilenameStorage, self)._save(name, content)
 
 
 class Booking(models.Model):
@@ -170,7 +186,7 @@ class Laboratory(models.Model):
     university_abbreviation = models.CharField(max_length=100, blank=True, null=True)
     project_tag = models.CharField(max_length=100, blank=True, null=True)
     course = models.CharField(max_length=255, blank=False, default="")
-    image = models.ImageField(upload_to="labs/", blank=True, null=True, default=None)
+    image = models.ImageField(upload_to=laboratory_image_upload_to, storage=UniqueFilenameStorage(), blank=True, null=True, default=None)
     description = models.CharField(max_length=1000, default="")
     url = models.CharField(max_length=255, blank=True, null=True, default="")
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -223,18 +239,6 @@ class Laboratory(models.Model):
     @property
     def is_available_now(self):
         return self.has_bookings_available()
-
-
-class UniqueFilenameStorage(FileSystemStorage):
-    def get_available_name(self, name, max_length=None):
-        if max_length and len(name) > max_length:
-            raise (Exception("name's length is greater than max_length"))
-        return name
-
-    def _save(self, name, content):
-        if self.exists(name):
-            return name
-        return super(UniqueFilenameStorage, self)._save(name, content)
 
 
 class LaboratoryContent(models.Model):
