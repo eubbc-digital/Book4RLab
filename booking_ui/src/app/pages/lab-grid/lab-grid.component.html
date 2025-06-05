@@ -47,7 +47,7 @@
       <mat-card class="card">
         <mat-card-header class="card-header">
           <mat-card-title>{{ lab.name }}</mat-card-title>
-          <mat-card-subtitle>{{ lab.university }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ lab.university + (lab.university_abbreviation ? ' (' + lab.university_abbreviation + ')' : '') }}</mat-card-subtitle>
         </mat-card-header>
 
         <div class="image-container">

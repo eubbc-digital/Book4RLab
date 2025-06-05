@@ -52,7 +52,7 @@
           <p class="dialog-label">Instructors:</p>
           <ng-container *ngIf="labForm.controls['instructor'] as instructorsArray">
             <div class="instructor-group" *ngFor="let instructorControl of instructorsArray.controls; let i = index">
-              <div class="input-field">
+              <div class="input-field" [class.has-error]="instructorControl.hasError('pattern')">
                 <mat-form-field appearance="fill">
                   <mat-label>Full Name</mat-label>
                   <input matInput [formControl]="instructorControl" />
@@ -78,10 +78,13 @@
           </div>
         </div>
 
-        <div class="input-field">
+        <div class="input-field image-field">
+          <p class="dialog-label">Current cover image:</p>
+          <img *ngIf="currentCoverImage" mat-card-image [src]="currentCoverImage" alt="Cover image" class="remote-lab-img" />
+          <span *ngIf="!currentCoverImage" class="cover-image-text">The laboratory does not have a cover image.</span>
           <div *ngIf="imageName != ''; else showImageLabel">
             <p>
-              <strong>Current Image: </strong>
+              <strong>Selected Image: </strong>
               {{ imageName }}
             </p>
 
@@ -91,7 +94,7 @@
           </div>
 
           <ng-template #showImageLabel>
-            <p class="dialog-label">Choose an image for the laboratory:</p>
+            <p class="dialog-label">Choose a new image for the laboratory:</p>
           </ng-template>
 
           <input class="file" type="file" name="Image" accept="image/*" (change)="onFileChange($event)" />
@@ -100,7 +103,7 @@
           </div>
         </div>
 
-        <mat-form-field appearance="fill" class="input-field">
+        <mat-form-field appearance="fill" class="input-field" [class.has-error]="urlControl.hasError('pattern')">
           <mat-label>URL</mat-label>
           <input matInput formControlName="url" />
           <mat-error *ngIf="urlControl.invalid">
@@ -130,7 +133,7 @@
           </p>
           <ng-container *ngIf="labForm.controls['allowed_emails'] as emailsArray">
             <div class="email-group" *ngFor="let emailControl of emailsArray.controls; let i = index">
-              <div class="input-field">
+              <div class="input-field" [class.has-error]="emailControl.hasError('email')">
                 <mat-form-field appearance="fill">
                   <mat-label>Email Address</mat-label>
                   <input matInput [formControl]="emailControl" />

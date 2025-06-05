@@ -72,14 +72,23 @@ mat-dialog-content {
   margin-top: 30px;
 }
 
+.remote-lab-img {
+  height: 100%;
+  width: 100%;
+  padding-left: 16px;
+}
+
+.cover-image-text{
+  padding-bottom: 16px;
+  display: block;
+}
+
 @media (max-width: 600px) {
-  .add-buttons-container {
+  .add-buttons-container, .image-field {
     flex-direction: column;
   }
-
-  .input-field, .email-group, .instructor-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  
+  .has-error{
+    padding-bottom: 26px;
   }
 }

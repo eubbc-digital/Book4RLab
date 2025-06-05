@@ -35,6 +35,7 @@ export class LabDialogComponent implements OnInit {
 
   title = 'Register laboratory';
   imageName = '';
+  currentCoverImage: string | null = null;
   selectedLabId = 0;
   submitted = false;
   onUpdate!: boolean;
@@ -90,6 +91,7 @@ export class LabDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.dialogData) {
       const lab = this.dialogData;
+      console.log('Lab data received:', lab); /////
       this.selectedLabId = lab.id;
 
       this.labForm.patchValue({
@@ -110,6 +112,9 @@ export class LabDialogComponent implements OnInit {
       this.populateAllowedEmails(lab.allowed_emails);
 
       this.title = 'Update Laboratory';
+      this.currentCoverImage = typeof this.imageControl.value === 'string'
+        ? this.imageControl.value
+        : null;
       this.onUpdate = true;
       this.displayFormErrors();
     } else {
@@ -427,7 +432,7 @@ export class LabDialogComponent implements OnInit {
 
   getFullNameMessage(control: AbstractControl) {
     if (control.hasError('pattern')) {
-      return 'Provide a full name with up to 4 words, separated by spaces';
+      return 'Provide a full name with up to 4 words, separated by spaces.';
     }
     return '';
   }
