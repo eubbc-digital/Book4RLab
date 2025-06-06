@@ -49,7 +49,6 @@ def get_all_files_in_dirs(dirs):
 def optimize_and_update_all_images():
     image_map = get_all_image_paths()
     all_files = get_all_files_in_dirs(IMAGE_DIRS)
-    optimized_hash_map = {}
 
     for path in all_files:
         try:
