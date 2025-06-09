@@ -21,6 +21,17 @@
 
 .help-icon {
   margin-right: 10px;
+  margin-bottom: 8px;;
+  vertical-align: middle;
+}
+
+.header-title {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.close-icon {
+  margin-bottom: 6px;
   vertical-align: middle;
 }
 
@@ -109,7 +120,7 @@ mat-dialog-actions {
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .help-dialog-container {
-    width: 90vw;
+    width: 100%;
   }
 
   .dialog-header {
@@ -126,5 +137,10 @@ mat-dialog-actions {
 
   .contact-icon {
     margin-bottom: 8px;
+  }
+
+  .help-icon {
+    margin-bottom: 6px;
+    vertical-align: middle;
   }
 }
