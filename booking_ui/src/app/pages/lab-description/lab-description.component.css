@@ -114,6 +114,13 @@ mat-form-field {
   margin-top: 20px;
 }
 
+input[type="file"].file {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
 @media (max-width: 600px) {
   .col-1 {
     width: 6%;
