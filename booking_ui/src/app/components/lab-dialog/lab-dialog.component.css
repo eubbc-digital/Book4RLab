@@ -93,9 +93,9 @@ input[type="file"].file {
 }
 
 .remote-lab-img {
+  margin-left: 0px;
   height: 100%;
   width: 100%;
-  padding-left: 16px;
 }
 
 .cover-image-text{
