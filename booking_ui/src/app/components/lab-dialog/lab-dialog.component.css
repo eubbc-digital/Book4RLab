@@ -10,11 +10,14 @@
   margin-bottom: 20px;
 }
 
-mat-dialog-content {
+.mat-dialog-content {
+  margin-left: 0px;
+  margin-right: 0px;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: scroll;
+  scrollbar-width: thin;
   min-height: 60vh;
 }
 
@@ -38,6 +41,13 @@ mat-dialog-content {
 
 .mat-icon {
   cursor: pointer;
+}
+
+input[type="file"].file {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .input-field {
@@ -93,12 +103,21 @@ mat-dialog-content {
   display: block;
 }
 
+.save-button {
+  margin-right: 24px;
+}
+
 @media (max-width: 600px) {
   .add-buttons-container {
     flex-direction: column;
   }
-  
+
   .has-error{
     padding-bottom: 26px;
+  }
+
+  .mat-dialog-content {
+    padding-left: 2px;
+    padding-right: 8px;
   }
 }

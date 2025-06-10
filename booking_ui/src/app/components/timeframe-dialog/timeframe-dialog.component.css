@@ -1,0 +1,20 @@
+.input-field {
+  padding-left: 0px;
+  height: auto;
+}
+
+.mat-dialog-title{
+  margin-top: 18px;
+  margin-bottom: 0px;
+}
+
+@media (max-width: 600px) {
+  .mat-dialog-title{
+    margin-top: 0px;
+  }
+
+  .mat-dialog-content {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+}
