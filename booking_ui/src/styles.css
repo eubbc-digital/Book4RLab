@@ -195,6 +195,10 @@ tr.no-data-row {
   .input-field {
     padding: 0px;
   }
+
+  .page-content {
+    padding: 8px 18px;
+  }
 }
 
 @media only screen and (max-width: 850px) {

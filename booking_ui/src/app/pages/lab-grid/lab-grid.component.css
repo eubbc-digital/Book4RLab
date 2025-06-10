@@ -304,7 +304,7 @@
 @media (max-width: 600px) {
   .labs-grid {
     grid-template-columns: 1fr;
-    padding: 0 10px;
+    padding: 0;
   }
 
   .searched-lab-field {
