@@ -10,6 +10,11 @@
   margin-bottom: 20px;
 }
 
+.mat-dialog-title{
+  margin-top: 12px;
+  margin-bottom: 12px;;
+}
+
 .mat-dialog-content {
   margin-left: 0px;
   margin-right: 0px;
@@ -114,6 +119,11 @@ input[type="file"].file {
 
   .has-error{
     padding-bottom: 26px;
+  }
+
+  .mat-dialog-title{
+    margin-top: 0px;
+    margin-bottom: 4px;
   }
 
   .mat-dialog-content {
