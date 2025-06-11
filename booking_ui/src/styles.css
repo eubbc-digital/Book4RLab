@@ -161,6 +161,11 @@ tr.no-data-row {
   width: 40%;
 }
 
+.lab-dialog .mat-dialog-container{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .mat-tooltip {
   font-size: 0.9rem;
   white-space: pre-line;
@@ -194,6 +199,10 @@ tr.no-data-row {
 
   .input-field {
     padding: 0px;
+  }
+
+  .page-content {
+    padding: 8px 18px;
   }
 }
 

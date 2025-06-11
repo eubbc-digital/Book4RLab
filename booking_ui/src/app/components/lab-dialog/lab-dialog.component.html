@@ -105,12 +105,11 @@
           <p class="dialog-label">Current cover image:</p>
           <img *ngIf="currentCoverImage" mat-card-image [src]="currentCoverImage" alt="Cover image" class="remote-lab-img" />
           <span *ngIf="!currentCoverImage" class="cover-image-text">The laboratory does not have a cover image.</span>
-          <div *ngIf="imageName != ''; else showImageLabel">
+          <div *ngIf="imagePreview; else showImageLabel">
             <p>
               <strong>Selected Image: </strong>
-              {{ imageName }}
             </p>
-
+            <img *ngIf="imagePreview" [src]="imagePreview" alt="Selected image" class="remote-lab-img" />
             <p>
               <strong>If you want to change, choose another:</strong>
             </p>
@@ -170,7 +169,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-raised-button color="warn" (click)="resetDialog()">Cancel</button>
-  <button mat-raised-button cdkFocusInitial color="primary" (click)="save()">
+  <button class= "save-button" mat-raised-button cdkFocusInitial color="primary" (click)="save()">
     Save
   </button>
 </mat-dialog-actions>

@@ -34,7 +34,7 @@ export class LabDialogComponent implements OnInit {
 
 
   title = 'Register laboratory';
-  imageName = '';
+  imagePreview: string | null = null;
   currentCoverImage: string | null = null;
   selectedLabId = 0;
   submitted = false;
@@ -269,10 +269,16 @@ export class LabDialogComponent implements OnInit {
   onFileChange(event: any): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
-      this.imageName = file.name;
+      this.imagePreview = file.name;
       this.imageControl.setValue(file);
+
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.imagePreview = event.target.result;
+      };
+      reader.readAsDataURL(file);
     } else {
-      this.imageName = '';
+      this.imagePreview = null;
       this.imageControl.setValue(null);
     }
   }

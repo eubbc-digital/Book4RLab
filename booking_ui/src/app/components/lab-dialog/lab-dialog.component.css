@@ -10,11 +10,19 @@
   margin-bottom: 20px;
 }
 
-mat-dialog-content {
+.mat-dialog-title{
+  margin-top: 12px;
+  margin-bottom: 12px;;
+}
+
+.mat-dialog-content {
+  margin-left: 0px;
+  margin-right: 0px;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: scroll;
+  scrollbar-width: thin;
   min-height: 60vh;
 }
 
@@ -38,6 +46,13 @@ mat-dialog-content {
 
 .mat-icon {
   cursor: pointer;
+}
+
+input[type="file"].file {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .input-field {
@@ -83,9 +98,9 @@ mat-dialog-content {
 }
 
 .remote-lab-img {
+  margin-left: 0px;
   height: 100%;
   width: 100%;
-  padding-left: 16px;
 }
 
 .cover-image-text{
@@ -93,12 +108,26 @@ mat-dialog-content {
   display: block;
 }
 
+.save-button {
+  margin-right: 24px;
+}
+
 @media (max-width: 600px) {
   .add-buttons-container {
     flex-direction: column;
   }
-  
+
   .has-error{
     padding-bottom: 26px;
+  }
+
+  .mat-dialog-title{
+    margin-top: 0px;
+    margin-bottom: 4px;
+  }
+
+  .mat-dialog-content {
+    padding-left: 2px;
+    padding-right: 8px;
   }
 }

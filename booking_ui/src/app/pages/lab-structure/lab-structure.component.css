@@ -179,4 +179,8 @@
     text-align: left;
     min-width: 80px;
   }
+
+  .lab-detail-card {
+    padding: 8px 0px;
+  }
 }
