@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from users.serializers import UserSerializer
+import re
 
 
 class BookingSerializer(serializers.ModelSerializer):
@@ -254,7 +255,37 @@ class LaboratorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["owner"] = self.context["request"].user
         return Laboratory.objects.create(**validated_data)
+    
+    def validate_instructor(self, value):
+        names = [re.sub(r'\s+', ' ', name.strip()) for name in re.split(r'\s*,\s*', value.strip())]
 
+        pattern = r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]{1,}\.?(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]{1,}\.?){1,3}$'
+        invalid = [name for name in names if not re.match(pattern, name)]
+        
+        if invalid:
+            raise serializers.ValidationError(
+                f"Invalid instructor name format in: {', '.join(invalid)}. Use from 2 to 4 name parts, each containing at least two letters."
+            )
+        
+        return ', '.join(names)
+    
+    def validate_availability_type(self, value):
+        lab_type = self.initial_data.get('type', self.instance.type if self.instance else 'rt')
+
+        rt_types = ["bookable", "development", "demand", "unavailable"]
+        uc_types = ["always", "development", "unavailable"]
+        
+        if lab_type == "rt" and value not in rt_types:
+            raise serializers.ValidationError(
+                f"Real Time labs can only have these availability types: {', '.join(rt_types)}"
+            )
+        
+        if lab_type == "uc" and value not in uc_types:
+            raise serializers.ValidationError(
+                f"Ultra Concurrent labs can only have these availability types: {', '.join(uc_types)}"
+            )
+        
+        return value
 
 class LaboratoryContentSerializer(serializers.ModelSerializer):
     class Meta:

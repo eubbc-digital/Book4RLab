@@ -18,7 +18,7 @@ export class HelpButtonComponent {
 
   openHelp() {
     this.dialog.open(HelpDialogComponent, {
-      width: '500px',
+      width: '550px',
       panelClass: 'help-dialog-container'
     });
   }

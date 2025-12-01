@@ -1,5 +1,5 @@
 <div *ngIf="components.length == 0">
-  <span>No laboratory content for now.</span>
+  <span class="no-content-span">No laboratory content for now.</span>
   <br />
   <div class="dropdown">
     <button id="btn-add" class="dropbtn" mat-icon-button aria-label="Clear">
@@ -105,7 +105,7 @@
           </div>
         </div>
         <button matSuffix mat-icon-button aria-label="Clear" (click)="deleteComponent(i)">
-          <mat-icon>delete</mat-icon>
+          <mat-icon mat-icon-button color="warn">delete</mat-icon>
         </button>
       </div>
     </div>

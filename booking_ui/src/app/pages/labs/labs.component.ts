@@ -79,7 +79,7 @@ export class LabsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'dialog-responsive';
+    dialogConfig.panelClass = ['dialog-responsive', 'lab-dialog'];
     dialogConfig.data = this.selectedLab;
     const dialogRef = this.dialog.open(LabDialogComponent, dialogConfig);
 

@@ -161,6 +161,25 @@ tr.no-data-row {
   width: 40%;
 }
 
+.lab-dialog .mat-dialog-container{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.mat-tooltip {
+  font-size: 0.9rem;
+  white-space: pre-line;
+}
+
+.mat-error {
+  font-size: 0.77rem;
+}
+
+.mat-checkbox-label {
+  white-space: normal;
+  word-break: break-word;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .reservation-list {
@@ -180,6 +199,10 @@ tr.no-data-row {
 
   .input-field {
     padding: 0px;
+  }
+
+  .page-content {
+    padding: 8px 18px;
   }
 }
 

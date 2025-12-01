@@ -1,7 +1,6 @@
 /* Main dialog container */
 .help-dialog-container {
   font-family: 'Roboto', sans-serif;
-  max-width: 500px;
   color: #333;
   line-height: 1.5;
 }
@@ -21,13 +20,25 @@
 
 .help-icon {
   margin-right: 10px;
+  margin-bottom: 8px;;
+  vertical-align: middle;
+}
+
+.header-title {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.close-icon {
+  margin-bottom: 6px;
+  padding-bottom: 12px;
   vertical-align: middle;
 }
 
 /* Close button */
 .close-button {
-  margin-left: 16px;
-  margin-right: 10px;
+  margin-bottom: 16px;
+  margin-right: 16px;
 }
 
 /* Content sections */
@@ -109,7 +120,7 @@ mat-dialog-actions {
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .help-dialog-container {
-    width: 90vw;
+    width: 100%;
   }
 
   .dialog-header {
@@ -126,5 +137,10 @@ mat-dialog-actions {
 
   .contact-icon {
     margin-bottom: 8px;
+  }
+
+  .help-icon {
+    margin-bottom: 6px;
+    vertical-align: middle;
   }
 }

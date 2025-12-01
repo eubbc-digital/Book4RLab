@@ -22,57 +22,67 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { PublicReservationsComponent } from './pages/public-reservations/public-reservations.component';
 import { RouterModule, Routes } from '@angular/router';
 import { TimeframesComponent } from './pages/timeframes/timeframes.component';
+import { MainLayoutComponent } from './pages/main-layout/main-layout.component';
 
 const routes: Routes = [
   {
-    path: 'labs',
-    component: LabGridComponent,
-  },
-  {
-    path: 'lab-structure',
-    component: LabStructureComponent,
-  },
-  {
-    path: 'booking/:id',
-    component: BookingStepperComponent,
-    canDeactivate: [PendingChangesGuard],
-  },
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      { path: '', 
+        redirectTo: '/labs', 
+        pathMatch: 'full' },
+      {
+        path: 'labs',
+        component: LabGridComponent,
+      },
+      {
+        path: 'lab-structure',
+        component: LabStructureComponent,
+      },
+      {
+        path: 'booking/:id',
+        component: BookingStepperComponent,
+        canDeactivate: [PendingChangesGuard],
+      },
+      {
+        path: 'my-reservations',
+        component: PrivateReservationsComponent,
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+      },
+      {
+        path: 'public-reservations',
+        component: PublicReservationsComponent,
+      },
+      {
+        path: 'my-labs',
+        component: LabsComponent,
+        canActivate: [LabsGuard],
+      },
+      {
+        path: 'equipments',
+        component: EquipmentsComponent,
+      },
+      {
+        path: 'timeframes',
+        component: TimeframesComponent,
+      },
+      {
+        path: 'instructor-access',
+        component: InstructorAccessRequestComponent,
+      }
+    ]
+  }, 
   {
     path: 'access',
     component: AccessComponent,
     canActivate: [AuthGuard],
   },
-  { path: 'activate', component: ActivationComponent },
-  { path: '', redirectTo: '/labs', pathMatch: 'full' },
-  {
-    path: 'my-reservations',
-    component: PrivateReservationsComponent,
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-  },
-  {
-    path: 'public-reservations',
-    component: PublicReservationsComponent,
-  },
-  {
-    path: 'my-labs',
-    component: LabsComponent,
-    canActivate: [LabsGuard],
-  },
-  {
-    path: 'equipments',
-    component: EquipmentsComponent,
-  },
-  {
-    path: 'timeframes',
-    component: TimeframesComponent,
-  },
-  {
-    path: 'instructor-access',
-    component: InstructorAccessRequestComponent,
-  },
+  { path: 'activate', 
+    component: ActivationComponent },
   {
     path: '**',
     component: NotFoundComponent,

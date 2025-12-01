@@ -5,11 +5,11 @@
 }
 
 .private-card {
-  height: 500px;
+  height: auto;
 }
 
 .public-card {
-  height: 310px;
+  height: auto;
 }
 
 .extra-padding {
