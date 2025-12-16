@@ -13,6 +13,19 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
+    def normalize_email(self, email):
+        """
+        Normalize the email address by lowercasing both the name and the domain part of the it.
+        """
+        email = email or ''
+        try:
+            email_name, domain_part = email.strip().rsplit('@', 1)
+        except ValueError:
+            pass
+        else:
+            email = '@'.join([email_name.lower(), domain_part.lower()])
+        return email
+    
     def create_user(self, email, password=None, **extra_fields):
         """Create a new user and validate email"""
         if not email:
