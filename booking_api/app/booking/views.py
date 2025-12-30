@@ -70,7 +70,7 @@ class BookingUserList(generics.ListAPIView):
         user_id = self.request.user.id
 
         if user_id is not None:
-            return queryset.filter(reserved_by=int(user_id))
+            return queryset.filter(reserved_by=int(user_id)).order_by("-start_date")
 
         return None
 
