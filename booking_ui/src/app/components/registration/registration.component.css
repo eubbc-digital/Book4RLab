@@ -25,3 +25,22 @@
 .instructor-notice li {
   margin-bottom: 5px;
 }
+
+.instructor-reason-container {
+  margin-top: 15px;
+}
+
+.instructor-reason-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.instructor-reason-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  box-sizing: border-box;
+  font-family: inherit;
+}
