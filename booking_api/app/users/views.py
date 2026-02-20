@@ -81,6 +81,7 @@ class InstructorAccessRequestView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         administrator_email = os.environ.get("EMAIL_HOST_USER")
         email = request.data.get("email", None)
+        reason = request.data.get("reason", "No justification provided.")
 
         try:
             user = User.objects.get(email=email)
@@ -112,6 +113,7 @@ class InstructorAccessRequestView(generics.CreateAPIView):
             context = {
                 "user_name": f"{user.name} {user.last_name}",
                 "user_email": user.email,
+                "reason": reason,
             }
             template_name = "instructor_access_request_template.html"
             recipient = [administrator_email]
