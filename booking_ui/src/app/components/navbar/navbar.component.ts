@@ -4,7 +4,7 @@
  * MIT License - See LICENSE file in the root directory
  */
 
-import { BreakpointObserver, Breakpoints, BreakpointState,} from '@angular/cdk/layout';
+import { BreakpointObserver, BreakpointState,} from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ import { Group } from 'src/app/enums/group';
 })
 export class NavbarComponent implements OnInit {
   isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
-    Breakpoints.Handset
+    '(max-width: 1049.98px)'
   );
 
   professorLearnifyUrl = config.learnifyUrl.instructor;
@@ -96,6 +96,10 @@ export class NavbarComponent implements OnInit {
 
   goToLearnifyStudent(): void {
     window.open(this.studentLearnifyUrl, '_blank');
+  }
+
+  goToEedaTools(): void {
+    window.open('https://eeda.iotecbol.com/', '_blank');
   }
 
   logout(): void {
