@@ -91,6 +91,9 @@ class AuthTokenSerializer(serializers.Serializer):
         email = attrs.get("email")
         password = attrs.get("password")
 
+        if email:
+            email = get_user_model().objects.normalize_email(email)
+
         user = authenticate(
             request=self.context.get("request"), username=email, password=password
         )
