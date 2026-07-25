@@ -440,8 +440,11 @@ class UserLaboratoryAccess(generics.GenericAPIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            allowed_emails = laboratory.allowed_emails.split(",")
-            if user_email in allowed_emails:
+            allowed_emails = [
+                email.strip().lower()
+                for email in laboratory.allowed_emails.split(",")
+            ]
+            if user_email.lower() in allowed_emails:
                 return Response({"access": True}, status=status.HTTP_200_OK)
             else:
                 return Response({"access": False}, status=status.HTTP_200_OK)

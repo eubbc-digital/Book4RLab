@@ -84,7 +84,7 @@ class InstructorAccessRequestView(generics.CreateAPIView):
         reason = request.data.get("reason", "No justification provided.")
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=User.objects.normalize_email(email))
 
             # Check if user already has instructor access
             if user.groups.filter(name__in=["instructors"]).exists():

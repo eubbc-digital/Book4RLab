@@ -9,6 +9,7 @@ from django.contrib.auth.models import Group
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from utils import send_custom_email, account_activation_token
 import os
 
@@ -44,7 +45,18 @@ class UserSerializer(serializers.ModelSerializer):
             "country",
             "time_zone",
         )
-        extra_kwargs = {"password": {"write_only": True, "min_length": 8}}
+        extra_kwargs = {
+            "password": {"write_only": True, "min_length": 8},
+            "email": {
+                "validators": [
+                    UniqueValidator(
+                        queryset=get_user_model().objects.all(),
+                        lookup="iexact",
+                        message="A user with this email address already exists.",
+                    )
+                ]
+            },
+        }
 
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""
@@ -88,7 +100,7 @@ class AuthTokenSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """Validate and authenticate the user"""
-        email = attrs.get("email")
+        email = get_user_model().objects.normalize_email(attrs.get("email"))
         password = attrs.get("password")
 
         user = authenticate(

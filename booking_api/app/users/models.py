@@ -13,6 +13,11 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
+    @classmethod
+    def normalize_email(cls, email):
+        """Lowercase the whole address, unlike Django which only lowercases the domain"""
+        return str(email or "").strip().lower()
+
     def create_user(self, email, password=None, **extra_fields):
         """Create a new user and validate email"""
         if not email:
@@ -50,6 +55,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
+    def save(self, *args, **kwargs):
+        """Normalize the email on every write, whatever the entry point is"""
+        self.email = UserManager.normalize_email(self.email)
+        return super().save(*args, **kwargs)
 
 
 class InstructorRequest(models.Model):
