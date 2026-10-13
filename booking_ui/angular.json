@@ -32,6 +32,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/booking/",
               "budgets": [
                 {
                   "type": "initial",
