@@ -6,6 +6,8 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from django.urls import path
 from booking import views
+
+app_name = "booking"
 from django.conf.urls.static import static
 from django.conf import settings
 

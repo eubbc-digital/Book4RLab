@@ -51,6 +51,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     time_zone = models.CharField(max_length=25, default="Etc/UTC")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    # Keycloak "sub" claim; set on first SSO login
+    keycloak_sub = models.CharField(max_length=255, unique=True, null=True, blank=True)
 
     objects = UserManager()
 

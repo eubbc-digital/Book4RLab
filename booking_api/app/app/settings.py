@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken",
     "corsheaders",
 ]
 
@@ -90,6 +89,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
         "NAME": os.environ.get("DB_NAME"),
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
@@ -130,6 +130,22 @@ STATIC_URL = os.environ.get("STATIC_URL")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
+
+# Keycloak (SSO). Tokens are validated against the realm's public keys.
+KEYCLOAK_PUBLIC_URL = os.environ.get("KEYCLOAK_PUBLIC_URL", "http://localhost:8080")
+KEYCLOAK_INTERNAL_URL = os.environ.get("KEYCLOAK_INTERNAL_URL", KEYCLOAK_PUBLIC_URL)
+KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM", "eeda")
+KEYCLOAK_ALLOWED_CLIENTS = [
+    c.strip()
+    for c in os.environ.get("KEYCLOAK_ALLOWED_CLIENTS", "book4rlab").split(",")
+    if c.strip()
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "users.authentication.KeycloakTokenAuthentication",
+    ],
+}
 
 # Email configuration
 
