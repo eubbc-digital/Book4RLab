@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import config from '../../config.json';
 
 import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 import { Group } from 'src/app/enums/group';
 
@@ -33,13 +34,12 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private breakPointObserver: BreakpointObserver,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-
-    if (token) {
+    if (this.authService.isLoggedIn()) {
       this.userService.getUserData().subscribe(
         (user) => {
           this.isProfessor = user.groups?.some(group => group.name === Group.Professors) ?? false;
@@ -84,7 +84,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goToLogin(): void {
-    this.router.navigateByUrl('/access');
+    this.authService.login(this.router.url);
   }
 
   goToLearnifyProfessor(): void {
@@ -103,9 +103,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    this.goToLabGrid();
     this.isLoggedIn = false;
     this.isProfessor = false;
+    this.authService.logout();
   }
 }

@@ -5,88 +5,99 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { User } from '../interfaces/user';
-import { ActivationData } from '../interfaces/activation-data';
-import { ToastrService } from 'ngx-toastr';
-import config from '../config.json';
+import { HttpClient } from '@angular/common/http';
+import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+export interface InstructorRequestStatus {
+  status: 'none' | 'pending' | 'approved';
+  requested_at?: string;
+}
+
+export const authConfig: AuthConfig = {
+  issuer: environment.auth.issuer,
+  clientId: environment.auth.clientId,
+  responseType: 'code',
+  scope: 'openid profile email',
+  redirectUri: document.baseURI,
+  postLogoutRedirectUri: document.baseURI,
+  // Silent SSO checks use iframes, which third-party cookie rules block across domains
+  useSilentRefresh: false,
+  sessionChecksEnabled: false,
+  showDebugInformation: false,
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private httpOptions = <any>{};
-
-  constructor(private http: HttpClient, private toastr: ToastrService) {
-    this.httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      observe: 'response' as 'response',
-    };
+  constructor(private oauth: OAuthService, private http: HttpClient) {
+    this.oauth.configure(authConfig);
   }
 
-  signUp(user: User): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.users.signup}`;
-    return this.http
-      .post(URL, user, this.httpOptions)
-      .pipe(catchError(this.handleError<User>('signUp')));
-  }
-
-  activate(activationData: ActivationData): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.users.activate}`;
-    return this.http
-      .post(URL, activationData, this.httpOptions)
-      .pipe(catchError(this.handleActivationError<ActivationData>('activate')));
-  }
-
-  login(user: User): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.users.login}`;
-    return this.http
-      .post(URL, user, this.httpOptions)
-      .pipe(catchError(this.handleError<User>('login')));
-  }
-
-  requestInstructorAccess(data: any): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.users.instructorAccessRequest}`;
-    return this.http.post(URL, data, this.httpOptions)
+  /**
+   * Runs before the app renders (APP_INITIALIZER). Loads Keycloak metadata and
+   * completes a login redirect. Never rejects, so an unreachable Keycloak still
+   * lets anonymous pages load.
+   */
+  init(): Promise<void> {
+    return this.oauth
+      .loadDiscoveryDocumentAndTryLogin()
+      .then(() => undefined)
+      .catch((error) => {
+        console.error('Keycloak discovery failed', error);
+      });
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem('token') ? true : false;
+    return this.oauth.hasValidAccessToken();
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      if (error && error.error)
-        this.toastr.error(this.getServerErrorMessage(error), 'Error');
-
-      return of(result as T);
-    };
+  /** Renews the access token with the refresh token (no iframe, so it works across domains). */
+  refreshSession(): Promise<boolean> {
+    if (!this.oauth.getRefreshToken()) return Promise.resolve(false);
+    return this.oauth
+      .refreshToken()
+      .then(() => true)
+      .catch(() => false);
   }
 
-  private handleActivationError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      if (error && error.error)
-        this.toastr.error(this.getServerErrorMessage(error), 'Error');
-
-      throw error;
-    };
+  accessToken(): string {
+    return this.oauth.getAccessToken();
   }
 
-  private getServerErrorMessage(error: HttpErrorResponse): string {
-    let errorMsg = 'A server error has ocurred please try later.';
+  /** Path the user was on before signing in. Read once after the login redirect. */
+  consumeReturnUrl(): string | null {
+    const state = this.oauth.state;
+    if (!state || !state.startsWith('/')) return null;
+    this.oauth.state = '';
+    return state;
+  }
 
-    if (error.error['non_field_errors'])
-      errorMsg = `${error.error['non_field_errors']}. Please check that your email and password are correct.`;
-    else if (error.error['email']) errorMsg = error.error['email'];
+  login(returnUrl: string = '/labs'): void {
+    this.oauth.initCodeFlow(returnUrl);
+  }
 
-    return errorMsg;
+  /** Opens Keycloak's self-registration form. Email verification happens there. */
+  register(returnUrl: string = '/labs'): void {
+    this.oauth.initCodeFlow(returnUrl, { prompt: 'create' });
+  }
+
+  logout(): void {
+    this.oauth.logOut();
+  }
+
+  requestInstructorAccess(): Observable<InstructorRequestStatus> {
+    return this.http.post<InstructorRequestStatus>(
+      `${environment.auth.eedaSsoUrl}/api/auth/instructor-request/`,
+      {}
+    );
+  }
+
+  getInstructorRequestStatus(): Observable<InstructorRequestStatus> {
+    return this.http.get<InstructorRequestStatus>(
+      `${environment.auth.eedaSsoUrl}/api/auth/instructor-request/`
+    );
   }
 }

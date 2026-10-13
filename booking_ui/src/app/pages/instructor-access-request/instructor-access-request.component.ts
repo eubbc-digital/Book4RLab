@@ -1,5 +1,5 @@
-import { AuthService } from 'src/app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 import { Group } from 'src/app/enums/group';
 import { User } from 'src/app/interfaces/user';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,6 @@ export class InstructorAccessRequestComponent implements OnInit {
   currentUser?: User;
   isInstructor = false;
   hasRequestedAccess = false;
-  requestReason: string = '';
 
   constructor(
     private authService: AuthService,
@@ -25,47 +24,39 @@ export class InstructorAccessRequestComponent implements OnInit {
   ngOnInit() {
     this.userService.getUserData().subscribe((user) => {
       this.currentUser = user;
-      user.groups!.forEach((group) => {
-        if (group.name === Group.Professors) this.isInstructor = true;
-      });
+      this.isInstructor = !!user.groups?.some((group) => group.name === Group.Professors);
+      if (!this.isInstructor) this.loadRequestStatus();
     });
   }
 
   requestInstructorAccess() {
-    const data = { email: this.currentUser?.email || '', reason: this.requestReason };
-
-    this.authService.requestInstructorAccess(data).subscribe({
-      next: (response: any) => {
-        const message = response.body?.message || response.message;
-
-        if (message === 'The user already has instructor access') {
-          this.toastr.info(message);
-        }
-        else if (message === 'Instructor access request is pending approval') {
-          this.toastr.warning(message);
+    this.authService.requestInstructorAccess().subscribe({
+      next: (response) => {
+        if (response.status === 'approved') {
+          this.isInstructor = true;
+          this.toastr.info('You already have instructor access');
+        } else if (response.requested_at) {
           this.hasRequestedAccess = true;
-        }
-        else if (message === 'Instructor access was already approved') {
-          this.toastr.success(message);
-        }
-        else {
           this.toastr.success('Instructor access request sent');
-        }
-
-        if (response.message === 'Instructor access request sent') {
+        } else {
           this.hasRequestedAccess = true;
-        }
-      },
-      error: (err: any) => {
-        if (err.status === 400 && err.error.message === 'Invalid email account') {
-          this.toastr.error('Invalid email account');
-        }
-        else if (err.status === 400 && err.error.message === 'Request already exists') {
           this.toastr.warning('You already have a pending request');
         }
-        else {
-          this.toastr.error('Failed to send request. Please try again later.');
-        }
+      },
+      error: () => {
+        this.toastr.error('Failed to send request. Please try again later.');
+      }
+    });
+  }
+
+  private loadRequestStatus() {
+    this.authService.getInstructorRequestStatus().subscribe({
+      next: (response) => {
+        this.isInstructor = response.status === 'approved';
+        this.hasRequestedAccess = response.status === 'pending';
+      },
+      error: () => {
+        this.toastr.error('Could not load your instructor access status.');
       }
     });
   }

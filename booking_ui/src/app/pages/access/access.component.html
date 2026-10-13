@@ -1,13 +1,16 @@
 <div class="main-container">
   <mat-card class="card">
     <mat-card-title class="title">{{ title }}</mat-card-title>
-    <mat-tab-group mat-align-tabs="center">
-      <mat-tab label="Login">
-        <app-login></app-login>
-      </mat-tab>
-      <mat-tab label="Sign Up">
-        <app-registration></app-registration>
-      </mat-tab>
-    </mat-tab-group>
+    <mat-card-content class="access-content">
+      <p class="access-description">
+        Sign in with your UPB account. New users can create an account and verify their email.
+      </p>
+      <button class="access-button" type="button" mat-raised-button color="primary" (click)="signIn()">
+        Sign In
+      </button>
+      <button class="access-button" type="button" mat-stroked-button color="primary" (click)="signUp()">
+        Create account
+      </button>
+    </mat-card-content>
   </mat-card>
 </div>

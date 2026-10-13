@@ -7,7 +7,7 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { AuthService } from 'src/app/services/auth.service';
 import { Country } from 'src/app/interfaces/country';
 import { IanaTimezone } from 'src/app/interfaces/timezone';
@@ -60,6 +60,10 @@ export class ProfileFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Name and email are owned by Keycloak; the user changes them in the account console
+    this.editionForm.controls['name'].disable();
+    this.editionForm.controls['lastName'].disable();
+    this.editionForm.controls['email'].disable();
     this.getUserData();
     this.filteredOptions = this.countryControl.valueChanges.pipe(
       startWith(''),
@@ -137,10 +141,7 @@ export class ProfileFormComponent implements OnInit {
   }
   updateUser(formDirective: FormGroupDirective): void {
     if (this.editionForm.valid) {
-      const user: User = {
-        name: this.editionForm.controls['name'].value,
-        last_name: this.editionForm.controls['lastName'].value,
-        email: this.editionForm.controls['email'].value,
+      const user: Partial<User> = {
         country: this.countryControl.value.code,
         time_zone: this.timeZoneControl.value.timezone,
       };

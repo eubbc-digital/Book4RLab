@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 * Adriana Orellana, Angel Zenteno, Alex Villazon, Omar Ormachea
 * MIT License - See LICENSE file in the root directory
@@ -9,7 +9,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  auth: {
+    issuer: 'http://localhost:8080/realms/eeda',
+    clientId: 'book4rlab',
+    eedaSsoUrl: 'http://localhost:8001',
+  },
 };
 
 /*
