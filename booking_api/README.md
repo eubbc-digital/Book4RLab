@@ -34,6 +34,9 @@ KEYCLOAK_PUBLIC_URL={https://eeda.iotecbol.com/auth}
 KEYCLOAK_INTERNAL_URL={http://keycloak:8080}
 KEYCLOAK_REALM=eeda
 KEYCLOAK_ALLOWED_CLIENTS=book4rlab
+KEYCLOAK_TIMEOUT=10
+# Team mailbox that receives instructor access requests
+INSTRUCTOR_REQUEST_EMAIL={team_email}
 
 # POSTGRES
 POSTGRES_DB={db_name}
@@ -64,6 +67,8 @@ POSTGRES_PASSWORD={db_password}
 | `KEYCLOAK_INTERNAL_URL` | Keycloak base URL reachable from this server (JWKS fetch) | `http://keycloak:8080` |
 | `KEYCLOAK_REALM` | Realm name | `eeda` |
 | `KEYCLOAK_ALLOWED_CLIENTS` | Comma-separated client ids allowed to call the API | `book4rlab` |
+| `KEYCLOAK_TIMEOUT` | Seconds to wait for Keycloak | `10` |
+| `INSTRUCTOR_REQUEST_EMAIL` | Team mailbox for instructor access requests | `team@example.com` |
 |  |  |  |
 | `POSTGRES_DB` | Database name | Must match `DB_NAME` |
 | `POSTGRES_USER` | Admin username | Must match `DB_USER` |

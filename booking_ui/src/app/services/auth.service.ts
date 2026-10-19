@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import config from '../config.json';
 
 export interface InstructorRequestStatus {
   status: 'none' | 'pending' | 'approved';
@@ -90,14 +91,14 @@ export class AuthService {
 
   requestInstructorAccess(): Observable<InstructorRequestStatus> {
     return this.http.post<InstructorRequestStatus>(
-      `${environment.auth.eedaSsoUrl}/api/auth/instructor-request/`,
+      `${config.api.baseUrl}${config.api.instructorRequest}`,
       {}
     );
   }
 
   getInstructorRequestStatus(): Observable<InstructorRequestStatus> {
     return this.http.get<InstructorRequestStatus>(
-      `${environment.auth.eedaSsoUrl}/api/auth/instructor-request/`
+      `${config.api.baseUrl}${config.api.instructorRequest}`
     );
   }
 }

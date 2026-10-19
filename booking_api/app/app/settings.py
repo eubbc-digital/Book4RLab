@@ -140,6 +140,9 @@ KEYCLOAK_ALLOWED_CLIENTS = [
     for c in os.environ.get("KEYCLOAK_ALLOWED_CLIENTS", "book4rlab").split(",")
     if c.strip()
 ]
+KEYCLOAK_TIMEOUT = int(os.environ.get("KEYCLOAK_TIMEOUT", "10"))
+# Team mailbox that receives instructor access requests
+INSTRUCTOR_REQUEST_EMAIL = os.environ.get("INSTRUCTOR_REQUEST_EMAIL", "")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

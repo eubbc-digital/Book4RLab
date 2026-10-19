@@ -13,7 +13,6 @@ export const environment = {
   auth: {
     issuer: 'http://localhost:8080/realms/eeda',
     clientId: 'book4rlab',
-    eedaSsoUrl: 'http://localhost:8001',
   },
 };
 

@@ -9,6 +9,5 @@ export const environment = {
   auth: {
     issuer: 'https://eeda.iotecbol.com/auth/realms/eeda',
     clientId: 'book4rlab',
-    eedaSsoUrl: 'https://eeda.iotecbol.com',
   },
 };

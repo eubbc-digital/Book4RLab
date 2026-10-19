@@ -11,4 +11,5 @@ app_name = "users"
 
 urlpatterns = [
     path("me/", views.ManageUserView.as_view(), name="me"),
+    path("instructor-request/", views.InstructorRequestView.as_view(), name="instructor-request"),
 ]

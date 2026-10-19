@@ -73,6 +73,13 @@ class InstructorRequest(models.Model):
     requested_at = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
     approved_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="approved_instructor_requests",
+    )
 
     class Meta:
         verbose_name = "Instructor Access Request"

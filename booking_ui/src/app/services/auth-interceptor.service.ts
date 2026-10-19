@@ -15,7 +15,6 @@ import {
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -55,8 +54,8 @@ export class AuthInterceptorService implements HttpInterceptor {
     });
   }
 
-  /** Only our own APIs receive the access token: relative URLs and the eeda SSO backend. */
+  /** Only our own API receives the access token: relative URLs. */
   private isOwnApi(url: string): boolean {
-    return !/^https?:\/\//.test(url) || url.startsWith(environment.auth.eedaSsoUrl);
+    return !/^https?:\/\//.test(url);
   }
 }
