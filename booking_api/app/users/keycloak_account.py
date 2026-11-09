@@ -20,7 +20,7 @@ def update_account(bearer_token, first_name, last_name, attributes):
     Update the signed-in user's own Keycloak profile with their own access token.
     Needs no admin rights: Keycloak lets a user edit time zone and country.
     """
-    base = settings.KEYCLOAK_INTERNAL_URL.rstrip("/")
+    base = settings.KEYCLOAK_URL
     try:
         response = requests.post(
             f"{base}/realms/{settings.KEYCLOAK_REALM}/account",

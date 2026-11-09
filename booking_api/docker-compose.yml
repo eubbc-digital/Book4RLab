@@ -15,6 +15,9 @@ services:
     volumes:
       - ./app:/app
     env_file: .env
+    extra_hosts:
+      # Keycloak host from KEYCLOAK_URL: eeda.iotecbol.com in production, eeda.localtest.me in dev
+      - "${KEYCLOAK_HOST:-eeda.iotecbol.com}:host-gateway"
     depends_on:
       - db
     restart: ${RESTART_POLICY}

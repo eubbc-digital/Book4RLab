@@ -132,8 +132,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 # Keycloak (SSO). Tokens are validated against the realm's public keys.
-KEYCLOAK_PUBLIC_URL = os.environ.get("KEYCLOAK_PUBLIC_URL", "http://localhost:8080")
-KEYCLOAK_INTERNAL_URL = os.environ.get("KEYCLOAK_INTERNAL_URL", KEYCLOAK_PUBLIC_URL)
+# One Keycloak URL (issuer) for token validation and server calls alike; containers reach it via extra_hosts
+KEYCLOAK_URL = os.environ.get("KEYCLOAK_URL", "https://eeda.iotecbol.com/auth").rstrip("/")
 KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM", "eeda")
 KEYCLOAK_ALLOWED_CLIENTS = [
     c.strip()

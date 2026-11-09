@@ -24,7 +24,7 @@ def _get_jwks_client():
     global _jwks_client
     if _jwks_client is None:
         certs_url = (
-            f"{_realm_base(settings.KEYCLOAK_INTERNAL_URL)}/protocol/openid-connect/certs"
+            f"{_realm_base(settings.KEYCLOAK_URL)}/protocol/openid-connect/certs"
         )
         _jwks_client = jwt.PyJWKClient(certs_url, cache_keys=True)
     return _jwks_client
@@ -37,7 +37,7 @@ def validate_access_token(token):
         token,
         signing_key.key,
         algorithms=["RS256"],
-        issuer=_realm_base(settings.KEYCLOAK_PUBLIC_URL),
+        issuer=_realm_base(settings.KEYCLOAK_URL),
         # aud is "account" for most Keycloak tokens; the calling client is checked via azp
         options={"require": ["exp", "iat", "iss", "sub"], "verify_aud": False},
         leeway=30,

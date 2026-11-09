@@ -30,7 +30,7 @@ PRIVATE_PEM = PRIVATE_KEY.private_bytes(
 def make_token(**overrides):
     now = int(time.time())
     claims = {
-        'iss': f"{settings.KEYCLOAK_PUBLIC_URL}/realms/{settings.KEYCLOAK_REALM}",
+        'iss': f"{settings.KEYCLOAK_URL}/realms/{settings.KEYCLOAK_REALM}",
         'sub': 'kc-sub-1',
         'iat': now,
         'exp': now + 300,

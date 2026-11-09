@@ -30,8 +30,8 @@ EMAIL_HOST_USER={email_user}
 EMAIL_HOST_PASSWORD={email_app_password}
 
 # KEYCLOAK (SSO)
-KEYCLOAK_PUBLIC_URL={https://eeda.iotecbol.com/auth}
-KEYCLOAK_INTERNAL_URL={http://keycloak:8080}
+KEYCLOAK_URL=https://eeda.iotecbol.com/auth
+KEYCLOAK_HOST=eeda.iotecbol.com
 KEYCLOAK_REALM=eeda
 KEYCLOAK_ALLOWED_CLIENTS=book4rlab
 KEYCLOAK_TIMEOUT=10
@@ -63,8 +63,8 @@ POSTGRES_PASSWORD={db_password}
 | `UI_BASE_URL` | Frontend base URL | `http://localhost:4200` (dev), `https://domain.com` (prod) |
 | `EMAIL_HOST_USER` | SMTP email user | `user@example.com` |
 | `EMAIL_HOST_PASSWORD` | SMTP app password | Application-specific password |
-| `KEYCLOAK_PUBLIC_URL` | Keycloak base URL as seen by users; token issuer is `{this}/realms/{KEYCLOAK_REALM}` | `https://eeda.iotecbol.com/auth` |
-| `KEYCLOAK_INTERNAL_URL` | Keycloak base URL reachable from this server (JWKS fetch) | `http://keycloak:8080` |
+| `KEYCLOAK_URL` | Keycloak issuer, one URL for token validation and server calls (dev `http://eeda.localtest.me:8080/auth`) | `https://eeda.iotecbol.com/auth` |
+| `KEYCLOAK_HOST` | Host part of `KEYCLOAK_URL`, mapped to the host gateway in the app container | `eeda.iotecbol.com` |
 | `KEYCLOAK_REALM` | Realm name | `eeda` |
 | `KEYCLOAK_ALLOWED_CLIENTS` | Comma-separated client ids allowed to call the API | `book4rlab` |
 | `KEYCLOAK_TIMEOUT` | Seconds to wait for Keycloak | `10` |
