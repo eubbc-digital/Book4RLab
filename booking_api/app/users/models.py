@@ -49,6 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255)
     country = models.CharField(max_length=10, default=None, null=True)
     time_zone = models.CharField(max_length=25, default="Etc/UTC")
+    # Keycloak holds the value (required at registration); this is the local copy
+    institution = models.CharField(max_length=255, blank=True, default="")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     # Keycloak "sub" claim; set on first SSO login

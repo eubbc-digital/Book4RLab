@@ -22,7 +22,7 @@ from users.serializers import UserProfileSerializer
 logger = logging.getLogger(__name__)
 
 # Fields Keycloak owns. A change to these is written to Keycloak before it is saved here.
-KEYCLOAK_PROFILE_FIELDS = ("time_zone", "country")
+KEYCLOAK_PROFILE_FIELDS = ("time_zone", "country", "institution")
 
 
 class IdentityServiceUnavailable(APIException):
@@ -52,9 +52,11 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
                     token,
                     first_name=user.name,
                     last_name=user.last_name,
+                    # Keycloak requires institution on every account update, so always send the current value
                     attributes={
                         "time_zone": data.get("time_zone", user.time_zone),
                         "country": data.get("country", user.country) or "",
+                        "institution": data.get("institution", user.institution) or "",
                     },
                 )
             except KeycloakAccountRejected as exc:

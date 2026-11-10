@@ -48,6 +48,11 @@ class TimeZoneAndCountryClaimsTests(SignedInTestCase):
         user, _, _ = self.sign_in()
         self.assertEqual(user.time_zone, 'America/La_Paz')
 
+    def test_sync_copies_institution_from_claims(self):
+        user, _, _ = self.sign_in(institution='UPB')
+        user.refresh_from_db()
+        self.assertEqual(user.institution, 'UPB')
+
 
 class ProfileUpdateTests(SignedInTestCase):
     @mock.patch('users.views.update_account')
@@ -59,10 +64,24 @@ class ProfileUpdateTests(SignedInTestCase):
             token,
             first_name='Ana',
             last_name='Perez',
-            attributes={'time_zone': 'Europe/Madrid', 'country': ''},
+            attributes={'time_zone': 'Europe/Madrid', 'country': '', 'institution': ''},
         )
         user.refresh_from_db()
         self.assertEqual(user.time_zone, 'Europe/Madrid')
+
+    @mock.patch('users.views.update_account')
+    def test_institution_change_goes_to_keycloak_and_is_saved(self, update):
+        user, client, token = self.sign_in(institution='UPB', time_zone='Etc/UTC')
+        res = client.patch(reverse('users:me'), {'institution': 'UMSA'}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        update.assert_called_once_with(
+            token,
+            first_name='Ana',
+            last_name='Perez',
+            attributes={'time_zone': 'Etc/UTC', 'country': '', 'institution': 'UMSA'},
+        )
+        user.refresh_from_db()
+        self.assertEqual(user.institution, 'UMSA')
 
     @mock.patch('users.views.update_account')
     def test_name_change_does_not_call_keycloak(self, update):

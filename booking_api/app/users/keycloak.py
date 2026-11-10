@@ -78,9 +78,10 @@ def sync_user_from_claims(claims):
     user.email = email
     user.name = claims.get("given_name", "") or user.name
     user.last_name = claims.get("family_name", "") or user.last_name
-    # Keycloak is the source of truth for time zone and country; keep the local copy in step.
+    # Keycloak is the source of truth for time zone, country and institution; keep the local copy in step.
     user.time_zone = claims.get("time_zone") or user.time_zone
     user.country = claims.get("country") or user.country
+    user.institution = claims.get("institution") or user.institution
     user.is_active = True
     user.save()
 

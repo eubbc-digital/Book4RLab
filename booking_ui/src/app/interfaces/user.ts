@@ -14,4 +14,5 @@ export interface User {
   token?: string;
   country?: string;
   time_zone?: string;
+  institution?: string;
 }

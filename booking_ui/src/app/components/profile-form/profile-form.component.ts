@@ -49,6 +49,12 @@ export class ProfileFormComponent implements OnInit {
       this.requireMatch.bind(this),
     ]),
     timeZone: new UntypedFormControl({}, [Validators.required]),
+    institution: new UntypedFormControl('', [
+      Validators.required,
+      // Whitespace only is not a value: Keycloak rejects an empty institution
+      Validators.pattern(/\S/),
+      Validators.maxLength(255),
+    ]),
   });
 
   filteredOptions!: Observable<Country[]>;
@@ -115,12 +121,16 @@ export class ProfileFormComponent implements OnInit {
   get timeZoneControl() {
     return this.editionForm.controls['timeZone'];
   }
+  get institutionControl() {
+    return this.editionForm.controls['institution'];
+  }
 
   getUserData() {
     this.userService.getUserData().subscribe((user) => {
       this.editionForm.controls['name'].setValue(user.name);
       this.editionForm.controls['lastName'].setValue(user.last_name);
       this.editionForm.controls['email'].setValue(user.email);
+      this.editionForm.controls['institution'].setValue(user.institution ?? '');
 
       var country = this.getCountryInfoComplete(user.country);
       if (country) {
@@ -144,6 +154,7 @@ export class ProfileFormComponent implements OnInit {
       const user: Partial<User> = {
         country: this.countryControl.value.code,
         time_zone: this.timeZoneControl.value.timezone,
+        institution: this.institutionControl.value.trim(),
       };
 
       this.userService.updateUserData(user).subscribe((response) => {
