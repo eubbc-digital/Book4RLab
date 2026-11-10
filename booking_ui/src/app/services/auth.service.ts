@@ -20,6 +20,8 @@ export const authConfig: AuthConfig = {
   issuer: environment.auth.issuer,
   clientId: environment.auth.clientId,
   responseType: 'code',
+  // Production issuer is HTTPS. Dev uses plain HTTP on the eeda-sso dev host, which the library rejects by default.
+  requireHttps: environment.production,
   scope: 'openid profile email',
   redirectUri: document.baseURI,
   postLogoutRedirectUri: document.baseURI,

@@ -11,7 +11,8 @@
 export const environment = {
   production: false,
   auth: {
-    issuer: 'http://localhost:8080/realms/eeda',
+    // Dev Keycloak from eeda-sso (KC_HOSTNAME=eeda.localtest.me, relative path /auth)
+    issuer: 'http://eeda.localtest.me:8080/auth/realms/eeda',
     clientId: 'book4rlab',
   },
 };
