@@ -4,12 +4,14 @@ MIT License - See LICENSE file in the root directory
 """
 
 import time
+from datetime import timedelta
 from unittest import mock
 
 from django.contrib.auth.models import Group
 from django.core import mail
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -189,6 +191,66 @@ class InstructorRequestTests(SignedInTestCase):
         self.assertFalse(InstructorRequest.objects.filter(user=user).exists())
         self.assertEqual(len(mail.outbox), 0)
 
+    def approved_request(self, user, minutes_ago):
+        return InstructorRequest.objects.create(
+            user=user, reason='old reason', approved=True,
+            approved_at=timezone.now() - timedelta(minutes=minutes_ago),
+        )
+
+    def test_role_removed_after_approval_revokes_the_request(self):
+        user, _, _ = self.sign_in()
+        req = self.approved_request(user, minutes_ago=10)
+
+        _, client, _ = self.sign_in()  # fresh token without the instructor role
+        req.refresh_from_db()
+        self.assertFalse(req.approved)
+        self.assertIsNotNone(req.revoked_at)
+        self.assertEqual(client.get(self.url).json(), {'status': 'none'})
+
+    def test_token_issued_before_approval_does_not_revoke(self):
+        user, _, _ = self.sign_in()
+        req = self.approved_request(user, minutes_ago=0)
+
+        _, client, _ = self.sign_in(iat=int(time.time()) - 300)
+        req.refresh_from_db()
+        self.assertTrue(req.approved)
+        self.assertIsNone(req.revoked_at)
+        self.assertEqual(client.get(self.url).json(), {'status': 'approved'})
+
+    def test_token_with_the_role_does_not_revoke(self):
+        user, _, _ = self.sign_in()
+        req = self.approved_request(user, minutes_ago=10)
+        self.sign_in(realm_access={'roles': ['student', 'instructor']})
+        req.refresh_from_db()
+        self.assertTrue(req.approved)
+
+    def test_revoked_user_can_request_again_and_the_request_is_reused(self):
+        user, _, _ = self.sign_in()
+        req = self.approved_request(user, minutes_ago=10)
+        _, client, _ = self.sign_in()
+
+        res = client.post(self.url, {'reason': 'Teaching again'}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(InstructorRequest.objects.filter(user=user).count(), 1)
+        req.refresh_from_db()
+        self.assertEqual(req.reason, 'Teaching again')
+        self.assertFalse(req.approved)
+        self.assertIsNone(req.approved_at)
+        self.assertIsNone(req.revoked_at)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(client.get(self.url).json(), {'status': 'pending'})
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend', EMAIL_HOST='127.0.0.1', EMAIL_PORT=1)
+    def test_failed_email_on_request_again_keeps_the_revoked_request(self):
+        user, _, _ = self.sign_in()
+        req = self.approved_request(user, minutes_ago=10)
+        _, client, _ = self.sign_in()
+
+        self.assertEqual(client.post(self.url).status_code, status.HTTP_502_BAD_GATEWAY)
+        req.refresh_from_db()
+        self.assertIsNotNone(req.revoked_at)
+        self.assertEqual(req.reason, 'old reason')
+
     def test_instructor_role_in_token_is_approved(self):
         # The approver assigns the realm role in Keycloak; the next token carries it and sync adds the group.
         _, client, _ = self.sign_in(realm_access={'roles': ['student', 'instructor']})
@@ -229,6 +291,16 @@ class InstructorApprovalAdminTests(SignedInTestCase):
         self.assertTrue(req.approved)
         self.assertEqual(req.approved_by, self.admin)
         self.assertIsNotNone(req.approved_at)
+
+    def test_approving_a_revoked_request_clears_the_revocation(self):
+        keycloak = self.mock_keycloak()
+        keycloak.find_user_id.return_value = 'kc-id-1'
+        user = User.objects.create(email='back@upb.example', name='N', last_name='L', keycloak_sub='kc-id-1')
+        req = InstructorRequest.objects.create(user=user, revoked_at=timezone.now())
+        self.approve(req)
+        req.refresh_from_db()
+        self.assertTrue(req.approved)
+        self.assertIsNone(req.revoked_at)
 
     def test_request_stays_pending_when_keycloak_refuses_the_role(self):
         keycloak = self.mock_keycloak()

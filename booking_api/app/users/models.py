@@ -86,6 +86,8 @@ class InstructorRequest(models.Model):
         blank=True,
         related_name="approved_instructor_requests",
     )
+    # Set when the instructor role disappears from Keycloak after approval; the user may then request again
+    revoked_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Instructor Access Request"

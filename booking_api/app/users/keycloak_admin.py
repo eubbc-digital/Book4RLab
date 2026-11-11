@@ -6,8 +6,7 @@ MIT License - See LICENSE file in the root directory
 import requests
 from django.conf import settings
 
-# Realm role that grants instructor access; sync maps it to the "instructors" group
-INSTRUCTOR_ROLE = "instructor"
+from users.keycloak import INSTRUCTOR_ROLE
 
 
 class KeycloakAdminError(Exception):

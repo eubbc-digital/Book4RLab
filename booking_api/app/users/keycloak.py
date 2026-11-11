@@ -4,13 +4,15 @@ MIT License - See LICENSE file in the root directory
 """
 
 import logging
+from datetime import datetime, timedelta, timezone as dt_timezone
 
 import jwt
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import transaction
+from django.utils import timezone
 
-from users.models import User
+from users.models import InstructorRequest, User
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +21,9 @@ KEYCLOAK_PROFILE_FIELDS = ("time_zone", "country", "institution")
 
 # Keycloak realm roles that map to the Django groups the UI and permissions use
 ROLE_TO_GROUP = {"instructor": "instructors", "student": "students"}
+INSTRUCTOR_ROLE = "instructor"
+# Allowed difference between the Keycloak and API clocks when comparing a token's iat
+CLOCK_MARGIN = timedelta(seconds=60)
 
 _jwks_client = None
 
@@ -54,9 +59,28 @@ def validate_access_token(token):
     return claims
 
 
+def _realm_roles(claims):
+    return (claims.get("realm_access") or {}).get("roles", [])
+
+
 def _desired_group_names(claims):
-    roles = (claims.get("realm_access") or {}).get("roles", [])
+    roles = _realm_roles(claims)
     return {group for role, group in ROLE_TO_GROUP.items() if role in roles}
+
+
+def _revoke_instructor_request_if_role_removed(user, claims):
+    """
+    An approved request whose role is gone from Keycloak is marked revoked, so the user can request again.
+
+    Only tokens issued after the approval count: one issued before it lacks the role because Keycloak
+    had not given it yet, not because it was removed.
+    """
+    if INSTRUCTOR_ROLE in _realm_roles(claims):
+        return
+    issued_at = datetime.fromtimestamp(claims.get("iat", 0), tz=dt_timezone.utc)
+    InstructorRequest.objects.filter(
+        user=user, approved=True, approved_at__lt=issued_at - CLOCK_MARGIN
+    ).update(approved=False, revoked_at=timezone.now())
 
 
 def _copy_profile_claims(user, claims):
@@ -115,4 +139,5 @@ def sync_user_from_claims(claims):
     if desired != current:
         user.groups.remove(*Group.objects.filter(name__in=managed - desired))
         user.groups.add(*Group.objects.filter(name__in=desired - current))
+    _revoke_instructor_request_if_role_removed(user, claims)
     return user

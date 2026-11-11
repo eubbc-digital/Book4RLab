@@ -111,6 +111,10 @@ Approving a request in the Django admin gives the role through the Keycloak admi
 client with service accounts enabled whose service account has the `realm-management` roles `manage-users`,
 `query-users` and `view-realm`. Set its id and secret in `KEYCLOAK_ADMIN_CLIENT_ID` and `KEYCLOAK_ADMIN_CLIENT_SECRET`.
 
+If the role is later removed in Keycloak, the user's next token without it marks their approved request as revoked
+(only tokens issued after the approval count). A revoked request shows as `none`, so the user can request again;
+the new request reuses the same record.
+
 Before deploying the switch to Keycloak roles, give the role to everyone already in the local `instructors` group,
 or they lose instructor access on their next sign-in:
 

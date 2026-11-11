@@ -75,8 +75,9 @@ class InstructorRequestView(APIView):
         if user.groups.filter(name="instructors").exists():
             return "approved", None
         request = InstructorRequest.objects.filter(user=user).first()
-        if request is None:
-            return "none", None
+        if request is None or request.revoked_at:
+            # A revoked request counts as none: the user may ask again
+            return "none", request
         if request.approved:
             return "approved", request
         return "pending", request
@@ -86,7 +87,7 @@ class InstructorRequestView(APIView):
         return Response({"status": state})
 
     def post(self, request):
-        state, _ = self._state(request.user)
+        state, previous = self._state(request.user)
         if state != "none":
             return Response({"status": state}, status=status.HTTP_200_OK)
 
@@ -107,7 +108,18 @@ class InstructorRequestView(APIView):
         try:
             # The record is kept only if the team is told about it.
             with transaction.atomic():
-                instructor_request = InstructorRequest.objects.create(user=user, reason=reason)
+                if previous is None:
+                    instructor_request = InstructorRequest.objects.create(user=user, reason=reason)
+                else:
+                    # Asking again after a revocation reuses the one request a user has
+                    instructor_request = previous
+                    instructor_request.reason = reason
+                    instructor_request.requested_at = timezone.now()
+                    instructor_request.approved = False
+                    instructor_request.approved_at = None
+                    instructor_request.approved_by = None
+                    instructor_request.revoked_at = None
+                    instructor_request.save()
                 sent = send_mail(
                     subject="Instructor access request",
                     message=(

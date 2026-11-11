@@ -53,10 +53,10 @@ admin.site.register(User, UserAdmin)
 
 @admin.register(InstructorRequest)
 class InstructorRequestAdmin(admin.ModelAdmin):
-    list_display = ("user", "requested_at", "approved", "approved_by", "approved_at")
-    list_filter = ("approved",)
+    list_display = ("user", "requested_at", "approved", "approved_by", "approved_at", "revoked_at")
+    list_filter = ("approved", "revoked_at")
     search_fields = ("user__email", "user__name", "user__last_name")
-    readonly_fields = ("user", "requested_at", "approved", "approved_by", "approved_at")
+    readonly_fields = ("user", "requested_at", "approved", "approved_by", "approved_at", "revoked_at")
     actions = ["approve_requests"]
 
     @admin.action(description="Approve selected requests and give the instructor role in Keycloak")
@@ -89,6 +89,7 @@ class InstructorRequestAdmin(admin.ModelAdmin):
             instructor_request.approved = True
             instructor_request.approved_by = request.user
             instructor_request.approved_at = timezone.now()
+            instructor_request.revoked_at = None
             instructor_request.save()
             approved.append(user.email)
 
