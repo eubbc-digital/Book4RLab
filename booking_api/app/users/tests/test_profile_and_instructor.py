@@ -3,6 +3,7 @@ Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 """
 
+import time
 from unittest import mock
 
 from django.contrib.auth.models import Group
@@ -59,7 +60,34 @@ class TimeZoneAndCountryClaimsTests(SignedInTestCase):
         self.assertEqual(user.institution, 'UPB')
 
 
+    def test_sync_accepts_long_iana_time_zone(self):
+        user, _, _ = self.sign_in(time_zone='America/Argentina/Buenos_Aires')
+        user.refresh_from_db()
+        self.assertEqual(user.time_zone, 'America/Argentina/Buenos_Aires')
+
+    def test_sync_ignores_claims_that_do_not_fit_and_still_signs_in(self):
+        self.sign_in(time_zone='America/La_Paz', country='BO')
+        user, client, _ = self.sign_in(time_zone='x' * 65, country='Bolivia, Plurinational State of')
+        user.refresh_from_db()
+        self.assertEqual(user.time_zone, 'America/La_Paz')
+        self.assertEqual(user.country, 'BO')
+        self.assertEqual(client.get(reverse('users:me')).status_code, status.HTTP_200_OK)
+
+
 class ProfileUpdateTests(SignedInTestCase):
+    @mock.patch('users.views.update_account')
+    def test_old_token_does_not_undo_a_profile_change(self, _):
+        user, client, _ = self.sign_in(time_zone='Etc/UTC', iat=int(time.time()) - 60)
+        client.patch(reverse('users:me'), {'time_zone': 'Europe/Madrid'}, format='json')
+
+        # Same token, still carrying the old claim
+        res = client.get(reverse('users:me'))
+        self.assertEqual(res.data['time_zone'], 'Europe/Madrid')
+
+        # A token issued after the change applies its claims again
+        user, _, _ = self.sign_in(time_zone='America/La_Paz', iat=int(time.time()) + 5)
+        self.assertEqual(user.time_zone, 'America/La_Paz')
+
     @mock.patch('users.views.update_account')
     def test_time_zone_change_goes_to_keycloak_with_the_users_token_then_is_saved(self, update):
         user, client, token = self.sign_in(time_zone='Etc/UTC')
@@ -161,6 +189,14 @@ class InstructorRequestTests(SignedInTestCase):
         res = client.post(self.url)
         self.assertEqual(res.status_code, status.HTTP_502_BAD_GATEWAY)
         self.assertFalse(InstructorRequest.objects.filter(user=user).exists())
+
+    @override_settings(INSTRUCTOR_REQUEST_EMAIL='')
+    def test_missing_team_mailbox_keeps_no_record(self):
+        user, client, _ = self.sign_in()
+        res = client.post(self.url)
+        self.assertEqual(res.status_code, status.HTTP_502_BAD_GATEWAY)
+        self.assertFalse(InstructorRequest.objects.filter(user=user).exists())
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_instructor_role_in_token_is_approved(self):
         # The approver assigns the realm role in Keycloak; the next token carries it and sync adds the group.

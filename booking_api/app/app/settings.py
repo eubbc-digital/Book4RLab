@@ -141,8 +141,8 @@ KEYCLOAK_ALLOWED_CLIENTS = [
     if c.strip()
 ]
 KEYCLOAK_TIMEOUT = int(os.environ.get("KEYCLOAK_TIMEOUT", "10"))
-# Team mailbox that receives instructor access requests
-INSTRUCTOR_REQUEST_EMAIL = os.environ.get("INSTRUCTOR_REQUEST_EMAIL", "")
+# Team mailbox that receives instructor access requests; falls back to the SMTP account
+INSTRUCTOR_REQUEST_EMAIL = os.environ.get("INSTRUCTOR_REQUEST_EMAIL") or os.environ.get("EMAIL_HOST_USER", "")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

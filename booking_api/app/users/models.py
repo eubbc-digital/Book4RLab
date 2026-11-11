@@ -48,9 +48,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     country = models.CharField(max_length=10, default=None, null=True)
-    time_zone = models.CharField(max_length=25, default="Etc/UTC")
+    time_zone = models.CharField(max_length=64, default="Etc/UTC")
     # Keycloak holds the value (required at registration); this is the local copy
     institution = models.CharField(max_length=255, blank=True, default="")
+    # When the user last changed the Keycloak-held fields here. Tokens issued before this
+    # carry the old values and must not overwrite the local copy.
+    profile_updated_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     # Keycloak "sub" claim; set on first SSO login

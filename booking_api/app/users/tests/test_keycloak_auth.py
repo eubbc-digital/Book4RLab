@@ -125,6 +125,14 @@ class KeycloakAuthTests(TestCase):
         res = APIClient().get('/users/me/', HTTP_AUTHORIZATION='Bearer not-a-jwt')
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_token_without_email_is_unauthorized_not_500(self):
+        res = APIClient().get('/users/me/', HTTP_AUTHORIZATION=f"Bearer {make_token(email=None)}")
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_new_user_with_unverified_email_is_unauthorized_not_500(self):
+        res = APIClient().get('/users/me/', HTTP_AUTHORIZATION=f"Bearer {make_token(email_verified=False)}")
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_legacy_password_endpoints_are_gone(self):
         for path in ['/users/token/', '/users/signup/', '/users/activate/', '/users/instructor-access/']:
             res = APIClient().post(path, {})

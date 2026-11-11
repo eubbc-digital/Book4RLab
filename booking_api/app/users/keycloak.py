@@ -3,12 +3,19 @@ Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
 MIT License - See LICENSE file in the root directory
 """
 
+import logging
+
 import jwt
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import transaction
 
 from users.models import User
+
+logger = logging.getLogger(__name__)
+
+# User fields that Keycloak holds; the local row keeps a copy taken from the token claims
+KEYCLOAK_PROFILE_FIELDS = ("time_zone", "country", "institution")
 
 # Keycloak realm roles that map to the Django groups the UI and permissions use
 ROLE_TO_GROUP = {"instructor": "instructors", "student": "students"}
@@ -52,6 +59,26 @@ def _desired_group_names(claims):
     return {group for role, group in ROLE_TO_GROUP.items() if role in roles}
 
 
+def _copy_profile_claims(user, claims):
+    """
+    Keycloak is the source of truth for time zone, country and institution; keep the local copy in step.
+
+    Skipped for tokens issued before the user's last profile change here: they still carry the old values.
+    A value that does not fit the column is ignored, so one bad attribute cannot break every request.
+    """
+    if user.profile_updated_at and claims.get("iat", 0) <= user.profile_updated_at.timestamp():
+        return
+    for field in KEYCLOAK_PROFILE_FIELDS:
+        value = claims.get(field)
+        if not value:
+            continue
+        max_length = User._meta.get_field(field).max_length
+        if not isinstance(value, str) or len(value) > max_length:
+            logger.warning("Ignoring Keycloak %s claim for %s: not a string of at most %s characters", field, claims["sub"], max_length)
+            continue
+        setattr(user, field, value)
+
+
 @transaction.atomic
 def sync_user_from_claims(claims):
     """
@@ -78,10 +105,7 @@ def sync_user_from_claims(claims):
     user.email = email
     user.name = claims.get("given_name", "") or user.name
     user.last_name = claims.get("family_name", "") or user.last_name
-    # Keycloak is the source of truth for time zone, country and institution; keep the local copy in step.
-    user.time_zone = claims.get("time_zone") or user.time_zone
-    user.country = claims.get("country") or user.country
-    user.institution = claims.get("institution") or user.institution
+    _copy_profile_claims(user, claims)
     user.is_active = True
     user.save()
 

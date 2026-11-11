@@ -9,20 +9,19 @@ import logging
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db import transaction
+from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.authentication import KeycloakTokenAuthentication
+from users.keycloak import KEYCLOAK_PROFILE_FIELDS
 from users.keycloak_account import KeycloakAccountError, KeycloakAccountRejected, update_account
 from users.models import InstructorRequest
 from users.serializers import UserProfileSerializer
 
 logger = logging.getLogger(__name__)
-
-# Fields Keycloak owns. A change to these is written to Keycloak before it is saved here.
-KEYCLOAK_PROFILE_FIELDS = ("time_zone", "country", "institution")
 
 
 class IdentityServiceUnavailable(APIException):
@@ -44,6 +43,7 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     def perform_update(self, serializer):
         user = self.request.user
         data = serializer.validated_data
+        # Fields Keycloak owns. A change to these is written to Keycloak before it is saved here.
         if any(field in data for field in KEYCLOAK_PROFILE_FIELDS):
             # Keycloak holds these values. The account API needs the user's own token and the full profile.
             token = self.request.META.get("HTTP_AUTHORIZATION", "").split(" ", 1)[-1]
@@ -65,6 +65,9 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
             except KeycloakAccountError:
                 logger.exception("Could not update profile in Keycloak")
                 raise IdentityServiceUnavailable()
+            # Tokens issued before now still carry the old values; keep them from overwriting these
+            serializer.save(profile_updated_at=timezone.now())
+            return
         serializer.save()
 
 
@@ -104,11 +107,18 @@ class InstructorRequestView(APIView):
                 {"detail": f"The reason can have at most {MAX_INSTRUCTOR_REASON_LENGTH} characters."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        recipient = settings.INSTRUCTOR_REQUEST_EMAIL
+        if not recipient:
+            logger.error("INSTRUCTOR_REQUEST_EMAIL is not set; instructor request not recorded")
+            return Response(
+                {"detail": "Could not notify the team. Try again later."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
         try:
             # The record is kept only if the team is told about it.
             with transaction.atomic():
                 instructor_request = InstructorRequest.objects.create(user=user, reason=reason)
-                send_mail(
+                sent = send_mail(
                     subject="Instructor access request",
                     message=(
                         f"Name: {user.name} {user.last_name}\n"
@@ -118,9 +128,11 @@ class InstructorRequestView(APIView):
                         "Verify the requester, then approve the request in the Book4RLab admin."
                     ),
                     from_email=None,
-                    recipient_list=[settings.INSTRUCTOR_REQUEST_EMAIL],
+                    recipient_list=[recipient],
                     fail_silently=False,
                 )
+                if not sent:
+                    raise RuntimeError("send_mail delivered no message")
         except Exception:
             logger.exception("Instructor request could not be recorded or emailed")
             return Response(

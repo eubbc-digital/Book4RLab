@@ -34,5 +34,9 @@ class KeycloakTokenAuthentication(authentication.BaseAuthentication):
         except jwt.PyJWTError:
             raise exceptions.AuthenticationFailed("Invalid token.")
 
-        user = sync_user_from_claims(claims)
+        try:
+            user = sync_user_from_claims(claims)
+        except jwt.PyJWTError as exc:
+            # Missing or unverified email: the token is valid but cannot identify a local user
+            raise exceptions.AuthenticationFailed(f"Invalid token: {exc}")
         return user, claims
