@@ -157,10 +157,21 @@ export class ProfileFormComponent implements OnInit {
         institution: this.institutionControl.value.trim(),
       };
 
-      this.userService.updateUserData(user).subscribe((response) => {
-        if (response.status !== null && response.status === 200) {
-          this.toastr.success('Successful update of user data');
-        }
+      this.userService.updateUserData(user).subscribe({
+        next: (response) => {
+          if (response.status !== null && response.status === 200) {
+            this.toastr.success('Successful update of user data');
+          }
+        },
+        error: (err) => {
+          // 400: Keycloak rejected the values; 503: Keycloak unavailable
+          const detail = err?.error?.detail;
+          this.toastr.error(
+            (Array.isArray(detail) ? detail.join(' ') : detail) ??
+              'Your profile could not be saved. Try again later.',
+            'Update failed'
+          );
+        },
       });
     } else {
       this.toastr.error(

@@ -35,6 +35,8 @@ export const authConfig: AuthConfig = {
   providedIn: 'root',
 })
 export class AuthService {
+  private refreshing: Promise<boolean> | null = null;
+
   constructor(private oauth: OAuthService, private http: HttpClient) {
     this.oauth.configure(authConfig);
   }
@@ -58,12 +60,19 @@ export class AuthService {
   }
 
   /** Renews the access token with the refresh token (no iframe, so it works across domains). */
+  /**
+   * Renew the access token. Requests that fail together share one refresh, so the
+   * same refresh token is never sent twice (Keycloak may rotate it on use).
+   */
   refreshSession(): Promise<boolean> {
+    if (this.refreshing) return this.refreshing;
     if (!this.oauth.getRefreshToken()) return Promise.resolve(false);
-    return this.oauth
+    this.refreshing = this.oauth
       .refreshToken()
       .then(() => true)
-      .catch(() => false);
+      .catch(() => false)
+      .finally(() => (this.refreshing = null));
+    return this.refreshing;
   }
 
   accessToken(): string {
