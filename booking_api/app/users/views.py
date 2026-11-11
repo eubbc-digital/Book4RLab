@@ -68,6 +68,9 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
         serializer.save()
 
 
+MAX_INSTRUCTOR_REASON_LENGTH = 1000
+
+
 class InstructorRequestView(APIView):
     """A signed-in user asks for instructor access. The team reviews the request in the admin."""
 
@@ -95,16 +98,23 @@ class InstructorRequestView(APIView):
             return Response({"status": state}, status=status.HTTP_200_OK)
 
         user = request.user
+        reason = (request.data.get("reason") or "").strip()
+        if len(reason) > MAX_INSTRUCTOR_REASON_LENGTH:
+            return Response(
+                {"detail": f"The reason can have at most {MAX_INSTRUCTOR_REASON_LENGTH} characters."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         try:
             # The record is kept only if the team is told about it.
             with transaction.atomic():
-                instructor_request = InstructorRequest.objects.create(user=user)
+                instructor_request = InstructorRequest.objects.create(user=user, reason=reason)
                 send_mail(
                     subject="Instructor access request",
                     message=(
                         f"Name: {user.name} {user.last_name}\n"
                         f"Email: {user.email}\n"
-                        f"Requested at: {instructor_request.requested_at.isoformat()}\n\n"
+                        f"Requested at: {instructor_request.requested_at.isoformat()}\n"
+                        f"Reason: {reason or 'No reason given.'}\n\n"
                         "Verify the requester, then approve the request in the Book4RLab admin."
                     ),
                     from_email=None,

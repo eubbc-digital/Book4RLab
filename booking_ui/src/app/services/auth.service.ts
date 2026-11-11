@@ -91,10 +91,10 @@ export class AuthService {
     this.oauth.logOut();
   }
 
-  requestInstructorAccess(): Observable<InstructorRequestStatus> {
+  requestInstructorAccess(reason: string = ''): Observable<InstructorRequestStatus> {
     return this.http.post<InstructorRequestStatus>(
       `${config.api.baseUrl}${config.api.instructorRequest}`,
-      {}
+      { reason }
     );
   }
 

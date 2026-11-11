@@ -14,6 +14,7 @@ export class InstructorAccessRequestComponent implements OnInit {
   currentUser?: User;
   isInstructor = false;
   hasRequestedAccess = false;
+  requestReason = '';
 
   constructor(
     private authService: AuthService,
@@ -30,7 +31,7 @@ export class InstructorAccessRequestComponent implements OnInit {
   }
 
   requestInstructorAccess() {
-    this.authService.requestInstructorAccess().subscribe({
+    this.authService.requestInstructorAccess(this.requestReason.trim()).subscribe({
       next: (response) => {
         if (response.status === 'approved') {
           this.isInstructor = true;

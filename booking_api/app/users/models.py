@@ -73,6 +73,7 @@ class InstructorRequest(models.Model):
         User, on_delete=models.CASCADE, related_name="instructor_request"
     )
     requested_at = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField(blank=True, default="")
     approved = models.BooleanField(default=False)
     approved_at = models.DateTimeField(null=True, blank=True)
     approved_by = models.ForeignKey(

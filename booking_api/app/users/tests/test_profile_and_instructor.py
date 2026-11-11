@@ -48,6 +48,11 @@ class TimeZoneAndCountryClaimsTests(SignedInTestCase):
         user, _, _ = self.sign_in()
         self.assertEqual(user.time_zone, 'America/La_Paz')
 
+    def test_sync_stores_the_email_lowercased(self):
+        user, _, _ = self.sign_in(email='Ana.Perez@UPB.example')
+        user.refresh_from_db()
+        self.assertEqual(user.email, 'ana.perez@upb.example')
+
     def test_sync_copies_institution_from_claims(self):
         user, _, _ = self.sign_in(institution='UPB')
         user.refresh_from_db()
@@ -114,6 +119,26 @@ class InstructorRequestTests(SignedInTestCase):
     def test_status_none_for_new_student(self):
         _, client, _ = self.sign_in()
         self.assertEqual(client.get(self.url).json(), {'status': 'none'})
+
+    def test_reason_is_saved_and_sent_to_the_team(self):
+        user, client, _ = self.sign_in()
+        res = client.post(self.url, {'reason': '  Teaching chemistry at UPB  '}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(InstructorRequest.objects.get(user=user).reason, 'Teaching chemistry at UPB')
+        self.assertIn('Reason: Teaching chemistry at UPB', mail.outbox[0].body)
+
+    def test_reason_is_optional(self):
+        user, client, _ = self.sign_in()
+        self.assertEqual(client.post(self.url).status_code, status.HTTP_201_CREATED)
+        self.assertEqual(InstructorRequest.objects.get(user=user).reason, '')
+        self.assertIn('Reason: No reason given.', mail.outbox[0].body)
+
+    def test_overlong_reason_is_rejected_and_nothing_is_recorded(self):
+        user, client, _ = self.sign_in()
+        res = client.post(self.url, {'reason': 'x' * 1001}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(InstructorRequest.objects.filter(user=user).exists())
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_request_is_recorded_and_team_is_emailed_once(self):
         user, client, _ = self.sign_in()
