@@ -141,6 +141,9 @@ KEYCLOAK_ALLOWED_CLIENTS = [
     if c.strip()
 ]
 KEYCLOAK_TIMEOUT = int(os.environ.get("KEYCLOAK_TIMEOUT", "10"))
+# Service account client used to give the instructor realm role (needs realm-management roles)
+KEYCLOAK_ADMIN_CLIENT_ID = os.environ.get("KEYCLOAK_ADMIN_CLIENT_ID", "")
+KEYCLOAK_ADMIN_CLIENT_SECRET = os.environ.get("KEYCLOAK_ADMIN_CLIENT_SECRET", "")
 # Team mailbox that receives instructor access requests; falls back to the SMTP account
 INSTRUCTOR_REQUEST_EMAIL = os.environ.get("INSTRUCTOR_REQUEST_EMAIL") or os.environ.get("EMAIL_HOST_USER", "")
 

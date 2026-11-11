@@ -35,6 +35,9 @@ KEYCLOAK_HOST=eeda.iotecbol.com
 KEYCLOAK_REALM=eeda
 KEYCLOAK_ALLOWED_CLIENTS=book4rlab
 KEYCLOAK_TIMEOUT=10
+# Service account client that gives the instructor role when a request is approved
+KEYCLOAK_ADMIN_CLIENT_ID={admin_client_id}
+KEYCLOAK_ADMIN_CLIENT_SECRET={admin_client_secret}
 # Team mailbox that receives instructor access requests
 INSTRUCTOR_REQUEST_EMAIL={team_email}
 
@@ -68,7 +71,9 @@ POSTGRES_PASSWORD={db_password}
 | `KEYCLOAK_REALM` | Realm name | `eeda` |
 | `KEYCLOAK_ALLOWED_CLIENTS` | Comma-separated client ids allowed to call the API | `book4rlab` |
 | `KEYCLOAK_TIMEOUT` | Seconds to wait for Keycloak | `10` |
-| `INSTRUCTOR_REQUEST_EMAIL` | Team mailbox for instructor access requests | `team@example.com` |
+| `KEYCLOAK_ADMIN_CLIENT_ID` | Confidential client with a service account, used to give the `instructor` realm role | `book4rlab-admin` |
+| `KEYCLOAK_ADMIN_CLIENT_SECRET` | Secret of that client | Client secret from Keycloak |
+| `INSTRUCTOR_REQUEST_EMAIL` | Team mailbox for instructor access requests (defaults to `EMAIL_HOST_USER`) | `team@example.com` |
 |  |  |  |
 | `POSTGRES_DB` | Database name | Must match `DB_NAME` |
 | `POSTGRES_USER` | Admin username | Must match `DB_USER` |
@@ -96,6 +101,22 @@ To manage the project via the Django Admin Panel you might need to create a supe
 
 ```bash
 docker-compose run --rm app sh -c "python manage.py createsuperuser"
+```
+
+### Instructor Roles in Keycloak
+Instructor access comes from the `instructor` realm role in Keycloak. On every request the API makes the local
+`instructors` group match the token's roles, and blocking a user is done by disabling them in Keycloak.
+
+Approving a request in the Django admin gives the role through the Keycloak admin API. This needs a confidential
+client with service accounts enabled whose service account has the `realm-management` roles `manage-users`,
+`query-users` and `view-realm`. Set its id and secret in `KEYCLOAK_ADMIN_CLIENT_ID` and `KEYCLOAK_ADMIN_CLIENT_SECRET`.
+
+Before deploying the switch to Keycloak roles, give the role to everyone already in the local `instructors` group,
+or they lose instructor access on their next sign-in:
+
+```bash
+docker-compose run --rm app sh -c "python manage.py grant_instructor_roles --dry-run"
+docker-compose run --rm app sh -c "python manage.py grant_instructor_roles"
 ```
 
 ### Static Files

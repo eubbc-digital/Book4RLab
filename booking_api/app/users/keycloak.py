@@ -106,7 +106,7 @@ def sync_user_from_claims(claims):
     user.name = claims.get("given_name", "") or user.name
     user.last_name = claims.get("family_name", "") or user.last_name
     _copy_profile_claims(user, claims)
-    user.is_active = True
+    # Blocking a user is done in Keycloak (a disabled user gets no token), so is_active is not touched here
     user.save()
 
     desired = _desired_group_names(claims)

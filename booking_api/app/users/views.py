@@ -41,24 +41,14 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
     def perform_update(self, serializer):
-        user = self.request.user
         data = serializer.validated_data
         # Fields Keycloak owns. A change to these is written to Keycloak before it is saved here.
-        if any(field in data for field in KEYCLOAK_PROFILE_FIELDS):
-            # Keycloak holds these values. The account API needs the user's own token and the full profile.
+        changed = {field: data[field] or "" for field in KEYCLOAK_PROFILE_FIELDS if field in data}
+        if changed:
+            # Keycloak holds these values. The account API is called with the user's own token.
             token = self.request.META.get("HTTP_AUTHORIZATION", "").split(" ", 1)[-1]
             try:
-                update_account(
-                    token,
-                    first_name=user.name,
-                    last_name=user.last_name,
-                    # Keycloak requires institution on every account update, so always send the current value
-                    attributes={
-                        "time_zone": data.get("time_zone", user.time_zone),
-                        "country": data.get("country", user.country) or "",
-                        "institution": data.get("institution", user.institution) or "",
-                    },
-                )
+                update_account(token, attributes=changed)
             except KeycloakAccountRejected as exc:
                 logger.info("Keycloak rejected profile values: %s", exc)
                 raise ValidationError({"detail": "Keycloak did not accept these profile values."})

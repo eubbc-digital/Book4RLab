@@ -15,6 +15,7 @@ from rest_framework.test import APIClient
 
 from users.keycloak import sync_user_from_claims, validate_access_token
 from users.keycloak_account import KeycloakAccountError, KeycloakAccountRejected
+from users.keycloak_admin import KeycloakAdminError
 from users.models import InstructorRequest, User
 from users.tests.test_keycloak_auth import FakeSigningKey, make_token
 
@@ -93,12 +94,7 @@ class ProfileUpdateTests(SignedInTestCase):
         user, client, token = self.sign_in(time_zone='Etc/UTC')
         res = client.patch(reverse('users:me'), {'time_zone': 'Europe/Madrid'}, format='json')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        update.assert_called_once_with(
-            token,
-            first_name='Ana',
-            last_name='Perez',
-            attributes={'time_zone': 'Europe/Madrid', 'country': '', 'institution': ''},
-        )
+        update.assert_called_once_with(token, attributes={'time_zone': 'Europe/Madrid'})
         user.refresh_from_db()
         self.assertEqual(user.time_zone, 'Europe/Madrid')
 
@@ -107,12 +103,7 @@ class ProfileUpdateTests(SignedInTestCase):
         user, client, token = self.sign_in(institution='UPB', time_zone='Etc/UTC')
         res = client.patch(reverse('users:me'), {'institution': 'UMSA'}, format='json')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        update.assert_called_once_with(
-            token,
-            first_name='Ana',
-            last_name='Perez',
-            attributes={'time_zone': 'Etc/UTC', 'country': '', 'institution': 'UMSA'},
-        )
+        update.assert_called_once_with(token, attributes={'institution': 'UMSA'})
         user.refresh_from_db()
         self.assertEqual(user.institution, 'UMSA')
 
@@ -220,20 +211,59 @@ class InstructorApprovalAdminTests(SignedInTestCase):
             {'action': 'approve_requests', '_selected_action': [r.pk for r in requests]},
         )
 
-    def test_approve_records_the_decision_and_the_approver(self):
-        user = User.objects.create(email='teacher@upb.example', name='N', last_name='L')
+    def mock_keycloak(self, **kwargs):
+        patcher = mock.patch('users.admin.KeycloakAdmin', **kwargs)
+        keycloak_class = patcher.start()
+        self.addCleanup(patcher.stop)
+        return keycloak_class.return_value
+
+    def test_approve_gives_the_role_then_records_the_decision_and_the_approver(self):
+        keycloak = self.mock_keycloak()
+        keycloak.find_user_id.return_value = 'kc-id-1'
+        user = User.objects.create(email='teacher@upb.example', name='N', last_name='L', keycloak_sub='kc-id-1')
         req = InstructorRequest.objects.create(user=user)
         res = self.approve(req)
         self.assertEqual(res.status_code, 302)
+        keycloak.assign_instructor_role.assert_called_once_with('kc-id-1')
         req.refresh_from_db()
         self.assertTrue(req.approved)
         self.assertEqual(req.approved_by, self.admin)
         self.assertIsNotNone(req.approved_at)
 
+    def test_request_stays_pending_when_keycloak_refuses_the_role(self):
+        keycloak = self.mock_keycloak()
+        keycloak.find_user_id.return_value = 'kc-id-1'
+        keycloak.assign_instructor_role.side_effect = KeycloakAdminError('403')
+        user = User.objects.create(email='teacher@upb.example', name='N', last_name='L', keycloak_sub='kc-id-1')
+        req = InstructorRequest.objects.create(user=user)
+        self.approve(req)
+        req.refresh_from_db()
+        self.assertFalse(req.approved)
+
+    def test_request_stays_pending_when_keycloak_is_unreachable(self):
+        self.mock_keycloak(side_effect=KeycloakAdminError('not configured'))
+        user = User.objects.create(email='teacher@upb.example', name='N', last_name='L')
+        req = InstructorRequest.objects.create(user=user)
+        self.approve(req)
+        req.refresh_from_db()
+        self.assertFalse(req.approved)
+
+    def test_request_stays_pending_without_a_matching_keycloak_user(self):
+        keycloak = self.mock_keycloak()
+        keycloak.find_user_id.return_value = None
+        user = User.objects.create(email='teacher@upb.example', name='N', last_name='L')
+        req = InstructorRequest.objects.create(user=user)
+        self.approve(req)
+        keycloak.assign_instructor_role.assert_not_called()
+        req.refresh_from_db()
+        self.assertFalse(req.approved)
+
     def test_approving_an_already_approved_request_changes_nothing(self):
+        keycloak = self.mock_keycloak()
         user = User.objects.create(email='done@upb.example', name='N', last_name='L')
         req = InstructorRequest.objects.create(user=user, approved=True, approved_by=self.admin)
         self.approve(req)
+        keycloak.assign_instructor_role.assert_not_called()
         req.refresh_from_db()
         self.assertTrue(req.approved)
         self.assertEqual(req.approved_by, self.admin)

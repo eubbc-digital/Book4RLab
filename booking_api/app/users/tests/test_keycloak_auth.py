@@ -84,6 +84,12 @@ class KeycloakAuthTests(TestCase):
             realm_access={'roles': ['student']})))
         self.assertEqual(self.group_names(user), ['students'])
 
+    def test_sign_in_does_not_reactivate_a_deactivated_user(self):
+        user = sync_user_from_claims(validate_access_token(make_token()))
+        User.objects.filter(pk=user.pk).update(is_active=False)
+        user = sync_user_from_claims(validate_access_token(make_token()))
+        self.assertFalse(user.is_active)
+
     def test_existing_account_is_linked_by_verified_email(self):
         existing = User.objects.create(email='teacher@upb.edu', name='Old', last_name='Name')
         user = sync_user_from_claims(validate_access_token(make_token()))

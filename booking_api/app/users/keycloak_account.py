@@ -15,21 +15,34 @@ class KeycloakAccountRejected(KeycloakAccountError):
     """Keycloak refused the profile values (for example a missing required field)."""
 
 
-def update_account(bearer_token, first_name, last_name, attributes):
-    """
-    Update the signed-in user's own Keycloak profile with their own access token.
-    Needs no admin rights: Keycloak lets a user edit time zone and country.
-    """
-    base = settings.KEYCLOAK_URL
+def _account_request(method, bearer_token, **kwargs):
     try:
-        response = requests.post(
-            f"{base}/realms/{settings.KEYCLOAK_REALM}/account",
-            json={"firstName": first_name, "lastName": last_name, "attributes": attributes},
+        return requests.request(
+            method,
+            f"{settings.KEYCLOAK_URL}/realms/{settings.KEYCLOAK_REALM}/account",
             headers={"Authorization": f"Bearer {bearer_token}"},
             timeout=settings.KEYCLOAK_TIMEOUT,
+            **kwargs,
         )
     except requests.RequestException as exc:
-        raise KeycloakAccountError(f"account update failed: {exc}") from exc
+        raise KeycloakAccountError(f"account {method} failed: {exc}") from exc
+
+
+def update_account(bearer_token, attributes):
+    """
+    Update attributes of the signed-in user's own Keycloak profile with their own access token.
+    Needs no admin rights. Keycloak treats the posted profile as the whole profile, so the current
+    one is read first and only the given attributes are changed; everything else is sent back as is.
+    """
+    current = _account_request("GET", bearer_token)
+    if current.status_code != 200:
+        raise KeycloakAccountError(f"account read returned {current.status_code}")
+    profile = current.json()
+    merged = dict(profile.get("attributes") or {})
+    merged.update({name: [value] for name, value in attributes.items()})
+    profile["attributes"] = merged
+
+    response = _account_request("POST", bearer_token, json=profile)
     if response.status_code in (200, 204):
         return
     if response.status_code == 400:
