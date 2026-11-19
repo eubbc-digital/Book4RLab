@@ -16,6 +16,7 @@ import { from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import config from '../config.json';
 
 @Injectable({
   providedIn: 'root',
@@ -54,8 +55,18 @@ export class AuthInterceptorService implements HttpInterceptor {
     });
   }
 
-  /** Only our own API receives the access token: relative URLs. */
+  /**
+   * Only our own API receives the access token: relative URLs, and absolute URLs under
+   * config.json's api.baseUrl (production sets it to https://<domain>/booking/api/).
+   * Keycloak and any other site never get it.
+   */
   private isOwnApi(url: string): boolean {
-    return !/^https?:\/\//.test(url);
+    if (!/^https?:\/\//i.test(url)) return true;
+    const apiBase = config.api.baseUrl;
+    if (!/^https?:\/\//i.test(apiBase)) return false;
+    // Compare origin and path separately, so https://<domain>.example.org never matches https://<domain>
+    const target = new URL(url);
+    const base = new URL(apiBase);
+    return target.origin === base.origin && target.pathname.startsWith(base.pathname);
   }
 }

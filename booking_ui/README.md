@@ -30,8 +30,8 @@ This file holds the UI configuration. Update the `baseUrl` field according to yo
 
 | Environment  | Configuration Example                |
 |--------------|--------------------------------------|
-| Development  | `"baseUrl": "http://localhost:8000/"` |
-| Production   | `"baseUrl": "https://<domain>/booking/api/"` |
+| Development  | `"baseUrl": ""` (`ng serve` forwards API paths to `http://127.0.0.1:8000` through `proxy.conf.js`) |
+| Production   | `"baseUrl": "https://<domain>/booking/api/"` (with the trailing slash; the access token is sent only to URLs under it) |
 
 #### The Dockerfile
 For **development** environment, modify this line:
