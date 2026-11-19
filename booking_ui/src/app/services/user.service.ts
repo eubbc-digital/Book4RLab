@@ -31,7 +31,7 @@ export class UserService {
     return this.httpClient.get<User>(URL);
   }
 
-  updateUserData(user: User): Observable<any> {
+  updateUserData(user: Partial<User>): Observable<any> {
     const URL: string = `${config.api.baseUrl}${config.api.users.me}`;
     return this.httpClient.patch(URL, user, this.httpOptions);
   }

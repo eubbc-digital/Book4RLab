@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken",
     "corsheaders",
 ]
 
@@ -90,6 +89,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
         "NAME": os.environ.get("DB_NAME"),
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
@@ -130,6 +130,28 @@ STATIC_URL = os.environ.get("STATIC_URL")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
+
+# Keycloak (SSO). Tokens are validated against the realm's public keys.
+# One Keycloak URL (issuer) for token validation and server calls alike; containers reach it via extra_hosts
+KEYCLOAK_URL = os.environ.get("KEYCLOAK_URL", "https://eeda.iotecbol.com/auth").rstrip("/")
+KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM", "eeda")
+KEYCLOAK_ALLOWED_CLIENTS = [
+    c.strip()
+    for c in os.environ.get("KEYCLOAK_ALLOWED_CLIENTS", "book4rlab").split(",")
+    if c.strip()
+]
+KEYCLOAK_TIMEOUT = int(os.environ.get("KEYCLOAK_TIMEOUT", "10"))
+# Service account client used to give the instructor realm role (needs realm-management roles)
+KEYCLOAK_ADMIN_CLIENT_ID = os.environ.get("KEYCLOAK_ADMIN_CLIENT_ID", "")
+KEYCLOAK_ADMIN_CLIENT_SECRET = os.environ.get("KEYCLOAK_ADMIN_CLIENT_SECRET", "")
+# Team mailbox that receives instructor access requests; falls back to the SMTP account
+INSTRUCTOR_REQUEST_EMAIL = os.environ.get("INSTRUCTOR_REQUEST_EMAIL") or os.environ.get("EMAIL_HOST_USER", "")
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "users.authentication.KeycloakTokenAuthentication",
+    ],
+}
 
 # Email configuration
 

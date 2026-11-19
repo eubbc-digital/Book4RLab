@@ -20,7 +20,7 @@ from booking.serializers import (
 from users.models import User
 from django.core.exceptions import SuspiciousOperation
 from rest_framework import generics, status
-from rest_framework.authentication import TokenAuthentication
+from users.authentication import KeycloakTokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core.exceptions import ValidationError
@@ -30,7 +30,7 @@ import datetime
 
 class BookingList(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -62,7 +62,7 @@ class BookingList(generics.ListCreateAPIView):
 
 class BookingUserList(generics.ListAPIView):
     serializer_class = BookingSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -101,7 +101,7 @@ class BookingAccess(generics.ListAPIView):
 
 class BookingPublicList(generics.ListAPIView):
     serializer_class = PublicBookingSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -136,7 +136,7 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
     queryset = Booking.objects.all()
 
     serializer_class = BookingSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
@@ -229,7 +229,7 @@ class BookingDetail(generics.RetrieveUpdateAPIView):
 class EquipmentList(generics.ListCreateAPIView):
     queryset = Equipment.objects.filter(enabled=True)
     serializer_class = EquipmentSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
@@ -248,14 +248,14 @@ class EquipmentList(generics.ListCreateAPIView):
 class EquipmentDetail(generics.RetrieveUpdateAPIView):
     queryset = Equipment.objects.filter(enabled=True)
     serializer_class = EquipmentSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
 
 class TimeFrameList(generics.ListCreateAPIView):
     queryset = TimeFrame.objects.all()
     serializer_class = TimeFrameSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
@@ -274,13 +274,13 @@ class TimeFrameList(generics.ListCreateAPIView):
 class TimeFrameDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TimeFrame.objects.all()
     serializer_class = TimeFrameSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
 
 class LaboratoryList(generics.ListCreateAPIView):
     serializer_class = LaboratorySerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
@@ -322,13 +322,13 @@ class LaboratoryUpdate(generics.UpdateAPIView):
     queryset = Laboratory.objects.filter(enabled=True)
 
     serializer_class = LaboratorySerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
 
 class LaboratoryContentList(generics.ListCreateAPIView):
     serializer_class = LaboratoryContentSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     queryset = LaboratoryContent.objects.all()
@@ -402,7 +402,7 @@ class LaboratoryContentList(generics.ListCreateAPIView):
 
 
 class LaboratoryContentDeleteAll(generics.DestroyAPIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request, *args, **kwargs):
@@ -423,7 +423,7 @@ class LaboratoryContentRetrieve(generics.ListAPIView):
 
 
 class UserLaboratoryAccess(generics.GenericAPIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
@@ -453,7 +453,7 @@ class UserLaboratoryAccess(generics.GenericAPIView):
 
 
 class UserBookingAvailability(generics.GenericAPIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):

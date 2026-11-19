@@ -80,6 +80,14 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-form-field class="input-field">
+      <mat-label>Institution</mat-label>
+      <input matInput formControlName="institution" />
+      <mat-error *ngIf="institutionControl.hasError('required')">
+        Institution is required.
+      </mat-error>
+    </mat-form-field>
+
     <p class="mat-caption input-field">Required fields are marked with *</p>
 
     <div class="button-container">

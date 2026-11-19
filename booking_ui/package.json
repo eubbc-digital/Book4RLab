@@ -22,6 +22,7 @@
     "@angular/router": "^14.2.12",
     "@angular/youtube-player": "^14.2.7",
     "@videogular/ngx-videogular": "^6.0.0",
+    "angular-oauth2-oidc": "^14.0.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "ng-http-loader": "11.0.0",

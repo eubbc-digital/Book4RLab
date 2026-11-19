@@ -48,9 +48,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     country = models.CharField(max_length=10, default=None, null=True)
-    time_zone = models.CharField(max_length=25, default="Etc/UTC")
+    time_zone = models.CharField(max_length=64, default="Etc/UTC")
+    # Keycloak holds the value (required at registration); this is the local copy
+    institution = models.CharField(max_length=255, blank=True, default="")
+    # When the user last changed the Keycloak-held fields here. Tokens issued before this
+    # carry the old values and must not overwrite the local copy.
+    profile_updated_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    # Keycloak "sub" claim; set on first SSO login
+    keycloak_sub = models.CharField(max_length=255, unique=True, null=True, blank=True)
 
     objects = UserManager()
 
@@ -69,8 +76,18 @@ class InstructorRequest(models.Model):
         User, on_delete=models.CASCADE, related_name="instructor_request"
     )
     requested_at = models.DateTimeField(auto_now_add=True)
+    reason = models.TextField(blank=True, default="")
     approved = models.BooleanField(default=False)
     approved_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="approved_instructor_requests",
+    )
+    # Set when the instructor role disappears from Keycloak after approval; the user may then request again
+    revoked_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Instructor Access Request"

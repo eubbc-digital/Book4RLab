@@ -2,13 +2,9 @@
   "version": "1.8.0",
   "api": {
     "baseUrl": "",
+    "instructorRequest": "users/instructor-request/",
     "users": {
-      "activate": "users/activate/",
-      "instructorAccessRequest": "users/instructor-access/",
-      "login": "users/token/",
-      "me": "users/me/",
-      "passwordReset": "accounts/password_reset/",
-      "signup": "users/signup/"
+      "me": "users/me/"
     },
     "labs": "laboratories/",
     "user-access": "user-access/",

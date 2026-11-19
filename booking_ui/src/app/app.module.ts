@@ -15,6 +15,9 @@ import { QrCodeModule } from 'ng-qrcode';
 
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { APP_INITIALIZER } from '@angular/core';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { AuthService } from './services/auth.service';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { CookieService } from 'ngx-cookie-service';
 import { YouTubePlayerModule } from '@angular/youtube-player';
@@ -33,9 +36,7 @@ import { HelpButtonComponent } from './components/help-button/help-button.compon
 import { HelpDialogComponent } from './components/help-dialog/help-dialog.component';
 import { LabDialogComponent } from './components/lab-dialog/lab-dialog.component';
 import { LabsComponent } from './pages/labs/labs.component';
-import { LoginComponent } from './components/login/login.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { RegistrationComponent } from './components/registration/registration.component';
 import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
@@ -44,7 +45,6 @@ import { TimeframesComponent } from './pages/timeframes/timeframes.component';
 
 // Pages
 import { AccessComponent } from './pages/access/access.component';
-import { ActivationComponent } from './pages/activation/activation.component';
 import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
 import { InstructorAccessRequestComponent } from './pages/instructor-access-request/instructor-access-request.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -75,7 +75,6 @@ import { MainLayoutComponent } from './pages/main-layout/main-layout.component';
 @NgModule({
   declarations: [
     AccessComponent,
-    ActivationComponent,
     AppComponent,
     AvailableHoursComponent,
     BookingLinkComponent,
@@ -95,14 +94,12 @@ import { MainLayoutComponent } from './pages/main-layout/main-layout.component';
     LabGridComponent,
     LabStructureComponent,
     LabsComponent,
-    LoginComponent,
     NavbarComponent,
     NotFoundComponent,
     PrivateReservationsComponent,
     ProfileComponent,
     ProfileFormComponent,
     PublicReservationsComponent,
-    RegistrationComponent,
     ReservationCardComponent,
     ScrollToTopComponent,
     SpinnerComponent,
@@ -126,6 +123,7 @@ import { MainLayoutComponent } from './pages/main-layout/main-layout.component';
       progressBar: true,
     }),
     HttpClientModule,
+    OAuthModule.forRoot(),
     MatTooltipModule,
     NgHttpLoaderModule.forRoot(),
     VgCoreModule,
@@ -136,6 +134,12 @@ import { MainLayoutComponent } from './pages/main-layout/main-layout.component';
   ],
   providers: [
     CookieService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authService: AuthService) => () => authService.init(),
+      deps: [AuthService],
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

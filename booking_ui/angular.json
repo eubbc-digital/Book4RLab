@@ -32,6 +32,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/booking/",
               "budgets": [
                 {
                   "type": "initial",
@@ -77,6 +78,9 @@
             "development": {
               "browserTarget": "remote-lab-booking:build:development"
             }
+          },
+          "options": {
+            "proxyConfig": "proxy.conf.js"
           },
           "defaultConfiguration": "development"
         },

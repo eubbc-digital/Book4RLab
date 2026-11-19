@@ -7,7 +7,7 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { AuthService } from 'src/app/services/auth.service';
 import { Country } from 'src/app/interfaces/country';
 import { IanaTimezone } from 'src/app/interfaces/timezone';
@@ -49,6 +49,12 @@ export class ProfileFormComponent implements OnInit {
       this.requireMatch.bind(this),
     ]),
     timeZone: new UntypedFormControl({}, [Validators.required]),
+    institution: new UntypedFormControl('', [
+      Validators.required,
+      // Whitespace only is not a value: Keycloak rejects an empty institution
+      Validators.pattern(/\S/),
+      Validators.maxLength(255),
+    ]),
   });
 
   filteredOptions!: Observable<Country[]>;
@@ -60,6 +66,10 @@ export class ProfileFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Name and email are owned by Keycloak; the user changes them in the account console
+    this.editionForm.controls['name'].disable();
+    this.editionForm.controls['lastName'].disable();
+    this.editionForm.controls['email'].disable();
     this.getUserData();
     this.filteredOptions = this.countryControl.valueChanges.pipe(
       startWith(''),
@@ -111,12 +121,16 @@ export class ProfileFormComponent implements OnInit {
   get timeZoneControl() {
     return this.editionForm.controls['timeZone'];
   }
+  get institutionControl() {
+    return this.editionForm.controls['institution'];
+  }
 
   getUserData() {
     this.userService.getUserData().subscribe((user) => {
       this.editionForm.controls['name'].setValue(user.name);
       this.editionForm.controls['lastName'].setValue(user.last_name);
       this.editionForm.controls['email'].setValue(user.email);
+      this.editionForm.controls['institution'].setValue(user.institution ?? '');
 
       var country = this.getCountryInfoComplete(user.country);
       if (country) {
@@ -137,18 +151,27 @@ export class ProfileFormComponent implements OnInit {
   }
   updateUser(formDirective: FormGroupDirective): void {
     if (this.editionForm.valid) {
-      const user: User = {
-        name: this.editionForm.controls['name'].value,
-        last_name: this.editionForm.controls['lastName'].value,
-        email: this.editionForm.controls['email'].value,
+      const user: Partial<User> = {
         country: this.countryControl.value.code,
         time_zone: this.timeZoneControl.value.timezone,
+        institution: this.institutionControl.value.trim(),
       };
 
-      this.userService.updateUserData(user).subscribe((response) => {
-        if (response.status !== null && response.status === 200) {
-          this.toastr.success('Successful update of user data');
-        }
+      this.userService.updateUserData(user).subscribe({
+        next: (response) => {
+          if (response.status !== null && response.status === 200) {
+            this.toastr.success('Successful update of user data');
+          }
+        },
+        error: (err) => {
+          // 400: Keycloak rejected the values; 503: Keycloak unavailable
+          const detail = err?.error?.detail;
+          this.toastr.error(
+            (Array.isArray(detail) ? detail.join(' ') : detail) ??
+              'Your profile could not be saved. Try again later.',
+            'Update failed'
+          );
+        },
       });
     } else {
       this.toastr.error(

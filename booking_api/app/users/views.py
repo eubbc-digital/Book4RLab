@@ -4,132 +4,156 @@ MIT License - See LICENSE file in the root directory
 Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 """
 
+import logging
+
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.db import transaction
 from django.utils import timezone
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
-from rest_framework import authentication, generics, permissions, status
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import generics, permissions, status
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.response import Response
-from rest_framework.settings import api_settings
-from users.models import User, InstructorRequest
-from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
-from utils import account_activation_token, send_custom_email
-import os
+from rest_framework.views import APIView
+
+from users.authentication import KeycloakTokenAuthentication
+from users.keycloak import KEYCLOAK_PROFILE_FIELDS
+from users.keycloak_account import KeycloakAccountError, KeycloakAccountRejected, update_account
+from users.models import InstructorRequest
+from users.serializers import UserProfileSerializer
+
+logger = logging.getLogger(__name__)
 
 
-class CreateUserView(generics.CreateAPIView):
-    """Create a new user"""
-
-    serializer_class = UserSerializer
-
-
-class CreateTokenView(ObtainAuthToken):
-    """Get token for user"""
-
-    serializer_class = AuthTokenSerializer
-    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+class IdentityServiceUnavailable(APIException):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    default_detail = "Identity service unavailable. Try again later."
+    default_code = "identity_service_unavailable"
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
-    """Manage the authenticated user"""
+    """Authenticated user's profile. Time zone and country are stored in Keycloak."""
 
     serializer_class = UserProfileSerializer
-    authentication_classes = (authentication.TokenAuthentication,)
+    authentication_classes = (KeycloakTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
-        """Retrieve and return authentication user"""
         return self.request.user
 
+    def perform_update(self, serializer):
+        data = serializer.validated_data
+        # Fields Keycloak owns. A change to these is written to Keycloak before it is saved here.
+        changed = {field: data[field] or "" for field in KEYCLOAK_PROFILE_FIELDS if field in data}
+        if changed:
+            # Keycloak holds these values. The account API is called with the user's own token.
+            token = self.request.META.get("HTTP_AUTHORIZATION", "").split(" ", 1)[-1]
+            try:
+                update_account(token, attributes=changed)
+            except KeycloakAccountRejected as exc:
+                logger.info("Keycloak rejected profile values: %s", exc)
+                raise ValidationError({"detail": "Keycloak did not accept these profile values."})
+            except KeycloakAccountError:
+                logger.exception("Could not update profile in Keycloak")
+                raise IdentityServiceUnavailable()
+            # Tokens issued before now still carry the old values; keep them from overwriting these
+            serializer.save(profile_updated_at=timezone.now())
+            return
+        serializer.save()
 
-class ActivateAccountView(generics.GenericAPIView):
+
+MAX_INSTRUCTOR_REASON_LENGTH = 1000
+
+
+def _send_instructor_request_email(user, reason, recipient):
+    """Tell the team about a request with the instructor access email template. Returns the number sent."""
+    html = render_to_string(
+        "instructor_access_request_template.html",
+        {
+            "user_name": f"{user.name} {user.last_name}",
+            "user_email": user.email,
+            "reason": reason or "No justification provided.",
+        },
+    )
+    message = EmailMultiAlternatives(
+        subject="Instructor Access Request",
+        body=strip_tags(html),
+        from_email=settings.EMAIL_HOST_USER or None,
+        to=[recipient],
+    )
+    message.attach_alternative(html, "text/html")
+    # Errors are raised, not swallowed: the request is kept only if the team is told
+    return message.send(fail_silently=False)
+
+
+class InstructorRequestView(APIView):
+    """A signed-in user asks for instructor access. The team reviews the request in the admin."""
+
+    authentication_classes = (KeycloakTokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    @staticmethod
+    def _state(user):
+        if user.groups.filter(name="instructors").exists():
+            return "approved", None
+        request = InstructorRequest.objects.filter(user=user).first()
+        if request is None or request.revoked_at:
+            # A revoked request counts as none: the user may ask again
+            return "none", request
+        if request.approved:
+            return "approved", request
+        return "pending", request
+
+    def get(self, request):
+        state, _ = self._state(request.user)
+        return Response({"status": state})
+
     def post(self, request):
-        uid = request.data.get("uid", None)
-        token = request.data.get("token", None)
+        state, previous = self._state(request.user)
+        if state != "none":
+            return Response({"status": state}, status=status.HTTP_200_OK)
 
-        if not uid or not token:
+        user = request.user
+        reason = (request.data.get("reason") or "").strip()
+        if len(reason) > MAX_INSTRUCTOR_REASON_LENGTH:
             return Response(
-                {"message": "uid and token are required in the request body."},
+                {"detail": f"The reason can have at most {MAX_INSTRUCTOR_REASON_LENGTH} characters."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
+        recipient = settings.INSTRUCTOR_REQUEST_EMAIL
+        if not recipient:
+            logger.error("INSTRUCTOR_REQUEST_EMAIL is not set; instructor request not recorded")
+            return Response(
+                {"detail": "Could not notify the team. Try again later."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
         try:
-            uid = force_str(urlsafe_base64_decode(uid))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-
-        if user is not None and account_activation_token.check_token(user, token):
-            user.is_active = True
-            user.save()
+            # The record is kept only if the team is told about it.
+            with transaction.atomic():
+                if previous is None:
+                    instructor_request = InstructorRequest.objects.create(user=user, reason=reason)
+                else:
+                    # Asking again after a revocation reuses the one request a user has
+                    instructor_request = previous
+                    instructor_request.reason = reason
+                    instructor_request.requested_at = timezone.now()
+                    instructor_request.approved = False
+                    instructor_request.approved_at = None
+                    instructor_request.approved_by = None
+                    instructor_request.revoked_at = None
+                    instructor_request.save()
+                sent = _send_instructor_request_email(user, reason, recipient)
+                if not sent:
+                    raise RuntimeError("send_mail delivered no message")
+        except Exception:
+            logger.exception("Instructor request could not be recorded or emailed")
             return Response(
-                {
-                    "message": "Thank you for your email confirmation. Now you can log in to your account."
-                },
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(
-                {"message": "Activation link is invalid!"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
-class InstructorAccessRequestView(generics.CreateAPIView):
-    """Manage the request for instructor access"""
-
-    def create(self, request, *args, **kwargs):
-        administrator_email = os.environ.get("EMAIL_HOST_USER")
-        email = request.data.get("email", None)
-        reason = request.data.get("reason", "No justification provided.")
-
-        try:
-            user = User.objects.get(email=User.objects.normalize_email(email))
-
-            # Check if user already has instructor access
-            if user.groups.filter(name__in=["instructors"]).exists():
-                return Response(
-                    {"message": "The user already has instructor access"},
-                    status=status.HTTP_200_OK,
-                )
-
-            # Check for existing pending request
-            if hasattr(user, "instructor_request"):
-                if user.instructor_request.approved:
-                    return Response(
-                        {"message": "Instructor access was already approved"},
-                        status=status.HTTP_200_OK,
-                    )
-                return Response(
-                    {"message": "Instructor access request is pending approval"},
-                    status=status.HTTP_200_OK,
-                )
-
-            # Create new request
-            InstructorRequest.objects.create(user=user)
-
-            # Send email notification
-            subject = "Instructor Access Request"
-            context = {
-                "user_name": f"{user.name} {user.last_name}",
-                "user_email": user.email,
-                "reason": reason,
-            }
-            template_name = "instructor_access_request_template.html"
-            recipient = [administrator_email]
-
-            send_custom_email(subject, template_name, context, recipient)
-
-            return Response(
-                {
-                    "message": "Instructor access request sent",
-                    "requested_at": timezone.now().isoformat(),
-                },
-                status=status.HTTP_201_CREATED,
+                {"detail": "Could not notify the team. Try again later."},
+                status=status.HTTP_502_BAD_GATEWAY,
             )
 
-        except User.DoesNotExist:
-            return Response(
-                {"message": "Invalid email account"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        return Response(
+            {"status": "pending", "requested_at": instructor_request.requested_at},
+            status=status.HTTP_201_CREATED,
+        )

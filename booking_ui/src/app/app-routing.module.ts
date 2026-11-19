@@ -5,7 +5,6 @@
  */
 
 import { AccessComponent } from './pages/access/access.component';
-import { ActivationComponent } from './pages/activation/activation.component';
 import { AuthGuard } from './services/guards/auth.guard';
 import { BookingStepperComponent } from './pages/booking-stepper/booking-stepper.component';
 import { EquipmentsComponent } from './pages/equipments/equipments.component';
@@ -81,8 +80,6 @@ const routes: Routes = [
     component: AccessComponent,
     canActivate: [AuthGuard],
   },
-  { path: 'activate', 
-    component: ActivationComponent },
   {
     path: '**',
     component: NotFoundComponent,
