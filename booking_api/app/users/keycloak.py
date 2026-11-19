@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone as dt_timezone
 import jwt
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 
 from users.models import InstructorRequest, User
@@ -103,14 +103,24 @@ def _copy_profile_claims(user, claims):
         setattr(user, field, value)
 
 
-@transaction.atomic
 def sync_user_from_claims(claims):
     """
     Find or create the local User for a Keycloak identity and mirror its name and roles.
 
     Matching: keycloak_sub first, then email (only for a verified email, so an unverified
     Keycloak address can never take over an existing account).
+
+    On a first sign-in the UI sends several requests at once, and each may try to create the
+    user. The ones that lose the race hit the unique email and retry, finding the new row.
     """
+    try:
+        return _sync_user_from_claims(claims)
+    except IntegrityError:
+        return _sync_user_from_claims(claims)
+
+
+@transaction.atomic
+def _sync_user_from_claims(claims):
     sub = claims["sub"]
     email = (claims.get("email") or "").lower()
     if not email:

@@ -11,10 +11,12 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.db import IntegrityError
 from django.test import TestCase, override_settings
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from users import keycloak as keycloak_module
 from users.keycloak import sync_user_from_claims, validate_access_token
 from users.models import User
 
@@ -89,6 +91,25 @@ class KeycloakAuthTests(TestCase):
         User.objects.filter(pk=user.pk).update(is_active=False)
         user = sync_user_from_claims(validate_access_token(make_token()))
         self.assertFalse(user.is_active)
+
+    def test_losing_the_first_sign_in_race_finds_the_user_created_by_the_other_request(self):
+        claims = validate_access_token(make_token())
+        real_sync = keycloak_module._sync_user_from_claims
+        calls = []
+
+        def sync(claims):
+            calls.append(claims)
+            if len(calls) == 1:
+                # The other request creates the user between this one's lookup and its insert
+                real_sync(claims)
+                raise IntegrityError('duplicate key value violates unique constraint "users_user_email_key"')
+            return real_sync(claims)
+
+        with mock.patch('users.keycloak._sync_user_from_claims', side_effect=sync):
+            user = sync_user_from_claims(claims)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(User.objects.filter(email='teacher@upb.edu').count(), 1)
+        self.assertEqual(user.keycloak_sub, 'kc-sub-1')
 
     def test_existing_account_is_linked_by_verified_email(self):
         existing = User.objects.create(email='teacher@upb.edu', name='Old', last_name='Name')
