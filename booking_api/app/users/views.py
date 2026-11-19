@@ -7,7 +7,9 @@ Adriana Orellana, Angel Zenteno, Boris Pedraza, Alex Villazon, Omar Ormachea
 import logging
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import generics, permissions, status
@@ -62,6 +64,27 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
 
 MAX_INSTRUCTOR_REASON_LENGTH = 1000
+
+
+def _send_instructor_request_email(user, reason, recipient):
+    """Tell the team about a request with the instructor access email template. Returns the number sent."""
+    html = render_to_string(
+        "instructor_access_request_template.html",
+        {
+            "user_name": f"{user.name} {user.last_name}",
+            "user_email": user.email,
+            "reason": reason or "No justification provided.",
+        },
+    )
+    message = EmailMultiAlternatives(
+        subject="Instructor Access Request",
+        body=strip_tags(html),
+        from_email=settings.EMAIL_HOST_USER or None,
+        to=[recipient],
+    )
+    message.attach_alternative(html, "text/html")
+    # Errors are raised, not swallowed: the request is kept only if the team is told
+    return message.send(fail_silently=False)
 
 
 class InstructorRequestView(APIView):
@@ -120,19 +143,7 @@ class InstructorRequestView(APIView):
                     instructor_request.approved_by = None
                     instructor_request.revoked_at = None
                     instructor_request.save()
-                sent = send_mail(
-                    subject="Instructor access request",
-                    message=(
-                        f"Name: {user.name} {user.last_name}\n"
-                        f"Email: {user.email}\n"
-                        f"Requested at: {instructor_request.requested_at.isoformat()}\n"
-                        f"Reason: {reason or 'No reason given.'}\n\n"
-                        "Verify the requester, then approve the request in the Book4RLab admin."
-                    ),
-                    from_email=None,
-                    recipient_list=[recipient],
-                    fail_silently=False,
-                )
+                sent = _send_instructor_request_email(user, reason, recipient)
                 if not sent:
                     raise RuntimeError("send_mail delivered no message")
         except Exception:

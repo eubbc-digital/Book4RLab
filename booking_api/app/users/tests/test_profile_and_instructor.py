@@ -146,13 +146,20 @@ class InstructorRequestTests(SignedInTestCase):
         res = client.post(self.url, {'reason': '  Teaching chemistry at UPB  '}, format='json')
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(InstructorRequest.objects.get(user=user).reason, 'Teaching chemistry at UPB')
-        self.assertIn('Reason: Teaching chemistry at UPB', mail.outbox[0].body)
+        email = mail.outbox[0]
+        self.assertEqual(email.subject, 'Instructor Access Request')
+        self.assertIn('Teaching chemistry at UPB', email.body)
+        self.assertIn(user.email, email.body)
+        html, mimetype = email.alternatives[0]
+        self.assertEqual(mimetype, 'text/html')
+        self.assertIn('New Instructor Access Request', html)
+        self.assertIn('Teaching chemistry at UPB', html)
 
     def test_reason_is_optional(self):
         user, client, _ = self.sign_in()
         self.assertEqual(client.post(self.url).status_code, status.HTTP_201_CREATED)
         self.assertEqual(InstructorRequest.objects.get(user=user).reason, '')
-        self.assertIn('Reason: No reason given.', mail.outbox[0].body)
+        self.assertIn('No justification provided.', mail.outbox[0].body)
 
     def test_overlong_reason_is_rejected_and_nothing_is_recorded(self):
         user, client, _ = self.sign_in()
