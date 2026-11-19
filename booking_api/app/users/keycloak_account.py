@@ -20,7 +20,8 @@ def _account_request(method, bearer_token, **kwargs):
         return requests.request(
             method,
             f"{settings.KEYCLOAK_URL}/realms/{settings.KEYCLOAK_REALM}/account",
-            headers={"Authorization": f"Bearer {bearer_token}"},
+            # Without Accept: application/json, Keycloak answers GET /account with the account console page
+            headers={"Authorization": f"Bearer {bearer_token}", "Accept": "application/json"},
             timeout=settings.KEYCLOAK_TIMEOUT,
             **kwargs,
         )
@@ -37,7 +38,10 @@ def update_account(bearer_token, attributes):
     current = _account_request("GET", bearer_token)
     if current.status_code != 200:
         raise KeycloakAccountError(f"account read returned {current.status_code}")
-    profile = current.json()
+    try:
+        profile = current.json()
+    except ValueError as exc:
+        raise KeycloakAccountError("account read did not return JSON") from exc
     merged = dict(profile.get("attributes") or {})
     merged.update({name: [value] for name, value in attributes.items()})
     profile["attributes"] = merged

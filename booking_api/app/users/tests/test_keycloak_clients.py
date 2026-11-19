@@ -46,7 +46,23 @@ class UpdateAccountTests(SimpleTestCase):
             {'time_zone': ['Europe/Madrid'], 'institution': ['UPB'], 'phone': ['123']},
         )
         for call in request.call_args_list:
-            self.assertEqual(call.kwargs['headers'], {'Authorization': 'Bearer user-token'})
+            self.assertEqual(call.kwargs['headers']['Authorization'], 'Bearer user-token')
+
+    @mock.patch('users.keycloak_account.requests.request')
+    def test_asks_for_json_so_keycloak_does_not_send_the_account_page(self, request):
+        request.side_effect = [response(200, {'attributes': {}}), response(204)]
+        update_account('user-token', attributes={'country': 'BO'})
+        for call in request.call_args_list:
+            self.assertEqual(call.kwargs['headers']['Accept'], 'application/json')
+
+    @mock.patch('users.keycloak_account.requests.request')
+    def test_html_answer_is_an_account_error(self, request):
+        page = response(200)
+        page.json.side_effect = ValueError('not json')
+        request.return_value = page
+        with self.assertRaises(KeycloakAccountError):
+            update_account('user-token', attributes={'country': 'BO'})
+        self.assertEqual(request.call_count, 1)
 
     @mock.patch('users.keycloak_account.requests.request')
     def test_failed_read_sends_no_update(self, request):
