@@ -31,6 +31,7 @@ import { map, Observable, startWith } from 'rxjs';
 })
 export class RegistrationComponent implements OnInit {
   wantsInstructorAccess: boolean = false;
+  instructorReason: string = '';
   countries: Country[] = countries;
   timeZones: IanaTimezone[] = [];
   timeZoneChosen: IanaTimezone = { group: '', timezone: '', label: '' };
@@ -142,7 +143,7 @@ export class RegistrationComponent implements OnInit {
           this.toastr.success(`Welcome ${user.name}`, 'Successful registration');
 
           if (this.wantsInstructorAccess) {
-            var data = { 'email': user.email };
+            var data = { 'email': user.email, 'reason': this.instructorReason };
             this.authService.requestInstructorAccess(data).subscribe();
           }
 

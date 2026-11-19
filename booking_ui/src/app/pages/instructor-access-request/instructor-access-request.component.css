@@ -92,3 +92,21 @@
     max-width: 100%;
   }
 }
+
+textarea:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+  color: #9e9e9e;
+  border-color: #9e9e9e;
+}
+
+.request-textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  font-family: inherit;
+  padding: 10px;
+  border: 1px solid #9e9e9e;
+  border-radius: 4px;
+  resize: vertical;
+  box-sizing: border-box;
+}

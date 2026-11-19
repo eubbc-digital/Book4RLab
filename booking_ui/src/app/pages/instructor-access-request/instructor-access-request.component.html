@@ -9,6 +9,16 @@
     <li>The verification process may take 1-2 business days</li>
     <li>You'll receive email confirmation once approved</li>
   </ul>
+  <p class="request-description">
+    Reason for requesting access:
+  </p>
+  <textarea 
+    class="request-textarea"
+    [(ngModel)]="requestReason" 
+    placeholder="Briefly describe your academic role, institution, and your intended use for the remote laboratories..." 
+    [disabled]="hasRequestedAccess"
+    rows="4">
+  </textarea>
   <p class="contact-note">
     For any questions, please contact:
     <a href="mailto:upbremotelabs@gmail.com" class="contact-email">

@@ -11,5 +11,10 @@ a:visited:active {
 }
 
 #password-link {
+  margin-bottom: 4px;
+}
+
+#eeda-tools-link {
+  margin-top: 10px;
   margin-bottom: 20px;
 }

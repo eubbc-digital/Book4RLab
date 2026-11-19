@@ -14,6 +14,7 @@ export class InstructorAccessRequestComponent implements OnInit {
   currentUser?: User;
   isInstructor = false;
   hasRequestedAccess = false;
+  requestReason: string = '';
 
   constructor(
     private authService: AuthService,
@@ -31,7 +32,7 @@ export class InstructorAccessRequestComponent implements OnInit {
   }
 
   requestInstructorAccess() {
-    const data = { email: this.currentUser?.email || '' };
+    const data = { email: this.currentUser?.email || '', reason: this.requestReason };
 
     this.authService.requestInstructorAccess(data).subscribe({
       next: (response: any) => {

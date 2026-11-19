@@ -31,6 +31,15 @@
   </button>
 
   <mat-menu class="navbar-menu" #menu="matMenu">
+    <button
+      mat-menu-item
+      aria-label="EEDA Tools"
+      (click)="goToEedaTools()"
+    >
+      <mat-icon class="icon">build</mat-icon>
+      <span>EEDA Tools</span>
+    </button>
+
     <div *ngIf="isLoggedIn; else showLoginButton">
       <button
         *ngIf="!isProfessor"
@@ -114,10 +123,19 @@
 
   <!-- Web menu -->
   <ng-template #navbarButtons>
-    <div *ngIf="isLoggedIn; else showLoginButton">
-      <button 
-        mat-button 
-        aria-label="Booking button" 
+    <button
+      mat-button
+      aria-label="EEDA Tools"
+      (click)="goToEedaTools()"
+    >
+      <mat-icon class="icon">build</mat-icon>
+      <span>EEDA Tools</span>
+    </button>
+
+    <div *ngIf="isLoggedIn; else showLoginButtonWeb">
+      <button
+        mat-button
+        aria-label="Booking button"
         (click)="goToLabGrid()"
       >
         <mat-icon class="icon">book_online</mat-icon>
@@ -126,45 +144,61 @@
 
       <button
         mat-button
-        aria-label="Labs button"
-        (click)="goToLabManager()"
-        *ngIf="isProfessor"
+        aria-label="More options"
+        [matMenuTriggerFor]="moreMenu"
       >
-        <span>My Laboratories</span>
+        <span>More</span>
+        <mat-icon>arrow_drop_down</mat-icon>
       </button>
 
-      <button
-        mat-button
-        aria-label="Learnify module button"
-        (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
-        *ngIf="isLearnifyUrl"
-      >
-        <span>Learnify Module</span>
-      </button>
+      <mat-menu #moreMenu="matMenu">
+        <button
+          mat-menu-item
+          aria-label="Labs button"
+          (click)="goToLabManager()"
+          *ngIf="isProfessor"
+        >
+          <mat-icon class="icon">science</mat-icon>
+          <span>My Laboratories</span>
+        </button>
 
-      <button
-        mat-button
-        aria-label="Public reservation list button"
-        (click)="goToPublicReservations()"
-      >
-        <span>Public Rooms</span>
-      </button>
+        <button
+          mat-menu-item
+          aria-label="Learnify module button"
+          (click)="isProfessor ? goToLearnifyProfessor() : goToLearnifyStudent()"
+          *ngIf="isLearnifyUrl"
+        >
+          <mat-icon class="icon">library_books</mat-icon>
+          <span>Learnify Module</span>
+        </button>
 
-      <button
-        mat-button
-        aria-label="Personal reservation list button"
-        (click)="goToMyReservations()"
-      >
-        <span>My Reservations</span>
-      </button>
+        <button
+          mat-menu-item
+          aria-label="Public reservation list button"
+          (click)="goToPublicReservations()"
+        >
+          <mat-icon class="icon">list</mat-icon>
+          <span>Public Rooms</span>
+        </button>
 
-      <button
-        mat-button
-        aria-label="Profile list button"
-        (click)="goToMyProfile()"
-      >
-        <span>Profile</span>
-      </button>
+        <button
+          mat-menu-item
+          aria-label="Personal reservation list button"
+          (click)="goToMyReservations()"
+        >
+          <mat-icon class="icon">list</mat-icon>
+          <span>My Reservations</span>
+        </button>
+
+        <button
+          mat-menu-item
+          aria-label="Profile list button"
+          (click)="goToMyProfile()"
+        >
+          <mat-icon class="icon">person</mat-icon>
+          <span>Profile</span>
+        </button>
+      </mat-menu>
 
       <button mat-button aria-label="Logout icon" (click)="logout()">
         <mat-icon class="icon">logout</mat-icon>
@@ -172,7 +206,7 @@
       </button>
     </div>
 
-    <ng-template #showLoginButton>
+    <ng-template #showLoginButtonWeb>
       <button mat-button aria-label="Logout icon" (click)="goToLogin()">
         <mat-icon class="icon">login</mat-icon>
         <span>Login / Sign Up</span>
